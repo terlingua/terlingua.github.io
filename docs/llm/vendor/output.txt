@@ -1,5 +1,0 @@
-Export complete: docs/llm/dump.txt
-  Total files: 192
-  Blog posts (front matter only): 110
-  Full content files: 79
-  Binary files skipped: 3
