@@ -116,7 +116,7 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
 {
     # Header
     echo "$WIDE_SEP"
-    echo "PROJECT EXPORT: mercifulpotato.github.io"
+    echo "PROJECT EXPORT: terlingua.github.io"
     echo "DATE: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
     echo "$WIDE_SEP"
     echo ""

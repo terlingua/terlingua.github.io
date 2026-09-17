@@ -171,9 +171,9 @@ Console.WriteLine($"Wrote posts index: {indexPath} ({allPostMetadata.Count} post
 // Generate RSS feed with full post content
 var feedPath = Path.Combine(outputDir, "feed.xml");
 var rssXml = RssGenerator.Generate(
-    title: "Merciful Potato Magazine",
+    title: "Terlingua Magazine",
     description: "A free, open-source Blazor WebAssembly showcase on .NET 10",
-    siteUrl: "https://mercifulpotato.github.io",
+    siteUrl: "https://terlingua.github.io",
     posts: allPostMetadata,
     getPostHtml: slug => postHtmlMap.GetValueOrDefault(slug)
 );

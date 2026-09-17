@@ -23,7 +23,7 @@ var host = builder.Build();
 
 // Log application startup
 var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("App");
-logger.LogInformation("Merciful Potato Magazine started at {Time}", DateTime.UtcNow);
+logger.LogInformation("Terlingua Magazine started at {Time}", DateTime.UtcNow);
 
 var telemetry = host.Services.GetRequiredService<TelemetryService>();
 telemetry.TrackEvent("AppStarted");

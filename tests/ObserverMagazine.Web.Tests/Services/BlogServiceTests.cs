@@ -43,7 +43,7 @@ public class BlogServiceTests
             Id = "terlingua-team",
             Name = "Observer Team",
             Email = "hello@observermagazine.example",
-            Bio = "The team behind Merciful Potato Magazine.",
+            Bio = "The team behind Terlingua Magazine.",
             Socials = new Dictionary<string, string> { ["github"] = "ObserverMagazine" }
         }
     ];
