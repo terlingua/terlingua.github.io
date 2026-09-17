@@ -16,7 +16,7 @@ public class BlogServiceTests
             Slug = "first-post",
             Title = "First Post",
             Date = new DateTime(2026, 1, 15),
-            Author = "mercifulpotato-team",
+            Author = "terlingua-team",
             AuthorName = "Observer Team",
             Summary = "The first post",
             Tags = ["test", "intro"],
@@ -28,7 +28,7 @@ public class BlogServiceTests
             Slug = "second-post",
             Title = "Second Post",
             Date = new DateTime(2026, 2, 20),
-            Author = "mercifulpotato-team",
+            Author = "terlingua-team",
             AuthorName = "Observer Team",
             Summary = "The second post",
             Tags = ["test"],
@@ -40,7 +40,7 @@ public class BlogServiceTests
     [
         new()
         {
-            Id = "mercifulpotato-team",
+            Id = "terlingua-team",
             Name = "Observer Team",
             Email = "hello@observermagazine.example",
             Bio = "The team behind Merciful Potato Magazine.",
@@ -85,7 +85,7 @@ public class BlogServiceTests
         Assert.NotNull(featured);
         Assert.Equal("First Post", featured.Title);
         Assert.Equal(2, featured.ReadingTimeMinutes);
-        Assert.Equal("mercifulpotato-team", featured.Author);
+        Assert.Equal("terlingua-team", featured.Author);
         Assert.Equal("Observer Team", featured.AuthorName);
     }
 
@@ -154,7 +154,7 @@ public class BlogServiceTests
         var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://test.local/") };
         var service = CreateService(httpClient);
 
-        var author = await service.GetAuthorAsync("mercifulpotato-team");
+        var author = await service.GetAuthorAsync("terlingua-team");
 
         Assert.NotNull(author);
         Assert.Equal("hello@observermagazine.example", author.Email);
