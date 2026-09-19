@@ -1,6 +1,6 @@
 ===============================================================================
 PROJECT EXPORT: terlingua.github.io
-DATE: 2026-09-19 00:26:44 UTC
+DATE: 2026-09-19 20:29:15 UTC
 ===============================================================================
 
 ===============================================================================
@@ -14,7 +14,8 @@ DIRECTORY TREE (all git-tracked files)
 │   │   ├── kushal.yml
 │   │   └── terlingua-team.yml
 │   └── blog
-│       └── 2026-03-22-good-morning.md
+│       ├── 2026-03-22-good-morning.md
+│       └── 2026-09-19-good-afternoon.md
 ├── Directory.Build.props
 ├── Directory.Packages.props
 ├── docs
@@ -121,7 +122,7 @@ DIRECTORY TREE (all git-tracked files)
     │   └── RssGenerator.cs
     └── requirements-audio.txt
 
-30 directories, 83 files
+30 directories, 84 files
 
 
 -------------------------------------------------------------------------------
@@ -238,6 +239,19 @@ title: Good morning!
 date: 2026-09-17
 author: kushal
 summary: In which I say Good morning to you
+tags:
+  - introductions
+---
+
+
+-------------------------------------------------------------------------------
+FILE: content/blog/2026-09-19-good-afternoon.md  [FRONT MATTER ONLY — body omitted to save context space]
+-------------------------------------------------------------------------------
+---
+title: Good afternoon!
+date: 2026-09-19
+author: kushal
+summary: In which I say Good afternoon to you
 tags:
   - introductions
 ---
@@ -9501,8 +9515,8 @@ num2words>=0.5.14
 
 ===============================================================================
 EXPORT COMPLETED
-Total Files Exported: 81
-  Blog posts (front matter only): 1
+Total Files Exported: 82
+  Blog posts (front matter only): 2
   Full content files: 78
   Binary files skipped: 2
 Output File: docs/llm/dump.txt

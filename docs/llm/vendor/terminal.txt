@@ -110,4 +110,118 @@ Export complete: docs/llm/dump.txt
 real	0m0.096s
 user	0m0.046s
 sys	0m0.039s
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+206M	.
+
+real	0m0.014s
+user	0m0.001s
+sys	0m0.009s
+
+real	0m7.723s
+user	0m11.568s
+sys	0m1.071s
+Restore complete (0.5s)
+
+Build succeeded in 0.6s
+
+real	0m0.727s
+user	0m0.786s
+sys	0m0.147s
+Content directory: content/blog
+Output directory:  src/ObserverMagazine.Web/wwwroot
+Authors directory: content/authors
+Publish before:    2026-09-19 20:29:04 UTC
+Found 3 author profile(s)
+  Loaded author: kushal (kushal)
+  Loaded author: abraham-lincoln (Abraham Lincoln)
+  Loaded author: terlingua-team (Terlingua Team)
+Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
+Found 2 markdown files
+Processing: 2026-03-22-good-morning.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
+Processing: 2026-09-19-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (2 posts, 0 drafts skipped, 0 future posts skipped)
+Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
+Content processing complete.
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (720ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (862ms)
+
+Test run summary: Passed!
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (720ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (862ms)
+
+  total: 81
+  failed: 0
+  succeeded: 81
+  skipped: 0
+  duration: 1s 062ms
+
+real	0m5.980s
+user	0m5.134s
+sys	0m0.764s
+Restore complete (0.5s)
+
+Build succeeded in 0.6s
+Project 'ObserverMagazine.Web' has the following package references
+   [net10.0]: 
+   Top-level Package                                        Requested      Resolved
+   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.11, )    10.0.11 
+   > Microsoft.AspNetCore.Components.WebAssembly            10.0.12        10.0.12 
+   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.111, )   10.0.111
+   > Microsoft.Extensions.Http                              10.0.12        10.0.12 
+   > Microsoft.Extensions.Logging.Configuration             10.0.12        10.0.12 
+   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.11, )    10.0.11 
+   > Microsoft.NET.Sdk.WebAssembly.Pack               (A)   [10.0.1, )     10.0.1  
+
+Project 'ObserverMagazine.Integration.Tests' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.3.2       1.3.2   
+   > xunit.v3             4.0.1       4.0.1   
+   > YamlDotNet           18.1.0      18.1.0  
+
+Project 'ObserverMagazine.Web.Tests' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > bunit                2.11.3      2.11.3  
+   > xunit.v3             4.0.1       4.0.1   
+
+Project 'ObserverMagazine.ContentProcessor' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.3.2       1.3.2   
+   > YamlDotNet           18.1.0      18.1.0  
+
+(A) : Auto-referenced package.
+
+real	0m1.530s
+user	0m1.500s
+sys	0m0.337s
+Restore complete (0.5s)
+
+Build succeeded in 0.6s
+
+The following sources were used:
+   https://api.nuget.org/v3/index.json
+
+The given project `ObserverMagazine.Web` has no updates given the current sources.
+The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
+
+real	0m2.627s
+user	0m1.894s
+sys	0m0.390s
+Export complete: docs/llm/dump.txt
+  Total files: 82
+  Blog posts (front matter only): 2
+  Full content files: 78
+  Binary files skipped: 2
+
+real	0m0.098s
+user	0m0.027s
+sys	0m0.057s
 kushal@fedora:~/src/dotnet/terlingua$ 
