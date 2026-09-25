@@ -1,136 +1,109 @@
-kushal@fedora:~$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-206M	.
+kushal@fedora:~/src/ts/kphoto$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+207M	.
 
-real	0m0.018s
-user	0m0.001s
-sys	0m0.007s
+real	0m0.019s
+user	0m0.003s
+sys	0m0.006s
 
-real	0m7.620s
-user	0m11.811s
-sys	0m1.033s
+Welcome to .NET 10.0!
+---------------------
+SDK Version: 10.0.112
+
+----------------
+Installed an ASP.NET Core HTTPS development certificate.
+To trust the certificate, run 'dotnet dev-certs https --trust'
+Learn about HTTPS: https://aka.ms/dotnet-https
+
+----------------
+Write your first app: https://aka.ms/dotnet-hello-world
+Find out what's new: https://aka.ms/dotnet-whats-new
+Explore documentation: https://aka.ms/dotnet-docs
+Report issues and find source on GitHub: https://github.com/dotnet/core
+Use 'dotnet --help' to see available commands or visit: https://aka.ms/dotnet-cli
+--------------------------------------------------------------------------------------
+Checking the state of installed workloads...
+Pack Microsoft.Android.Sdk.Linux version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Sdk.Linux version 36.1.2...
+Pack Microsoft.Android.Sdk.Linux version 35.0.105 is already installed.
+Writing workload pack installation record for Microsoft.Android.Sdk.Linux version 35.0.105...
+Pack Microsoft.Android.Ref.36 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Ref.36 version 36.1.2...
+Pack Microsoft.Android.Runtime.36.android version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.36.android version 36.1.2...
+Pack Microsoft.Android.Runtime.Mono.36.android-arm version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.Mono.36.android-arm version 36.1.2...
+Pack Microsoft.Android.Runtime.Mono.36.android-arm64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.Mono.36.android-arm64 version 36.1.2...
+Pack Microsoft.Android.Runtime.Mono.36.android-x86 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.Mono.36.android-x86 version 36.1.2...
+Pack Microsoft.Android.Runtime.Mono.36.android-x64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.Mono.36.android-x64 version 36.1.2...
+Pack Microsoft.Android.Runtime.CoreCLR.36.android-arm64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.CoreCLR.36.android-arm64 version 36.1.2...
+Pack Microsoft.Android.Runtime.CoreCLR.36.android-x64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.CoreCLR.36.android-x64 version 36.1.2...
+Pack Microsoft.Android.Runtime.NativeAOT.36.android-arm64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.NativeAOT.36.android-arm64 version 36.1.2...
+Pack Microsoft.Android.Runtime.NativeAOT.36.android-x64 version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Runtime.NativeAOT.36.android-x64 version 36.1.2...
+Pack Microsoft.Android.Templates version 36.1.2 is already installed.
+Writing workload pack installation record for Microsoft.Android.Templates version 36.1.2...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-arm version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-arm version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-arm64 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-arm64 version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-x64 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-x64 version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-x86 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-x86 version 9.0.11...
+Pack Microsoft.NET.Runtime.MonoAOTCompiler.Task version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NET.Runtime.MonoAOTCompiler.Task version 9.0.11...
+Pack Microsoft.NET.Runtime.MonoTargets.Sdk version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NET.Runtime.MonoTargets.Sdk version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x86 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x86 version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x64 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x64 version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm64 version 9.0.11 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm64 version 9.0.11...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-arm version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-arm version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-arm64 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-arm64 version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-x64 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-x64 version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.Mono.android-x86 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.Mono.android-x86 version 10.0.1...
+Pack Microsoft.NET.Runtime.MonoAOTCompiler.Task version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NET.Runtime.MonoAOTCompiler.Task version 10.0.1...
+Pack Microsoft.NET.Runtime.MonoTargets.Sdk version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NET.Runtime.MonoTargets.Sdk version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x86 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x86 version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x64 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-x64 version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm version 10.0.1...
+Pack Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm64 version 10.0.1 is already installed.
+Writing workload pack installation record for Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.android-arm64 version 10.0.1...
+----------------
+
+real	0m8.165s
+user	0m12.109s
+sys	0m1.171s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
 
-real	0m0.730s
+real	0m0.723s
 user	0m0.775s
-sys	0m0.153s
+sys	0m0.139s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
-Publish before:    2026-09-19 00:26:33 UTC
-Found 3 author profile(s)
-  Loaded author: kushal (kushal)
-  Loaded author: abraham-lincoln (Abraham Lincoln)
-  Loaded author: terlingua-team (Terlingua Team)
-Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 1 markdown files
-Processing: 2026-03-22-good-morning.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (1 posts, 0 drafts skipped, 0 future posts skipped)
-Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
-Content processing complete.
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (660ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (851ms)
-
-Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (660ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (851ms)
-
-  total: 81
-  failed: 0
-  succeeded: 81
-  skipped: 0
-  duration: 1s 036ms
-
-real	0m5.960s
-user	0m4.967s
-sys	0m0.743s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-Project 'ObserverMagazine.Web' has the following package references
-   [net10.0]: 
-   Top-level Package                                        Requested      Resolved
-   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.11, )    10.0.11 
-   > Microsoft.AspNetCore.Components.WebAssembly            10.0.12        10.0.12 
-   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.111, )   10.0.111
-   > Microsoft.Extensions.Http                              10.0.12        10.0.12 
-   > Microsoft.Extensions.Logging.Configuration             10.0.12        10.0.12 
-   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.11, )    10.0.11 
-   > Microsoft.NET.Sdk.WebAssembly.Pack               (A)   [10.0.1, )     10.0.1  
-
-Project 'ObserverMagazine.Integration.Tests' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.3.2       1.3.2   
-   > xunit.v3             4.0.1       4.0.1   
-   > YamlDotNet           18.1.0      18.1.0  
-
-Project 'ObserverMagazine.Web.Tests' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > bunit                2.11.3      2.11.3  
-   > xunit.v3             4.0.1       4.0.1   
-
-Project 'ObserverMagazine.ContentProcessor' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.3.2       1.3.2   
-   > YamlDotNet           18.1.0      18.1.0  
-
-(A) : Auto-referenced package.
-
-real	0m1.515s
-user	0m1.504s
-sys	0m0.298s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-
-The following sources were used:
-   https://api.nuget.org/v3/index.json
-
-The given project `ObserverMagazine.Web` has no updates given the current sources.
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
-
-real	0m2.656s
-user	0m1.941s
-sys	0m0.436s
-Export complete: docs/llm/dump.txt
-  Total files: 81
-  Blog posts (front matter only): 1
-  Full content files: 78
-  Binary files skipped: 2
-
-real	0m0.096s
-user	0m0.046s
-sys	0m0.039s
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-206M	.
-
-real	0m0.014s
-user	0m0.001s
-sys	0m0.009s
-
-real	0m7.723s
-user	0m11.568s
-sys	0m1.071s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-
-real	0m0.727s
-user	0m0.786s
-sys	0m0.147s
-Content directory: content/blog
-Output directory:  src/ObserverMagazine.Web/wwwroot
-Authors directory: content/authors
-Publish before:    2026-09-19 20:29:04 UTC
+Publish before:    2026-09-25 20:20:51 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -144,36 +117,36 @@ Processing: 2026-09-19-good-afternoon.md
 Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (2 posts, 0 drafts skipped, 0 future posts skipped)
 Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
 Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (720ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (862ms)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (680ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (863ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (720ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (862ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (680ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (863ms)
 
   total: 81
   failed: 0
   succeeded: 81
   skipped: 0
-  duration: 1s 062ms
+  duration: 1s 050ms
 
-real	0m5.980s
-user	0m5.134s
-sys	0m0.764s
+real	0m5.891s
+user	0m5.023s
+sys	0m0.715s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
 Project 'ObserverMagazine.Web' has the following package references
    [net10.0]: 
    Top-level Package                                        Requested      Resolved
-   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.11, )    10.0.11 
+   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.12, )    10.0.12 
    > Microsoft.AspNetCore.Components.WebAssembly            10.0.12        10.0.12 
-   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.111, )   10.0.111
+   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.112, )   10.0.112
    > Microsoft.Extensions.Http                              10.0.12        10.0.12 
    > Microsoft.Extensions.Logging.Configuration             10.0.12        10.0.12 
-   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.11, )    10.0.11 
+   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.12, )    10.0.12 
    > Microsoft.NET.Sdk.WebAssembly.Pack               (A)   [10.0.1, )     10.0.1  
 
 Project 'ObserverMagazine.Integration.Tests' has the following package references
@@ -197,9 +170,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.530s
-user	0m1.500s
-sys	0m0.337s
+real	0m1.493s
+user	0m1.485s
+sys	0m0.324s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -208,20 +181,28 @@ The following sources were used:
    https://api.nuget.org/v3/index.json
 
 The given project `ObserverMagazine.Web` has no updates given the current sources.
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
+Project `ObserverMagazine.Integration.Tests` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > Markdig              1.3.2       1.3.2      1.4.0 
 
-real	0m2.627s
-user	0m1.894s
-sys	0m0.390s
+The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
+Project `ObserverMagazine.ContentProcessor` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > Markdig              1.3.2       1.3.2      1.4.0 
+
+
+real	0m2.665s
+user	0m2.080s
+sys	0m0.426s
 Export complete: docs/llm/dump.txt
   Total files: 82
   Blog posts (front matter only): 2
   Full content files: 78
   Binary files skipped: 2
 
-real	0m0.098s
-user	0m0.027s
-sys	0m0.057s
+real	0m0.091s
+user	0m0.032s
+sys	0m0.048s
 kushal@fedora:~/src/dotnet/terlingua$ 
