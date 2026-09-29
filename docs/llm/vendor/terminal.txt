@@ -1,57 +1,59 @@
-kushal@fedora:~/src/dotnet/HelloXUnit$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
 207M	.
 
-real	0m0.018s
-user	0m0.000s
-sys	0m0.008s
+real	0m0.009s
+user	0m0.001s
+sys	0m0.007s
 
-real	0m7.271s
-user	0m11.659s
-sys	0m0.922s
-Restore complete (0.5s)
+real	0m7.520s
+user	0m12.001s
+sys	0m0.966s
+Restore complete (0.6s)
 
-Build succeeded in 0.6s
+Build succeeded in 0.7s
 
-real	0m0.749s
-user	0m0.766s
-sys	0m0.177s
+real	0m0.829s
+user	0m0.852s
+sys	0m0.166s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
-Publish before:    2026-09-29 19:18:14 UTC
+Publish before:    2026-09-29 19:23:40 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
   Loaded author: terlingua-team (Terlingua Team)
 Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 3 markdown files
+Found 4 markdown files
 Processing: 2026-03-22-good-morning.md
   Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
 Processing: 2026-09-19-good-afternoon.md
   Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
 Processing: 2026-09-25-good-afternoon.md
   Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (3 posts, 0 drafts skipped, 0 future posts skipped)
+Processing: 2026-09-29-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (4 posts, 0 drafts skipped, 0 future posts skipped)
 Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
 Content processing complete.
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (756ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (829ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (676ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (860ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (756ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (829ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (676ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (860ms)
 
   total: 81
   failed: 0
   succeeded: 81
   skipped: 0
-  duration: 1s 024ms
+  duration: 1s 036ms
 
-real	0m5.845s
-user	0m4.823s
-sys	0m0.778s
+real	0m4.192s
+user	0m5.025s
+sys	0m0.758s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -87,9 +89,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.497s
-user	0m1.471s
-sys	0m0.335s
+real	0m1.552s
+user	0m1.566s
+sys	0m0.319s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -102,16 +104,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.827s
-user	0m1.992s
-sys	0m0.411s
+real	0m1.734s
+user	0m1.691s
+sys	0m0.372s
 Export complete: docs/llm/dump.txt
-  Total files: 83
-  Blog posts (front matter only): 3
+  Total files: 84
+  Blog posts (front matter only): 4
   Full content files: 78
   Binary files skipped: 2
 
-real	0m0.091s
-user	0m0.037s
+real	0m0.081s
+user	0m0.039s
 sys	0m0.043s
 kushal@fedora:~/src/dotnet/terlingua$ 
