@@ -1,24 +1,24 @@
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+kushal@fedora:~/src/dotnet/HelloXUnit$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
 207M	.
 
-real	0m0.012s
-user	0m0.001s
+real	0m0.018s
+user	0m0.000s
 sys	0m0.008s
 
-real	0m8.319s
-user	0m13.062s
-sys	0m1.089s
+real	0m7.271s
+user	0m11.659s
+sys	0m0.922s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
 
-real	0m0.799s
-user	0m0.852s
-sys	0m0.171s
+real	0m0.749s
+user	0m0.766s
+sys	0m0.177s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
-Publish before:    2026-09-25 20:55:27 UTC
+Publish before:    2026-09-29 19:18:14 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -34,24 +34,24 @@ Processing: 2026-09-25-good-afternoon.md
 Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (3 posts, 0 drafts skipped, 0 future posts skipped)
 Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
 Content processing complete.
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (732ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (910ms)
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (756ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (829ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (910ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (732ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (756ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (829ms)
 
   total: 81
   failed: 0
   succeeded: 81
   skipped: 0
-  duration: 1s 110ms
+  duration: 1s 024ms
 
-real	0m6.407s
-user	0m5.468s
-sys	0m0.843s
+real	0m5.845s
+user	0m4.823s
+sys	0m0.778s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -87,12 +87,12 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.764s
-user	0m1.683s
-sys	0m0.406s
-Restore complete (0.6s)
+real	0m1.497s
+user	0m1.471s
+sys	0m0.335s
+Restore complete (0.5s)
 
-Build succeeded in 0.7s
+Build succeeded in 0.6s
 
 The following sources were used:
    https://api.nuget.org/v3/index.json
@@ -102,16 +102,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m3.104s
-user	0m2.456s
-sys	0m0.465s
+real	0m2.827s
+user	0m1.992s
+sys	0m0.411s
 Export complete: docs/llm/dump.txt
   Total files: 83
   Blog posts (front matter only): 3
   Full content files: 78
   Binary files skipped: 2
 
-real	0m0.100s
+real	0m0.091s
 user	0m0.037s
-sys	0m0.051s
+sys	0m0.043s
 kushal@fedora:~/src/dotnet/terlingua$ 
