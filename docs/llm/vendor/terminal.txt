@@ -1,24 +1,24 @@
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+kushal@fedora:~/src/dotnet/MyImapDownloader$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
 207M	.
 
-real	0m0.009s
-user	0m0.001s
-sys	0m0.007s
+real	0m0.011s
+user	0m0.002s
+sys	0m0.009s
 
-real	0m7.520s
-user	0m12.001s
-sys	0m0.966s
+real	0m8.341s
+user	0m13.071s
+sys	0m1.097s
 Restore complete (0.6s)
 
 Build succeeded in 0.7s
 
-real	0m0.829s
-user	0m0.852s
-sys	0m0.166s
+real	0m0.864s
+user	0m0.901s
+sys	0m0.178s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
-Publish before:    2026-09-29 19:23:40 UTC
+Publish before:    2026-10-22 00:52:17 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -38,22 +38,22 @@ Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
 Content processing complete.
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (676ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (860ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (696ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (906ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (676ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (860ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (906ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (696ms)
 
   total: 81
   failed: 0
   succeeded: 81
   skipped: 0
-  duration: 1s 036ms
+  duration: 1s 123ms
 
-real	0m4.192s
-user	0m5.025s
-sys	0m0.758s
+real	0m6.041s
+user	0m5.376s
+sys	0m0.857s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -89,9 +89,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.552s
-user	0m1.566s
-sys	0m0.319s
+real	0m1.624s
+user	0m1.592s
+sys	0m0.392s
 Restore complete (0.5s)
 
 Build succeeded in 0.6s
@@ -99,21 +99,41 @@ Build succeeded in 0.6s
 The following sources were used:
    https://api.nuget.org/v3/index.json
 
-The given project `ObserverMagazine.Web` has no updates given the current sources.
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
+Project `ObserverMagazine.Web` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package                                  Requested   Resolved   Latest 
+   > Microsoft.AspNetCore.Components.WebAssembly      10.0.12     10.0.12    10.0.13
+   > Microsoft.Extensions.Http                        10.0.12     10.0.12    10.0.13
+   > Microsoft.Extensions.Logging.Configuration       10.0.12     10.0.12    10.0.13
 
-real	0m1.734s
-user	0m1.691s
-sys	0m0.372s
+Project `ObserverMagazine.Integration.Tests` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > Markdig              1.4.0       1.4.0      1.4.2 
+   > xunit.v3             4.0.1       4.0.1      4.0.2 
+
+Project `ObserverMagazine.Web.Tests` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > bunit                2.11.3      2.11.3     2.12.5
+   > xunit.v3             4.0.1       4.0.1      4.0.2 
+
+Project `ObserverMagazine.ContentProcessor` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > Markdig              1.4.0       1.4.0      1.4.2 
+
+
+real	0m5.188s
+user	0m3.924s
+sys	0m0.474s
 Export complete: docs/llm/dump.txt
   Total files: 84
   Blog posts (front matter only): 4
   Full content files: 78
   Binary files skipped: 2
 
-real	0m0.081s
-user	0m0.039s
-sys	0m0.043s
+real	0m0.093s
+user	0m0.038s
+sys	0m0.049s
 kushal@fedora:~/src/dotnet/terlingua$ 
