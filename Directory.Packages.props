@@ -3,12 +3,12 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <!-- Version variables — touch these to update all related packages -->
-    <MicrosoftAspNetCoreVersion>10.0.12</MicrosoftAspNetCoreVersion>
-    <MicrosoftExtensionsVersion>10.0.12</MicrosoftExtensionsVersion>
-    <XunitVersion>4.0.1</XunitVersion>
-    <MarkdigVersion>1.4.0</MarkdigVersion>
+    <MicrosoftAspNetCoreVersion>10.0.13</MicrosoftAspNetCoreVersion>
+    <MicrosoftExtensionsVersion>10.0.13</MicrosoftExtensionsVersion>
+    <XunitVersion>4.0.2</XunitVersion>
+    <MarkdigVersion>1.4.2</MarkdigVersion>
     <YamlDotNetVersion>18.1.0</YamlDotNetVersion>
-    <BunitVersion>2.11.3</BunitVersion>
+    <BunitVersion>2.12.5</BunitVersion>
   </PropertyGroup>
 
   <ItemGroup>
