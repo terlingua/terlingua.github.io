@@ -1,0 +1,21 @@
+<div class="progress-meter">
+    <div class="progress-meter-track"
+         role="progressbar"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         aria-valuenow="@ClampedPercent"
+         aria-label="@(Label ?? "Progress")">
+        <div class="progress-meter-fill" style="width: @(ClampedPercent)%"></div>
+    </div>
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <span class="progress-meter-label">@Label</span>
+    }
+</div>
+
+@code {
+    [Parameter] public int Percent { get; set; }
+    [Parameter] public string? Label { get; set; }
+
+    private int ClampedPercent => Math.Clamp(Percent, 0, 100);
+}

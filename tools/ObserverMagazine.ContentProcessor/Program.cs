@@ -1,10 +1,11 @@
 using System.Text.Json;
 using ObserverMagazine.ContentProcessor;
+using ObserverMagazine.ContentProcessor.Books;
 
-// Parse command-line arguments
 string contentDir = "content/blog";
 string outputDir = "src/ObserverMagazine.Web/wwwroot";
 string authorsDir = "content/authors";
+string booksDir = "content/books";
 DateTime publishBefore = DateTime.UtcNow;
 
 for (int i = 0; i < args.Length; i++)
@@ -15,6 +16,8 @@ for (int i = 0; i < args.Length; i++)
         outputDir = args[++i];
     else if (args[i] == "--authors-dir" && i + 1 < args.Length)
         authorsDir = args[++i];
+    else if (args[i] == "--books-dir" && i + 1 < args.Length)
+        booksDir = args[++i];
     else if (args[i] == "--publish-before" && i + 1 < args.Length)
         publishBefore = DateTime.Parse(args[++i]);
 }
@@ -22,9 +25,9 @@ for (int i = 0; i < args.Length; i++)
 Console.WriteLine($"Content directory: {contentDir}");
 Console.WriteLine($"Output directory:  {outputDir}");
 Console.WriteLine($"Authors directory: {authorsDir}");
+Console.WriteLine($"Books directory:   {booksDir}");
 Console.WriteLine($"Publish before:    {publishBefore:yyyy-MM-dd HH:mm:ss} UTC");
 
-// --- Process author profiles ---
 var authorProfiles = new Dictionary<string, AuthorProfile>(StringComparer.OrdinalIgnoreCase);
 
 if (Directory.Exists(authorsDir))
@@ -54,7 +57,6 @@ else
     Console.WriteLine($"Authors directory '{authorsDir}' does not exist. No author profiles loaded.");
 }
 
-// Write authors.json
 string blogDataDir = Path.Combine(outputDir, "blog-data");
 Directory.CreateDirectory(blogDataDir);
 
@@ -69,7 +71,6 @@ var authorsJson = JsonSerializer.Serialize(authorProfiles.Values.ToArray(), json
 File.WriteAllText(authorsPath, authorsJson);
 Console.WriteLine($"Wrote authors index: {authorsPath} ({authorProfiles.Count} authors)");
 
-// --- Process blog posts ---
 if (!Directory.Exists(contentDir))
 {
     Console.WriteLine($"Content directory '{contentDir}' does not exist. Creating with no posts.");
@@ -97,7 +98,6 @@ foreach (var mdFile in markdownFiles)
         continue;
     }
 
-    // Skip drafts
     if (frontMatter.Draft)
     {
         Console.WriteLine($"  SKIPPED: Draft post '{frontMatter.Title}'");
@@ -105,7 +105,6 @@ foreach (var mdFile in markdownFiles)
         continue;
     }
 
-    // Skip future-dated posts
     if (frontMatter.Date > publishBefore)
     {
         Console.WriteLine($"  SKIPPED: Future post '{frontMatter.Title}' (date: {frontMatter.Date:yyyy-MM-dd}, publish-before: {publishBefore:yyyy-MM-dd})");
@@ -113,14 +112,12 @@ foreach (var mdFile in markdownFiles)
         continue;
     }
 
-    // Derive slug from filename
     var fileName = Path.GetFileNameWithoutExtension(mdFile);
     var slug = FrontMatterParser.DeriveSlug(fileName);
 
     var html = MarkdownProcessor.ToHtml(markdownBody);
     var readingTime = FrontMatterParser.CalculateReadingTime(markdownBody);
 
-    // Resolve author display name
     var authorId = frontMatter.Author ?? "";
     var authorName = authorId;
     string? authorEmail = null;
@@ -134,7 +131,6 @@ foreach (var mdFile in markdownFiles)
         Console.WriteLine($"  WARNING: No author profile found for '{authorId}'");
     }
 
-    // Write individual post HTML
     var htmlPath = Path.Combine(blogDataDir, $"{slug}.html");
     File.WriteAllText(htmlPath, html);
     Console.WriteLine($"  Wrote: {htmlPath} (~{readingTime} min read)");
@@ -159,16 +155,13 @@ foreach (var mdFile in markdownFiles)
     });
 }
 
-// Sort by date descending
 allPostMetadata.Sort((a, b) => b.Date.CompareTo(a.Date));
 
-// Write posts index JSON
 var indexPath = Path.Combine(blogDataDir, "posts-index.json");
 var indexJson = JsonSerializer.Serialize(allPostMetadata, jsonOptions);
 File.WriteAllText(indexPath, indexJson);
 Console.WriteLine($"Wrote posts index: {indexPath} ({allPostMetadata.Count} posts, {skippedDrafts} drafts skipped, {skippedFuture} future posts skipped)");
 
-// Generate RSS feed with full post content
 var feedPath = Path.Combine(outputDir, "feed.xml");
 var rssXml = RssGenerator.Generate(
     title: "Terlingua Magazine",
@@ -180,9 +173,29 @@ var rssXml = RssGenerator.Generate(
 File.WriteAllText(feedPath, rssXml);
 Console.WriteLine($"Wrote RSS feed: {feedPath}");
 
+var bookDiagnostics = new BuildDiagnostics();
+var books = new BookCompiler(authorProfiles, publishBefore, bookDiagnostics, Console.Out).Compile(booksDir);
+
+foreach (var warning in bookDiagnostics.Warnings)
+{
+    Console.WriteLine($"  WARNING: {warning}");
+}
+
+if (bookDiagnostics.HasErrors)
+{
+    foreach (var error in bookDiagnostics.Errors)
+    {
+        Console.Error.WriteLine($"  ERROR: {error}");
+    }
+    Console.Error.WriteLine($"Book processing failed with {bookDiagnostics.Errors.Count} error(s).");
+    Environment.Exit(1);
+}
+
+var bookDataDir = BookOutputWriter.Write(books, outputDir, jsonOptions);
+Console.WriteLine($"Wrote book data: {bookDataDir} ({books.Count} books)");
+
 Console.WriteLine("Content processing complete.");
 
-// --- Types used by the index ---
 public sealed class PostIndexEntry
 {
     public string Slug { get; init; } = "";

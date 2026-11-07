@@ -7,21 +7,27 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configure HttpClient for fetching static data
 builder.Services.AddScoped(_ =>
     new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-// Register application services
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddSingleton<TelemetryService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
-// Configure logging
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBookAnalytics, BookAnalytics>();
+builder.Services.AddScoped<IndexedDbProgressStore>();
+builder.Services.AddScoped<IProgressStore>(sp => new FallbackProgressStore(
+    sp.GetRequiredService<IndexedDbProgressStore>(),
+    new InMemoryProgressStore(),
+    sp.GetRequiredService<ILogger<FallbackProgressStore>>()));
+builder.Services.AddScoped<IReadingProgressService, ReadingProgressService>();
+
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var host = builder.Build();
 
-// Log application startup
 var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("App");
 logger.LogInformation("Terlingua Magazine started at {Time}", DateTime.UtcNow);
 

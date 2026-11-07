@@ -1,0 +1,205 @@
+@page "/books/{BookSlug}/{ChapterSlug}/{SubchapterSlug}"
+@inject IBookService BookService
+@inject IReadingProgressService ProgressService
+@inject IBookAnalytics BookAnalytics
+@inject ILogger<BookReader> Logger
+
+<PageTitle>@(_content?.Title ?? "Book") — Terlingua Magazine</PageTitle>
+
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_toc is null || _location is null || _content is null)
+{
+    <h1>Section Not Found</h1>
+    <p>
+        Sorry, we couldn't find that section.
+        @if (_toc is not null)
+        {
+            <a href="books/@_toc.Slug">Back to @_toc.Title</a>
+        }
+        else
+        {
+            <a href="books">Back to Books</a>
+        }
+    </p>
+}
+else
+{
+    <nav class="reader-breadcrumbs" aria-label="Breadcrumb">
+        <a href="books">Books</a>
+        <span aria-hidden="true">›</span>
+        <a href="books/@_toc.Slug">@_toc.Title</a>
+        <span aria-hidden="true">›</span>
+        <span>Chapter @_location.Chapter.Number: @_location.Chapter.Title</span>
+    </nav>
+
+    <article class="book-reader">
+        <header class="reader-header">
+            <h1><span class="reader-number">@_location.Label</span> @_content.Title</h1>
+            <div class="blog-meta">
+                <span>@_content.ReadingTimeMinutes min read</span>
+                @if (_content.Questions.Length > 0)
+                {
+                    <span> · @_content.Questions.Length @(_content.Questions.Length == 1 ? "question" : "questions")</span>
+                }
+                @if (_readerCount.HasValue)
+                {
+                    <span> · @_readerCount @(_readerCount == 1 ? "reader" : "readers")</span>
+                }
+            </div>
+            <ProgressMeter Percent="@_completion.Percent"
+                           Label="@($"Book progress: {_completion.CompletedSubchapters} of {_completion.TotalSubchapters} sections complete")" />
+        </header>
+
+        <RichContent Html="@_content.Html" />
+
+        <SubchapterQuiz @key="_location.ProgressKey"
+                        BookSlug="@_toc.Slug"
+                        Content="_content"
+                        Progress="_subchapterProgress"
+                        OnProgressChanged="ApplyProgress" />
+
+        @if (!_isPersistent)
+        {
+            <p class="storage-note">This browser can't store progress, so it will reset when you leave the site.</p>
+        }
+
+        <nav class="reader-pager" aria-label="Section navigation">
+            @if (_neighbors.Previous is { } previous)
+            {
+                <a class="reader-pager-link is-previous" href="@previous.Href(_toc.Slug)">
+                    <span class="reader-pager-direction">&larr; Previous</span>
+                    <span class="reader-pager-title">@previous.Label @previous.Subchapter.Title</span>
+                </a>
+            }
+            else
+            {
+                <a class="reader-pager-link is-previous" href="books/@_toc.Slug">
+                    <span class="reader-pager-direction">&larr; Contents</span>
+                    <span class="reader-pager-title">@_toc.Title</span>
+                </a>
+            }
+
+            @if (_neighbors.Next is { } next)
+            {
+                <a class="reader-pager-link is-next" href="@next.Href(_toc.Slug)">
+                    <span class="reader-pager-direction">Next &rarr;</span>
+                    <span class="reader-pager-title">@next.Label @next.Subchapter.Title</span>
+                </a>
+            }
+            else
+            {
+                <a class="reader-pager-link is-next" href="books/@_toc.Slug">
+                    <span class="reader-pager-direction">Finished &rarr;</span>
+                    <span class="reader-pager-title">Back to contents</span>
+                </a>
+            }
+        </nav>
+    </article>
+}
+
+@code {
+    [Parameter] public string BookSlug { get; set; } = "";
+    [Parameter] public string ChapterSlug { get; set; } = "";
+    [Parameter] public string SubchapterSlug { get; set; } = "";
+
+    private bool _loading = true;
+    private BookToc? _toc;
+    private SubchapterLocation? _location;
+    private SubchapterContent? _content;
+    private SubchapterNeighbors _neighbors = new(null, null);
+    private SubchapterProgress? _subchapterProgress;
+    private BookCompletion _completion = BookCompletion.Empty;
+    private int? _readerCount;
+    private bool _isPersistent = true;
+    private string? _loadedKey;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var key = $"{BookSlug}/{ChapterSlug}/{SubchapterSlug}";
+        if (string.Equals(_loadedKey, key, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _loadedKey = key;
+        _loading = true;
+        _readerCount = null;
+
+        VisitOutcome? visit = null;
+        try
+        {
+            visit = await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load book section {Key}", key);
+            _content = null;
+        }
+        finally
+        {
+            _loading = false;
+        }
+
+        if (visit is null || _toc is null || _location is null)
+        {
+            return;
+        }
+
+        StateHasChanged();
+        await TrackVisitAsync(key, _toc.Slug, _location, visit);
+    }
+
+    private async Task<VisitOutcome?> LoadAsync()
+    {
+        _toc = await BookService.GetTocAsync(BookSlug);
+        _location = _toc is null ? null : BookNavigator.Find(_toc, ChapterSlug, SubchapterSlug);
+        _content = null;
+
+        if (_toc is null || _location is null)
+        {
+            return null;
+        }
+
+        _content = await BookService.GetSubchapterAsync(_toc.Slug, _location.Chapter.Slug, _location.Subchapter.Slug);
+        if (_content is null)
+        {
+            return null;
+        }
+
+        _neighbors = BookNavigator.GetNeighbors(_toc, _location);
+        var visit = await ProgressService.RecordVisitAsync(_toc.Slug, _location.Chapter.Slug, _location.Subchapter.Slug);
+        ApplyProgress(visit.Progress);
+        _isPersistent = await ProgressService.IsPersistentAsync();
+        return visit;
+    }
+
+    private async Task TrackVisitAsync(string key, string bookSlug, SubchapterLocation location, VisitOutcome visit)
+    {
+        if (visit.IsFirstVisitToBook)
+        {
+            await BookAnalytics.RecordBookStartedAsync(bookSlug);
+        }
+
+        await BookAnalytics.RecordSubchapterOpenedAsync(bookSlug, location.Chapter.Slug, location.Subchapter.Slug, visit.IsFirstVisitToSubchapter);
+        var count = await BookAnalytics.GetSubchapterReaderCountAsync(bookSlug, location.Chapter.Slug, location.Subchapter.Slug);
+
+        if (string.Equals(_loadedKey, key, StringComparison.Ordinal))
+        {
+            _readerCount = count;
+        }
+    }
+
+    private void ApplyProgress(BookProgress progress)
+    {
+        if (_toc is null || _location is null)
+        {
+            return;
+        }
+
+        _subchapterProgress = progress.Subchapters.GetValueOrDefault(_location.ProgressKey);
+        _completion = BookProgressCalculator.GetCompletion(_toc, progress);
+    }
+}

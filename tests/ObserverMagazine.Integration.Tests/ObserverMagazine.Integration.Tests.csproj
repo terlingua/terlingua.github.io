@@ -15,4 +15,8 @@
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\tools\ObserverMagazine.ContentProcessor\ObserverMagazine.ContentProcessor.csproj" />
+  </ItemGroup>
+
 </Project>

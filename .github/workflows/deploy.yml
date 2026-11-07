@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore
 
       - name: Run content processor (markdown → JSON + HTML)
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
 
       # ── Audio generation with caching ──────────────────────────────
       # Cache key is based on the content of all blog markdown files.

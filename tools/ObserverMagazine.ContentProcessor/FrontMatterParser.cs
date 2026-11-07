@@ -5,38 +5,39 @@ namespace ObserverMagazine.ContentProcessor;
 
 public static class FrontMatterParser
 {
+    private const string Delimiter = "---";
+    private const string ClosingDelimiter = "\n---";
+
     private static readonly IDeserializer Deserializer = new DeserializerBuilder()
         .WithNamingConvention(CamelCaseNamingConvention.Instance)
         .IgnoreUnmatchedProperties()
         .Build();
 
-    /// <summary>
-    /// Splits a markdown file into YAML front matter and markdown body.
-    /// Front matter is delimited by --- at the start and end.
-    /// </summary>
-    public static (FrontMatter FrontMatter, string MarkdownBody) Parse(string rawContent)
+    public static (FrontMatter FrontMatter, string MarkdownBody) Parse(string rawContent) =>
+        Parse<FrontMatter>(rawContent);
+
+    public static (T FrontMatter, string MarkdownBody) Parse<T>(string rawContent) where T : new()
     {
-        if (!rawContent.StartsWith("---"))
+        if (!rawContent.StartsWith(Delimiter, StringComparison.Ordinal))
         {
-            return (new FrontMatter(), rawContent);
+            return (new T(), rawContent);
         }
 
-        var endIndex = rawContent.IndexOf("---", 3, StringComparison.Ordinal);
+        var endIndex = rawContent.IndexOf(ClosingDelimiter, Delimiter.Length, StringComparison.Ordinal);
         if (endIndex < 0)
         {
-            return (new FrontMatter(), rawContent);
+            return (new T(), rawContent);
         }
 
-        var yamlBlock = rawContent[3..endIndex].Trim();
-        var body = rawContent[(endIndex + 3)..].TrimStart('\r', '\n');
+        var yamlBlock = rawContent[Delimiter.Length..endIndex].Trim();
+        var body = rawContent[(endIndex + ClosingDelimiter.Length)..].TrimStart('\r', '\n');
 
-        var frontMatter = Deserializer.Deserialize<FrontMatter>(yamlBlock);
-        return (frontMatter, body);
+        return (DeserializeYaml<T>(yamlBlock), body);
     }
 
-    /// <summary>
-    /// Parses an author YAML file into an AuthorProfile.
-    /// </summary>
+    public static T DeserializeYaml<T>(string yaml) where T : new() =>
+        string.IsNullOrWhiteSpace(yaml) ? new T() : Deserializer.Deserialize<T>(yaml) ?? new T();
+
     public static AuthorProfile? ParseAuthor(string yamlContent, string id)
     {
         try
@@ -51,13 +52,8 @@ public static class FrontMatterParser
         }
     }
 
-    /// <summary>
-    /// Derives a slug from a filename like "2026-01-15-welcome-to-observer-magazine".
-    /// Strips the leading date prefix if present.
-    /// </summary>
     public static string DeriveSlug(string fileName)
     {
-        // Pattern: YYYY-MM-DD-rest-of-slug
         if (fileName.Length > 11 &&
             char.IsDigit(fileName[0]) &&
             fileName[4] == '-' &&
@@ -69,10 +65,6 @@ public static class FrontMatterParser
         return fileName;
     }
 
-    /// <summary>
-    /// Calculates estimated reading time in minutes from markdown text.
-    /// Uses 200 words per minute, minimum 1 minute.
-    /// </summary>
     public static int CalculateReadingTime(string markdownBody)
     {
         var wordCount = markdownBody

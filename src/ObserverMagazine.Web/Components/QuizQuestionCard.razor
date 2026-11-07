@@ -1,0 +1,187 @@
+<fieldset class="quiz-question @StateClass" id="@ElementId">
+    <legend class="quiz-legend">
+        <span class="quiz-number">Question @Number</span>
+        <span class="quiz-mode">@(Question.MultipleAnswers ? "Select all that apply" : "Select one answer")</span>
+    </legend>
+
+    <div class="quiz-prompt">@((MarkupString)Question.PromptHtml)</div>
+
+    <ul class="quiz-options">
+        @foreach (var option in Question.Options)
+        {
+            var inputId = $"{ElementId}-{option.Id}";
+            <li class="@OptionClass(option)">
+                <input type="@(Question.MultipleAnswers ? "checkbox" : "radio")"
+                       id="@inputId"
+                       name="@ElementId"
+                       value="@option.Id"
+                       checked="@_selected.Contains(option.Id)"
+                       disabled="@IsLocked"
+                       @onchange="e => OnOptionChanged(option.Id, e)" />
+                <label for="@inputId">@((MarkupString)option.TextHtml)</label>
+            </li>
+        }
+    </ul>
+
+    <div class="quiz-actions">
+        @if (_result is null)
+        {
+            <button type="button" class="btn btn-primary btn-sm quiz-submit" disabled="@(_selected.Count == 0)" @onclick="SubmitAsync">
+                Check answer
+            </button>
+        }
+        else if (!_result.IsCorrect)
+        {
+            <button type="button" class="btn btn-outline btn-sm quiz-retry" @onclick="Retry">Try again</button>
+            if (!_revealed)
+            {
+                <button type="button" class="btn btn-outline btn-sm quiz-reveal" @onclick="Reveal">Show answer</button>
+            }
+        }
+        @if (_attempts > 0)
+        {
+            <span class="quiz-attempts">@_attempts @(_attempts == 1 ? "attempt" : "attempts")</span>
+        }
+    </div>
+
+    @if (_result is not null)
+    {
+        <div class="quiz-feedback" role="status" aria-live="polite">
+            @if (_result.IsCorrect)
+            {
+                <strong class="quiz-verdict">Correct!</strong>
+            }
+            else
+            {
+                <strong class="quiz-verdict">Not quite.</strong>
+                if (Question.MultipleAnswers && !_revealed)
+                {
+                    <span> Select every correct answer and nothing else.</span>
+                }
+            }
+            @if (ShowSolution && !string.IsNullOrEmpty(Question.ExplanationHtml))
+            {
+                <div class="quiz-explanation">@((MarkupString)Question.ExplanationHtml)</div>
+            }
+        </div>
+    }
+</fieldset>
+
+@code {
+    [Parameter, EditorRequired] public QuizQuestion Question { get; set; } = null!;
+    [Parameter] public int Number { get; set; } = 1;
+    [Parameter] public QuestionProgress? InitialProgress { get; set; }
+    [Parameter] public EventCallback<QuizAnswer> OnAnswered { get; set; }
+
+    private readonly HashSet<string> _selected = new(StringComparer.Ordinal);
+    private QuizResult? _result;
+    private bool _revealed;
+    private int _attempts;
+
+    private string ElementId => $"quiz-{Question.Id}";
+    private bool IsLocked => _result is not null;
+    private bool ShowSolution => _result is { IsCorrect: true } || _revealed;
+
+    private string StateClass => _result switch
+    {
+        null => "",
+        { IsCorrect: true } => "is-correct",
+        _ => "is-incorrect"
+    };
+
+    protected override void OnInitialized()
+    {
+        if (InitialProgress is null)
+        {
+            return;
+        }
+
+        _attempts = InitialProgress.Attempts;
+        if (!InitialProgress.LastAttemptCorrect)
+        {
+            return;
+        }
+
+        var restored = QuizEvaluator.Evaluate(Question, InitialProgress.LastSelection);
+        if (restored.IsCorrect)
+        {
+            _selected.UnionWith(restored.Selected);
+            _result = restored;
+        }
+    }
+
+    private string OptionClass(QuizOption option)
+    {
+        var classes = new List<string> { "quiz-option" };
+        if (_selected.Contains(option.Id))
+        {
+            classes.Add("is-selected");
+        }
+
+        if (_result is not null)
+        {
+            if (ShowSolution && option.Correct)
+            {
+                classes.Add("is-answer");
+            }
+            if (_result.IsWronglySelected(option.Id))
+            {
+                classes.Add("is-wrong");
+            }
+        }
+
+        return string.Join(' ', classes);
+    }
+
+    private void OnOptionChanged(string optionId, ChangeEventArgs e)
+    {
+        if (IsLocked)
+        {
+            return;
+        }
+
+        if (!Question.MultipleAnswers)
+        {
+            _selected.Clear();
+            _selected.Add(optionId);
+            return;
+        }
+
+        var isChecked = e.Value switch
+        {
+            bool b => b,
+            string s => bool.TryParse(s, out var parsed) && parsed,
+            _ => false
+        };
+
+        if (isChecked)
+        {
+            _selected.Add(optionId);
+        }
+        else
+        {
+            _selected.Remove(optionId);
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_selected.Count == 0 || _result is not null)
+        {
+            return;
+        }
+
+        _result = QuizEvaluator.Evaluate(Question, _selected);
+        _attempts++;
+        await OnAnswered.InvokeAsync(new QuizAnswer(Question, _selected.ToArray(), _result));
+    }
+
+    private void Retry()
+    {
+        _result = null;
+        _revealed = false;
+        _selected.Clear();
+    }
+
+    private void Reveal() => _revealed = true;
+}

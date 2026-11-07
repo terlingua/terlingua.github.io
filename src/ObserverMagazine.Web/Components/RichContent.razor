@@ -1,0 +1,45 @@
+@inject IJSRuntime Js
+@inject ILogger<RichContent> Logger
+
+<div class="blog-content">
+    @((MarkupString)_processedHtml)
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Html { get; set; } = "";
+
+    private string _processedHtml = "";
+    private string? _sourceHtml;
+    private bool _enhancementPending;
+
+    protected override void OnParametersSet()
+    {
+        if (string.Equals(_sourceHtml, Html, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _sourceHtml = Html;
+        _processedHtml = HtmlPostProcessor.Process(Html);
+        _enhancementPending = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_enhancementPending)
+        {
+            return;
+        }
+
+        _enhancementPending = false;
+        try
+        {
+            await Js.InvokeVoidAsync("observerHighlight.highlightAll");
+            await Js.InvokeVoidAsync("observerCodeScroll.init");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogDebug(ex, "Post-render content enhancement failed");
+        }
+    }
+}

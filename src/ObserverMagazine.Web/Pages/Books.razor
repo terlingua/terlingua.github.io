@@ -1,0 +1,128 @@
+@page "/books"
+@inject IBookService BookService
+@inject IReadingProgressService ProgressService
+@inject IBookAnalytics BookAnalytics
+@inject IAnalyticsService Analytics
+@inject ILogger<Books> Logger
+
+<PageTitle>Books — Terlingua Magazine</PageTitle>
+
+<h1>Books</h1>
+<p class="books-intro">
+    Read chapter by chapter and check your understanding with short quizzes.
+    Your progress is saved in this browser.
+</p>
+
+@if (_books is null)
+{
+    <p><em>Loading books...</em></p>
+}
+else if (_books.Length == 0)
+{
+    <p>No books have been published yet.</p>
+}
+else
+{
+    <div class="book-list">
+        @foreach (var book in _books)
+        {
+            var completion = _completions.GetValueOrDefault(book.Slug);
+            var readers = _readerCounts.GetValueOrDefault(book.Slug);
+            <article class="book-card">
+                <h2><a href="books/@book.Slug">@book.Title</a></h2>
+                <div class="blog-meta">
+                    @if (!string.IsNullOrEmpty(book.AuthorName))
+                    {
+                        <span>@book.AuthorName · </span>
+                    }
+                    <span>@book.ChapterCount @(book.ChapterCount == 1 ? "chapter" : "chapters")</span>
+                    <span> · @book.SubchapterCount sections</span>
+                    @if (book.QuestionCount > 0)
+                    {
+                        <span> · @book.QuestionCount questions</span>
+                    }
+                    @if (book.ReadingTimeMinutes > 0)
+                    {
+                        <span> · @book.ReadingTimeMinutes min read</span>
+                    }
+                    @if (readers.HasValue)
+                    {
+                        <span> · @readers @(readers == 1 ? "reader" : "readers")</span>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(book.Summary))
+                {
+                    <p>@book.Summary</p>
+                }
+                @if (completion is not null)
+                {
+                    <ProgressMeter Percent="@completion.Percent"
+                                   Label="@($"{completion.Percent}% complete · {completion.CompletedSubchapters} of {completion.TotalSubchapters} sections")" />
+                }
+                @if (book.Tags is { Length: > 0 })
+                {
+                    <div class="tag-list">
+                        @foreach (var tag in book.Tags)
+                        {
+                            <span class="tag">@tag</span>
+                        }
+                    </div>
+                }
+            </article>
+        }
+    </div>
+}
+
+@code {
+    private BookSummary[]? _books;
+    private readonly Dictionary<string, BookCompletion> _completions = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int?> _readerCounts = new(StringComparer.Ordinal);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _books = await BookService.GetBooksAsync();
+            await LoadCompletionsAsync(_books);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load books");
+            _books ??= [];
+        }
+
+        StateHasChanged();
+        await Analytics.TrackPageViewAsync("Books", $"{_books.Length} books");
+        await LoadReaderCountsAsync(_books);
+    }
+
+    private async Task LoadCompletionsAsync(IEnumerable<BookSummary> books)
+    {
+        foreach (var book in books)
+        {
+            var progress = await ProgressService.GetAsync(book.Slug);
+            if (!progress.IsStarted)
+            {
+                continue;
+            }
+
+            var toc = await BookService.GetTocAsync(book.Slug);
+            if (toc is not null)
+            {
+                _completions[book.Slug] = BookProgressCalculator.GetCompletion(toc, progress);
+            }
+        }
+    }
+
+    private async Task LoadReaderCountsAsync(IEnumerable<BookSummary> books)
+    {
+        var lookups = books.Select(async b => (b.Slug, Count: await BookAnalytics.GetReaderCountAsync(b.Slug)));
+        foreach (var (slug, count) in await Task.WhenAll(lookups))
+        {
+            if (count.HasValue)
+            {
+                _readerCounts[slug] = count;
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+.progress-meter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.progress-meter-track {
+    height: 0.5rem;
+    border-radius: 99rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+}
+
+.progress-meter-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+.progress-meter-label {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}

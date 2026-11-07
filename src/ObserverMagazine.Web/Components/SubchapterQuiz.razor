@@ -1,0 +1,56 @@
+@inject IReadingProgressService ProgressService
+@inject IBookAnalytics BookAnalytics
+
+@if (Content.Questions.Length > 0)
+{
+    <section class="subchapter-quiz" aria-labelledby="quiz-heading">
+        <header class="quiz-header">
+            <h2 id="quiz-heading">Check your understanding</h2>
+            <span class="quiz-score">@CorrectCount of @Content.Questions.Length answered correctly</span>
+        </header>
+
+        @for (var i = 0; i < Content.Questions.Length; i++)
+        {
+            var question = Content.Questions[i];
+            var number = i + 1;
+            <QuizQuestionCard @key="question.Id"
+                              Question="question"
+                              Number="number"
+                              InitialProgress="GetQuestionProgress(question.Id)"
+                              OnAnswered="HandleAnsweredAsync" />
+        }
+
+        @if (CorrectCount == Content.Questions.Length)
+        {
+            <p class="quiz-complete" role="status">Nice work, you have completed this section.</p>
+        }
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired] public string BookSlug { get; set; } = "";
+    [Parameter, EditorRequired] public SubchapterContent Content { get; set; } = null!;
+    [Parameter] public SubchapterProgress? Progress { get; set; }
+    [Parameter] public EventCallback<BookProgress> OnProgressChanged { get; set; }
+
+    private int CorrectCount => Progress is { } progress
+        ? Content.Questions.Count(q => progress.Questions.TryGetValue(q.Id, out var p) && p.AnsweredCorrectly)
+        : 0;
+
+    private QuestionProgress? GetQuestionProgress(string questionId) =>
+        Progress?.Questions.GetValueOrDefault(questionId);
+
+    private async Task HandleAnsweredAsync(QuizAnswer answer)
+    {
+        var progress = await ProgressService.RecordAnswerAsync(
+            BookSlug,
+            Content.ChapterSlug,
+            Content.Slug,
+            answer.Question.Id,
+            answer.SelectedOptionIds,
+            answer.Result.IsCorrect);
+
+        await OnProgressChanged.InvokeAsync(progress);
+        await BookAnalytics.RecordQuizAnswerAsync(BookSlug, Content.ChapterSlug, Content.Slug, answer.Question.Id, answer.Result.IsCorrect);
+    }
+}

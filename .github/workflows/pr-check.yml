@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore
 
       - name: Run content processor
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
 
       # Microsoft.Testing.Platform mode (opted in via global.json).
       - name: Run tests

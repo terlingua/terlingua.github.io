@@ -1,0 +1,247 @@
+@page "/books/{BookSlug}"
+@inject IBookService BookService
+@inject IBlogService BlogService
+@inject IReadingProgressService ProgressService
+@inject IBookAnalytics BookAnalytics
+@inject IAnalyticsService Analytics
+@inject ILogger<BookDetail> Logger
+
+<PageTitle>@(_toc?.Title ?? "Book") — Terlingua Magazine</PageTitle>
+
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_toc is null)
+{
+    <h1>Book Not Found</h1>
+    <p>Sorry, we couldn't find that book. <a href="books">Back to Books</a></p>
+}
+else
+{
+    <article class="book-detail">
+        <header class="book-header">
+            <h1>@_toc.Title</h1>
+            <div class="blog-meta">
+                @if (!string.IsNullOrEmpty(_toc.AuthorName))
+                {
+                    <span>@_toc.AuthorName · </span>
+                }
+                <span>@_toc.Chapters.Length @(_toc.Chapters.Length == 1 ? "chapter" : "chapters")</span>
+                <span> · @_toc.SubchapterCount sections</span>
+                @if (_toc.QuestionCount > 0)
+                {
+                    <span> · @_toc.QuestionCount questions</span>
+                }
+                @if (_readerCount.HasValue)
+                {
+                    <span> · @_readerCount @(_readerCount == 1 ? "reader" : "readers")</span>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(_toc.Summary))
+            {
+                <p class="book-summary">@_toc.Summary</p>
+            }
+
+            @if (_toc.Tags is { Length: > 0 })
+            {
+                <div class="tag-list">
+                    @foreach (var tag in _toc.Tags)
+                    {
+                        <span class="tag">@tag</span>
+                    }
+                </div>
+            }
+
+            <div class="book-progress-panel">
+                <ProgressMeter Percent="@_completion.Percent" Label="@ProgressLabel" />
+                <div class="book-actions">
+                    @if (_continue is not null)
+                    {
+                        <a class="btn btn-primary" href="@_continue.Href(_toc.Slug)">
+                            @(_progress?.IsStarted == true ? "Continue" : "Start reading") · @_continue.Label
+                        </a>
+                    }
+                    @if (_progress?.IsStarted == true)
+                    {
+                        if (_confirmReset)
+                        {
+                            <span class="reset-confirm">
+                                Reset all progress for this book?
+                                <button type="button" class="btn btn-danger btn-sm" @onclick="ResetAsync">Reset</button>
+                                <button type="button" class="btn btn-outline btn-sm" @onclick="() => _confirmReset = false">Cancel</button>
+                            </span>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-outline btn-sm" @onclick="() => _confirmReset = true">Reset progress</button>
+                        }
+                    }
+                </div>
+                @if (!_isPersistent)
+                {
+                    <p class="storage-note">This browser can't store progress, so it will reset when you leave the site.</p>
+                }
+            </div>
+        </header>
+
+        <section class="book-toc" aria-labelledby="toc-heading">
+            <h2 id="toc-heading">Contents</h2>
+            <ol class="chapter-list">
+                @foreach (var chapter in _toc.Chapters)
+                {
+                    <li class="chapter-item">
+                        <h3 class="chapter-title">
+                            <span class="chapter-number">Chapter @chapter.Number</span>
+                            @chapter.Title
+                        </h3>
+                        @if (!string.IsNullOrEmpty(chapter.Summary))
+                        {
+                            <p class="chapter-summary">@chapter.Summary</p>
+                        }
+                        <ol class="subchapter-list">
+                            @foreach (var subchapter in chapter.Subchapters)
+                            {
+                                var location = new SubchapterLocation(chapter, subchapter);
+                                var status = BookProgressCalculator.GetStatus(location, _progress);
+                                var subProgress = _progress?.Subchapters.GetValueOrDefault(location.ProgressKey);
+                                <li class="@($"subchapter-item {StatusCss(status)}")">
+                                    <span class="status-icon" role="img" aria-label="@StatusText(status)" title="@StatusText(status)">@StatusGlyph(status)</span>
+                                    <a href="@location.Href(_toc.Slug)">
+                                        <span class="subchapter-number">@location.Label</span>
+                                        @subchapter.Title
+                                    </a>
+                                    <span class="subchapter-meta">
+                                        @subchapter.ReadingTimeMinutes min
+                                        @if (subchapter.QuestionIds.Length > 0)
+                                        {
+                                            <span> · @(BookProgressCalculator.CountCorrect(subchapter, subProgress))/@(subchapter.QuestionIds.Length) correct</span>
+                                        }
+                                    </span>
+                                </li>
+                            }
+                        </ol>
+                    </li>
+                }
+            </ol>
+        </section>
+
+        <AuthorCard Author="_author" />
+
+        <footer class="book-footer">
+            <a href="books">&larr; All books</a>
+        </footer>
+    </article>
+}
+
+@code {
+    [Parameter] public string BookSlug { get; set; } = "";
+
+    private bool _loading = true;
+    private BookToc? _toc;
+    private BookProgress? _progress;
+    private BookCompletion _completion = BookCompletion.Empty;
+    private SubchapterLocation? _continue;
+    private AuthorProfile? _author;
+    private int? _readerCount;
+    private bool _isPersistent = true;
+    private bool _confirmReset;
+    private string? _loadedSlug;
+
+    private string ProgressLabel =>
+        _completion.TotalQuestions > 0
+            ? $"{_completion.Percent}% complete · {_completion.CompletedSubchapters} of {_completion.TotalSubchapters} sections · {_completion.CorrectQuestions} of {_completion.TotalQuestions} questions correct"
+            : $"{_completion.Percent}% complete · {_completion.CompletedSubchapters} of {_completion.TotalSubchapters} sections";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.Equals(_loadedSlug, BookSlug, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _loadedSlug = BookSlug;
+        _loading = true;
+        _readerCount = null;
+        _confirmReset = false;
+
+        try
+        {
+            _toc = await BookService.GetTocAsync(BookSlug);
+            if (_toc is not null)
+            {
+                ApplyProgress(await ProgressService.GetAsync(_toc.Slug));
+                _isPersistent = await ProgressService.IsPersistentAsync();
+                _author = string.IsNullOrEmpty(_toc.Author) ? null : await BlogService.GetAuthorAsync(_toc.Author);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load book {Slug}", BookSlug);
+            _toc = null;
+        }
+        finally
+        {
+            _loading = false;
+        }
+
+        if (_toc is null)
+        {
+            return;
+        }
+
+        StateHasChanged();
+        var slug = _toc.Slug;
+        await Analytics.TrackPageViewAsync("Book", slug);
+        var count = await BookAnalytics.GetReaderCountAsync(slug);
+        if (string.Equals(_toc?.Slug, slug, StringComparison.Ordinal))
+        {
+            _readerCount = count;
+        }
+    }
+
+    private void ApplyProgress(BookProgress progress)
+    {
+        if (_toc is null)
+        {
+            return;
+        }
+
+        _progress = progress;
+        _completion = BookProgressCalculator.GetCompletion(_toc, progress);
+        _continue = BookProgressCalculator.GetContinueLocation(_toc, progress);
+    }
+
+    private async Task ResetAsync()
+    {
+        if (_toc is null)
+        {
+            return;
+        }
+
+        ApplyProgress(await ProgressService.ResetAsync(_toc.Slug));
+        _confirmReset = false;
+    }
+
+    private static string StatusCss(SubchapterStatus status) => status switch
+    {
+        SubchapterStatus.Completed => "is-completed",
+        SubchapterStatus.InProgress => "is-in-progress",
+        _ => "is-not-started"
+    };
+
+    private static string StatusText(SubchapterStatus status) => status switch
+    {
+        SubchapterStatus.Completed => "Completed",
+        SubchapterStatus.InProgress => "In progress",
+        _ => "Not started"
+    };
+
+    private static string StatusGlyph(SubchapterStatus status) => status switch
+    {
+        SubchapterStatus.Completed => "✓",
+        SubchapterStatus.InProgress => "◐",
+        _ => "○"
+    };
+}
