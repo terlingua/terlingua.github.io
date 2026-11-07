@@ -1,6 +1,6 @@
 ===============================================================================
 PROJECT EXPORT: terlingua.github.io
-DATE: 2026-11-07 23:12:18 UTC
+DATE: 2026-11-07 23:13:29 UTC
 ===============================================================================
 
 ===============================================================================
@@ -597,8 +597,8 @@ FILE: Directory.Packages.props
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <!-- Version variables — touch these to update all related packages -->
-    <MicrosoftAspNetCoreVersion>10.0.13</MicrosoftAspNetCoreVersion>
-    <MicrosoftExtensionsVersion>10.0.13</MicrosoftExtensionsVersion>
+    <MicrosoftAspNetCoreVersion>10.0.14</MicrosoftAspNetCoreVersion>
+    <MicrosoftExtensionsVersion>10.0.14</MicrosoftExtensionsVersion>
     <XunitVersion>4.0.2</XunitVersion>
     <MarkdigVersion>1.6.0</MarkdigVersion>
     <YamlDotNetVersion>18.1.0</YamlDotNetVersion>
