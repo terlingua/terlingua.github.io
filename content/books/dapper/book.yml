@@ -1,0 +1,9 @@
+title: "Dapper: Fast, Honest Data Access"
+author: terlingua-team
+summary: Learn Dapper, the micro-ORM for .NET — queries, parameters, mapping, multi-mapping, transactions, stored procedures, type handlers, and how to structure, secure and test a Dapper data layer.
+date: 2026-11-04
+tags:
+  - dapper
+  - sql
+  - dotnet
+  - data-access

@@ -1,0 +1,2 @@
+title: Dependency Inversion Principle
+summary: High-level policy should not depend on low-level detail — both depend on abstractions.

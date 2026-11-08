@@ -1,0 +1,9 @@
+title: Clean Code in C#
+author: terlingua-team
+summary: Practical habits for writing C# that other people can read, test and change — names, functions, error handling, classes, tests, code smells and refactoring.
+date: 2026-11-06
+tags:
+  - clean-code
+  - refactoring
+  - testing
+  - csharp

@@ -1,0 +1,8 @@
+title: Microsoft Azure for .NET Developers
+author: terlingua-team
+summary: Core Azure concepts and services from a developer's point of view — the resource hierarchy, Entra ID and managed identities, App Service, Functions and containers, storage and databases, messaging, networking, monitoring, Bicep and governance.
+date: 2026-11-02
+tags:
+  - azure
+  - cloud
+  - dotnet

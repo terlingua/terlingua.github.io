@@ -1,0 +1,9 @@
+title: SOLID Principles in C#
+author: terlingua-team
+summary: The five SOLID principles explained from first principles, with C# examples that show the problem, the refactoring and the trade-offs — including when not to apply them.
+date: 2026-11-07
+tags:
+  - solid
+  - design
+  - csharp
+  - dotnet

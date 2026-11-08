@@ -1,0 +1,2 @@
+title: Data Access with EF Core
+summary: DbContext, queries, change tracking, migrations and what EF Core 10 adds.

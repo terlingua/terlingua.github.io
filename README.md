@@ -79,6 +79,29 @@ Markdown body…
 - Invalid content (no correct option, fewer than two options, unnumbered files, missing
   `chapter.yml`, bad YAML, duplicate ids) fails the build with a list of errors.
 
+### Library
+
+| Book | Slug | Focus |
+|------|------|-------|
+| .NET 10 and Modern C# | `modern-dotnet` | SDK, C# 14, async, hosting, minimal APIs, EF Core 10, architecture, testing, AOT |
+| Modern Web Development with Blazor | `modern-blazor` | Render modes, component reuse, forms, routing, state, interop, security, Hybrid |
+| SOLID Principles in C# | `solid-principles` | The five principles, refactorings and trade-offs |
+| Clean Code in C# | `clean-code` | Naming, functions, errors, classes, tests, smells, refactoring |
+| Dapper: Fast, Honest Data Access | `dapper` | Queries, parameters, mapping, transactions, architecture, testing |
+| The Databricks Data Intelligence Platform | `databricks-platform` | Spark, Delta Lake, Unity Catalog, pipelines, jobs, SQL, MLflow, GenAI |
+| Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
+| Amazon Web Services for Builders | `amazon-web-services` | IAM, compute, storage, databases, integration, VPC, IaC, cost |
+| Blazor WebAssembly Basics | `blazor-basics` | A short introduction |
+
+Content guidelines for new sections:
+
+- Open with a "Learning objectives" list and keep each section focused on one concept
+- Prefer small, compilable code snippets with a language on every code fence
+- Write three or more questions per section, mixing single- and multiple-answer questions,
+  with an `explanation` on every question
+- Vary the position of the correct option; the UI does not shuffle options
+- Quote YAML values that contain `: `, ` #` or start with a backtick or `@`
+
 ### Progress and analytics
 
 - A section is complete when every question has been answered correctly, or, if it has
@@ -127,11 +150,11 @@ xUnit configuration for MTP lives in `testconfig.json` next to a test project
 
 | Component | Technology | License |
 |-----------|-----------|---------|
-| Framework | .NET 10 / Blazor WASM 10.0.12 | MIT |
-| Markdown | Markdig 1.3.2 | BSD-2-Clause |
+| Framework | .NET 10 / Blazor WASM 10.0.14 | MIT |
+| Markdown | Markdig 1.6.0 | BSD-2-Clause |
 | YAML | YamlDotNet 18.1.0 | MIT |
-| Test framework | xUnit.net v3 4.0.1 | Apache-2.0 |
-| Component testing | bUnit 2.10.3 | MIT |
+| Test framework | xUnit.net v3 4.0.2 | Apache-2.0 |
+| Component testing | bUnit 2.14.0 | MIT |
 | Test runner | Microsoft.Testing.Platform v2 | MIT |
 
 All dependencies are free for any use — no payment required, ever.

@@ -1,0 +1,8 @@
+title: Amazon Web Services for Builders
+author: terlingua-team
+summary: The core of AWS for application developers — global infrastructure, accounts and IAM, EC2, Lambda and containers, S3 and storage, RDS, Aurora and DynamoDB, messaging, VPC networking, observability, infrastructure as code, security and cost — with .NET examples.
+date: 2026-11-01
+tags:
+  - aws
+  - cloud
+  - dotnet

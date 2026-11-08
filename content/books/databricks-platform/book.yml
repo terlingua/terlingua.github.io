@@ -1,0 +1,10 @@
+title: The Databricks Data Intelligence Platform
+author: terlingua-team
+summary: A comprehensive guide to Databricks — the lakehouse, Apache Spark, Delta Lake, Unity Catalog, Auto Loader, streaming, Lakeflow pipelines and jobs, compute, Asset Bundles, Databricks SQL, MLflow, generative AI and cost management.
+date: 2026-11-03
+tags:
+  - databricks
+  - spark
+  - delta-lake
+  - data-engineering
+  - lakehouse

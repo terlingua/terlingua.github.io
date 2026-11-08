@@ -1,0 +1,2 @@
+title: Open/Closed Principle
+summary: Adding behaviour by adding code, not by editing code that already works.

@@ -1,0 +1,9 @@
+title: Modern Web Development with Blazor
+author: terlingua-team
+summary: All of Blazor — static SSR, Interactive Server, WebAssembly, Auto and Hybrid — with a focus on reusable components, forms, routing, state, JavaScript interop, security, performance and testing on .NET 10.
+date: 2026-11-05
+tags:
+  - blazor
+  - dotnet
+  - web
+  - components

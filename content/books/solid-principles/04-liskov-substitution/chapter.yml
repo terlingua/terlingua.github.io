@@ -1,0 +1,2 @@
+title: Liskov Substitution Principle
+summary: Subtypes must keep the promises of their base types.

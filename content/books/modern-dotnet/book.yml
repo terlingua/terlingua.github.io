@@ -1,0 +1,10 @@
+title: .NET 10 and Modern C#
+author: terlingua-team
+summary: A comprehensive tour of modern .NET — the SDK, C# 14, async and performance, the generic host, minimal APIs, EF Core, clean architecture, testing and deployment — with SOLID and clean-code practices applied throughout.
+date: 2026-11-07
+tags:
+  - dotnet
+  - csharp
+  - aspnetcore
+  - solid
+  - clean-code
