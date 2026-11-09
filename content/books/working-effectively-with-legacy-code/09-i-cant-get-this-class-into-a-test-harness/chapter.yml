@@ -1,0 +1,2 @@
+title: "I Can't Get This Class into a Test Harness (Chapter 9)"
+summary: "Seven cases — irritating, hidden, blob, global, include, onion and aliased dependencies — and the techniques that get a class instantiated under test."

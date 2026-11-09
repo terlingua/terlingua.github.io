@@ -1,0 +1,2 @@
+title: "I Can't Run This Method in a Test Harness (Chapter 10)"
+summary: "Private methods, sealed library types and side effects you can't observe — and how to test methods anyway."

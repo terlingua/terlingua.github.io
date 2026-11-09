@@ -1,0 +1,2 @@
+title: "Sensing and Separation (Chapter 3)"
+summary: "The two reasons to break dependencies, and fake and mock objects as the dominant technique for sensing."

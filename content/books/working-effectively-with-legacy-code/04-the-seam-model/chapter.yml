@@ -1,0 +1,2 @@
+title: "The Seam Model (Chapter 4)"
+summary: "Seeing a program as a set of places where behaviour can be swapped — preprocessing, link and object seams, each with an enabling point."

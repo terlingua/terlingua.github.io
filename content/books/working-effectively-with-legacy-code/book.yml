@@ -1,0 +1,10 @@
+title: "Working Effectively with Legacy Code: A Companion"
+author: "terlingua-team"
+summary: "A chapter-by-chapter study companion to Michael Feathers' classic. Short notes connect each idea to modern .NET, CI and tooling, and hundreds of reasoning-focused quiz questions cite the exact passage in the book so you can check yourself without juggling two screens."
+date: 2026-11-09
+tags:
+  - "legacy-code"
+  - "refactoring"
+  - "testing"
+  - "dependency-breaking"
+  - "book-companion"

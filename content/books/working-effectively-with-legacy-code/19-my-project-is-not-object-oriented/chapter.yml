@@ -1,0 +1,2 @@
+title: "My Project Is Not Object Oriented. How Do I Make Safe Changes? (Chapter 19)"
+summary: "Testing procedural code with link and preprocessing seams, separating pure logic from dependencies, function-pointer seams, and migrating toward objects."

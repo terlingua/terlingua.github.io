@@ -83,12 +83,12 @@ Markdown body…
 
 | Book | Slug | Focus |
 |------|------|-------|
-| Sustainable Energy — Without the Hot Air: A Quiz Companion | `sustainable-energy-without-the-hot-air` | Self-test companion to David MacKay's free book: 43 chapters mirroring its chapters and sections, page pointers, errata, quotes in every explanation |
 | Nutrition Science: What We Know and What We Don't | `nutrition-science` | Evidence-graded diet and nutrition: energy, macro- and micronutrients, patterns, disease, life stages, food safety, myths |
 | .NET 10 and Modern C# | `modern-dotnet` | SDK, C# 14, async, hosting, minimal APIs, EF Core 10, architecture, testing, AOT |
 | Modern Web Development with Blazor | `modern-blazor` | Render modes, component reuse, forms, routing, state, interop, security, Hybrid |
 | SOLID Principles in C# | `solid-principles` | The five principles, refactorings and trade-offs |
 | Clean Code in C# | `clean-code` | Naming, functions, errors, classes, tests, smells, refactoring |
+| Working Effectively with Legacy Code: A Companion | `working-effectively-with-legacy-code` | Chapter-by-chapter quizzes for Feathers' book: seams, characterization tests, sprouting and wrapping, the 24 dependency-breaking techniques |
 | Dapper: Fast, Honest Data Access | `dapper` | Queries, parameters, mapping, transactions, architecture, testing |
 | The Databricks Data Intelligence Platform | `databricks-platform` | Spark, Delta Lake, Unity Catalog, pipelines, jobs, SQL, MLflow, GenAI |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
@@ -102,8 +102,8 @@ Content guidelines for new sections:
 - Write three or more questions per section, mixing single- and multiple-answer questions,
   with an `explanation` on every question
 - Vary the position of the correct option; the UI does not shuffle options
+- Companions to published books follow the original chapter and section order, quote only short passages, and put each quotation inside “ ” in the `explanation` so it can be checked against the source
 - Non-software books may grade claims by certainty; `nutrition-science` uses Established, Strong, Uncertain and Not supported, and cites sources at the end of each section
-- Companion books to an existing work (such as `sustainable-energy-without-the-hot-air`) do not reproduce the source text: each section points to the source's pages, lists learning objectives and any errata, and every explanation quotes a short fragment of the source or its errata with a page reference
 - Quote option text that YAML would read as a boolean, number or null (`"Yes"`, `"50"`), and avoid `yes`, `no`, `null`, `true` and `false` as ids
 - Quote YAML values that contain `: `, ` #` or start with a backtick or `@`
 

@@ -1,0 +1,2 @@
+title: "This Class Is Too Big and I Don't Want It to Get Any Bigger (Chapter 20)"
+summary: "The problems of big classes, the Single Responsibility Principle, seven heuristics for seeing responsibilities, feature sketches, ISP, and safe class extraction without tests."

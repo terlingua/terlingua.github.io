@@ -1,0 +1,2 @@
+title: "I'm Changing the Same Code All Over the Place (Chapter 21)"
+summary: "Zealously removing duplication from two command classes — starting small, pulling up behaviour, and watching an orthogonal, open/closed design emerge."
