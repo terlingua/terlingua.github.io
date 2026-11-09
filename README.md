@@ -83,6 +83,7 @@ Markdown body…
 
 | Book | Slug | Focus |
 |------|------|-------|
+| Sustainable Energy — Without the Hot Air: A Quiz Companion | `sustainable-energy-without-the-hot-air` | Self-test companion to David MacKay's free book: 43 chapters mirroring its chapters and sections, page pointers, errata, quotes in every explanation |
 | Nutrition Science: What We Know and What We Don't | `nutrition-science` | Evidence-graded diet and nutrition: energy, macro- and micronutrients, patterns, disease, life stages, food safety, myths |
 | .NET 10 and Modern C# | `modern-dotnet` | SDK, C# 14, async, hosting, minimal APIs, EF Core 10, architecture, testing, AOT |
 | Modern Web Development with Blazor | `modern-blazor` | Render modes, component reuse, forms, routing, state, interop, security, Hybrid |
@@ -102,6 +103,7 @@ Content guidelines for new sections:
   with an `explanation` on every question
 - Vary the position of the correct option; the UI does not shuffle options
 - Non-software books may grade claims by certainty; `nutrition-science` uses Established, Strong, Uncertain and Not supported, and cites sources at the end of each section
+- Companion books to an existing work (such as `sustainable-energy-without-the-hot-air`) do not reproduce the source text: each section points to the source's pages, lists learning objectives and any errata, and every explanation quotes a short fragment of the source or its errata with a page reference
 - Quote option text that YAML would read as a boolean, number or null (`"Yes"`, `"50"`), and avoid `yes`, `no`, `null`, `true` and `false` as ids
 - Quote YAML values that contain `: `, ` #` or start with a backtick or `@`
 
