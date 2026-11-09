@@ -83,6 +83,7 @@ Markdown body…
 
 | Book | Slug | Focus |
 |------|------|-------|
+| Nutrition Science: What We Know and What We Don't | `nutrition-science` | Evidence-graded diet and nutrition: energy, macro- and micronutrients, patterns, disease, life stages, food safety, myths |
 | .NET 10 and Modern C# | `modern-dotnet` | SDK, C# 14, async, hosting, minimal APIs, EF Core 10, architecture, testing, AOT |
 | Modern Web Development with Blazor | `modern-blazor` | Render modes, component reuse, forms, routing, state, interop, security, Hybrid |
 | SOLID Principles in C# | `solid-principles` | The five principles, refactorings and trade-offs |
@@ -100,6 +101,8 @@ Content guidelines for new sections:
 - Write three or more questions per section, mixing single- and multiple-answer questions,
   with an `explanation` on every question
 - Vary the position of the correct option; the UI does not shuffle options
+- Non-software books may grade claims by certainty; `nutrition-science` uses Established, Strong, Uncertain and Not supported, and cites sources at the end of each section
+- Quote option text that YAML would read as a boolean, number or null (`"Yes"`, `"50"`), and avoid `yes`, `no`, `null`, `true` and `false` as ids
 - Quote YAML values that contain `: `, ` #` or start with a backtick or `@`
 
 ### Progress and analytics
