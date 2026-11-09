@@ -292,4 +292,148 @@ Export complete: docs/llm/dump.txt
 real	0m0.633s
 user	0m0.257s
 sys	0m0.342s
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+234M	.
+
+real	0m0.015s
+user	0m0.001s
+sys	0m0.013s
+
+real	0m10.682s
+user	0m20.297s
+sys	0m1.418s
+Restore complete (0.6s)
+
+Build succeeded in 0.7s
+
+real	0m0.835s
+user	0m0.895s
+sys	0m0.148s
+Content directory: content/blog
+Output directory:  src/ObserverMagazine.Web/wwwroot
+Authors directory: content/authors
+Books directory:   content/books
+Publish before:    2026-11-09 07:04:35 UTC
+Found 3 author profile(s)
+  Loaded author: kushal (kushal)
+  Loaded author: abraham-lincoln (Abraham Lincoln)
+  Loaded author: terlingua-team (Terlingua Team)
+Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
+Found 5 markdown files
+Processing: 2026-03-22-good-morning.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
+Processing: 2026-09-19-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-25-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-29-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-10-21-good-night.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
+Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
+Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
+Processing book: amazon-web-services
+  8 chapter(s), 19 subchapter(s), 60 question(s)
+Processing book: blazor-basics
+  2 chapter(s), 4 subchapter(s), 8 question(s)
+Processing book: clean-code
+  7 chapter(s), 14 subchapter(s), 44 question(s)
+Processing book: dapper
+  5 chapter(s), 15 subchapter(s), 48 question(s)
+Processing book: databricks-platform
+  8 chapter(s), 24 subchapter(s), 73 question(s)
+Processing book: microsoft-azure
+  7 chapter(s), 18 subchapter(s), 55 question(s)
+Processing book: modern-blazor
+  8 chapter(s), 22 subchapter(s), 73 question(s)
+Processing book: modern-dotnet
+  8 chapter(s), 21 subchapter(s), 76 question(s)
+Processing book: nutrition-science
+  11 chapter(s), 34 subchapter(s), 264 question(s)
+Processing book: solid-principles
+  7 chapter(s), 14 subchapter(s), 45 question(s)
+Processing book: sustainable-energy-without-the-hot-air
+  43 chapter(s), 159 subchapter(s), 1326 question(s)
+Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (11 books)
+Content processing complete.
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (872ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (1s 081ms)
+
+Test run summary: Passed!
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (872ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (1s 081ms)
+
+  total: 159
+  failed: 0
+  succeeded: 159
+  skipped: 0
+  duration: 1s 261ms
+
+real	0m5.386s
+user	0m6.678s
+sys	0m1.016s
+Restore complete (0.5s)
+
+Build succeeded in 0.7s
+Project 'ObserverMagazine.Web' has the following package references
+   [net10.0]: 
+   Top-level Package                                        Requested      Resolved
+   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.13, )    10.0.13 
+   > Microsoft.AspNetCore.Components.WebAssembly            10.0.14        10.0.14 
+   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.113, )   10.0.113
+   > Microsoft.Extensions.Http                              10.0.14        10.0.14 
+   > Microsoft.Extensions.Logging.Configuration             10.0.14        10.0.14 
+   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.13, )    10.0.13 
+   > Microsoft.NET.Sdk.WebAssembly.Pack               (A)   [10.0.1, )     10.0.1  
+
+Project 'ObserverMagazine.Integration.Tests' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.6.0       1.6.0   
+   > xunit.v3             4.0.3       4.0.3   
+   > YamlDotNet           18.1.0      18.1.0  
+
+Project 'ObserverMagazine.Web.Tests' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > bunit                2.14.0      2.14.0  
+   > xunit.v3             4.0.3       4.0.3   
+
+Project 'ObserverMagazine.ContentProcessor' has the following package references
+   [net10.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.6.0       1.6.0   
+   > YamlDotNet           18.1.0      18.1.0  
+
+(A) : Auto-referenced package.
+
+real	0m1.740s
+user	0m1.763s
+sys	0m0.341s
+Restore complete (0.5s)
+
+Build succeeded in 0.7s
+
+The following sources were used:
+   https://api.nuget.org/v3/index.json
+
+The given project `ObserverMagazine.Web` has no updates given the current sources.
+The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
+
+real	0m1.971s
+user	0m1.941s
+sys	0m0.392s
+Export complete: docs/llm/dump.txt
+  Total files: 605
+  Blog posts (front matter only): 5
+  Full content files: 598
+  Binary files skipped: 2
+
+real	0m0.616s
+user	0m0.283s
+sys	0m0.330s
 kushal@fedora:~/src/dotnet/terlingua$ 
