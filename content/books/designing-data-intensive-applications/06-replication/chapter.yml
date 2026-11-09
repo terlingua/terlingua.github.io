@@ -1,0 +1,2 @@
+title: "Replication (Chapter 6)"
+summary: "Keeping copies of data on several machines: single-leader replication, failover and replication logs, the anomalies of replication lag, multi-leader and local-first sync, conflict resolution with LWW and CRDTs, and leaderless quorums with version vectors."

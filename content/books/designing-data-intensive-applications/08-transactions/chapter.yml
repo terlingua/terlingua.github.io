@@ -1,0 +1,2 @@
+title: "Transactions (Chapter 8)"
+summary: "What ACID really means, single- and multi-object operations, read committed, snapshot isolation and MVCC, lost updates, write skew and phantoms, serial execution, two-phase locking, serializable snapshot isolation, two-phase commit and exactly-once processing."

@@ -1,0 +1,2 @@
+title: "Trade-Offs in Data Systems Architecture (Preface and Chapter 1)"
+summary: "The book's purpose and the four big architectural trade-offs: operational versus analytical, cloud versus self-hosted, distributed versus single-node, and business needs versus the rights of the people whose data you hold."

@@ -1,0 +1,2 @@
+title: "A Philosophy of Streaming Systems (Chapter 13)"
+summary: "The book's opinionated synthesis: integrating specialized tools through derived data, unifying batch and stream, unbundling the database, designing applications around dataflow, and achieving correctness with end-to-end request IDs, asynchronous constraint checking, integrity over timeliness, and continuous auditing."

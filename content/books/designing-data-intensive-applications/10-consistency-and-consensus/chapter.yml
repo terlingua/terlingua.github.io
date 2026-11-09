@@ -1,0 +1,2 @@
+title: "Consistency and Consensus (Chapter 10)"
+summary: "Linearizability and what it costs, CAP and its limits, ID generators, Lamport and hybrid logical clocks, the equivalent faces of consensus, how Raft-style algorithms work and where they hurt, and coordination services such as ZooKeeper and etcd."

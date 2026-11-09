@@ -1,0 +1,2 @@
+title: "Data Models and Query Languages (Chapter 3)"
+summary: "Relational versus document models, normalization trade-offs, analytics schemas, graph models and their query languages (Cypher, SPARQL, Datalog, GraphQL, recursive SQL), event sourcing with CQRS, and DataFrames."

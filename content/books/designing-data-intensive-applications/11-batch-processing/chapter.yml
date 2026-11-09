@@ -1,0 +1,2 @@
+title: "Batch Processing (Chapter 11)"
+summary: "Batch jobs as derived-data builders: Unix pipelines, distributed filesystems and object stores, job orchestration and scheduling, MapReduce, dataflow engines, shuffles and joins, SQL and DataFrames, and the main use cases from ETL to LLM data preparation."

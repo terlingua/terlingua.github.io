@@ -1,0 +1,2 @@
+title: "Encoding and Evolution (Chapter 5)"
+summary: "Backward and forward compatibility, language-specific formats, JSON/XML/CSV and JSON Schema, Protocol Buffers and Avro schema evolution, and how data flows through databases, services, durable workflows and message brokers."

@@ -1,0 +1,2 @@
+title: "Stream Processing (Chapter 12)"
+summary: "Unbounded data: messaging systems and log-based brokers, databases as streams with CDC and event sourcing, immutability and its limits, uses of stream processing, reasoning about time and windows, stream joins, and fault tolerance with checkpoints, transactions and idempotence."

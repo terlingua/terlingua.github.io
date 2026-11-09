@@ -1,0 +1,10 @@
+title: "Designing Data-Intensive Applications (2nd Edition): A Companion"
+author: "terlingua-team"
+summary: "A chapter-by-chapter study companion to Kleppmann and Riccomini's second edition. It follows the book's chapters and sections, connects each idea to today's cloud, streaming and AI systems, and offers hundreds of reasoning-focused quiz questions whose explanations quote the exact passage in the book. Each chapter opens with a foundations check on the background the book assumes."
+date: 2026-11-09
+tags:
+  - "databases"
+  - "distributed-systems"
+  - "data-engineering"
+  - "system-design"
+  - "book-companion"

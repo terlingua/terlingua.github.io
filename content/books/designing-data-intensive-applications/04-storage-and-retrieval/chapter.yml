@@ -1,0 +1,2 @@
+title: "Storage and Retrieval (Chapter 4)"
+summary: "How databases lay out data on disk: logs, SSTables and LSM-trees, B-trees and their trade-offs, secondary and clustered indexes, in-memory databases, columnar storage for analytics, query compilation and vectorization, and multidimensional, full-text and vector indexes."

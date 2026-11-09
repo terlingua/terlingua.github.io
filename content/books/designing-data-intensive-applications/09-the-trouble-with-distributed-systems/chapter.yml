@@ -1,0 +1,2 @@
+title: "The Trouble with Distributed Systems (Chapter 9)"
+summary: "Partial failures, unreliable networks and timeouts, unreliable clocks and process pauses, quorums, leases and fencing tokens, Byzantine faults, system models, safety and liveness, and verifying distributed systems with model checking, fault injection and deterministic simulation."

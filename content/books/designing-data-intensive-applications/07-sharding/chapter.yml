@@ -1,0 +1,2 @@
+title: "Sharding (Chapter 7)"
+summary: "Splitting data across machines: when sharding is worth it, sharding for multitenancy, key-range versus hash sharding, consistent hashing, hot spots, rebalancing, request routing, and local versus global secondary indexes."
