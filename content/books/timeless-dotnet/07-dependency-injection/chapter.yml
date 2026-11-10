@@ -1,0 +1,2 @@
+title: Dependency Injection and Service Registration
+summary: Lifetimes, registration patterns, keyed services, options, and the anti-patterns that turn DI into a liability.

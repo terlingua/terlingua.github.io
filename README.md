@@ -85,11 +85,11 @@ Markdown body…
 |------|------|-------|
 | Nutrition Science: What We Know and What We Don't | `nutrition-science` | Evidence-graded diet and nutrition: energy, macro- and micronutrients, patterns, disease, life stages, food safety, myths |
 | .NET 10 and Modern C# | `modern-dotnet` | SDK, C# 14, async, hosting, minimal APIs, EF Core 10, architecture, testing, AOT |
+| Timeless .NET: Modern C# 14 and .NET 10 Without the Vestiges | `timeless-dotnet` | Records, C# 14, tasks and async, cancellation tokens, DI, explicit mapping, modern Dapper, stored procedures vs parameterized SQL, xUnit v3 on MTP, .NET 11 and C# 15; spotting anachronisms, dogma, factoids and vestiges |
 | Modern Web Development with Blazor | `modern-blazor` | Render modes, component reuse, forms, routing, state, interop, security, Hybrid |
 | SOLID Principles in C# | `solid-principles` | The five principles, refactorings and trade-offs |
 | Clean Code in C# | `clean-code` | Naming, functions, errors, classes, tests, smells, refactoring |
 | Working Effectively with Legacy Code: A Companion | `working-effectively-with-legacy-code` | Chapter-by-chapter quizzes for Feathers' book: seams, characterization tests, sprouting and wrapping, the 24 dependency-breaking techniques |
-| Designing Data-Intensive Applications (2nd Edition): A Companion | `designing-data-intensive-applications` | Chapter-by-chapter quizzes for Kleppmann and Riccomini's second edition: storage, encoding, replication, sharding, transactions, consensus, batch and stream processing, ethics; each chapter opens with a foundations check |
 | Dapper: Fast, Honest Data Access | `dapper` | Queries, parameters, mapping, transactions, architecture, testing |
 | The Databricks Data Intelligence Platform | `databricks-platform` | Spark, Delta Lake, Unity Catalog, pipelines, jobs, SQL, MLflow, GenAI |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
@@ -104,7 +104,6 @@ Content guidelines for new sections:
   with an `explanation` on every question
 - Vary the position of the correct option; the UI does not shuffle options
 - Companions to published books follow the original chapter and section order, quote only short passages, and put each quotation inside “ ” in the `explanation` so it can be checked against the source
-- Companions may open each chapter with a `01-foundations-check` section of prerequisite questions that are not drawn from the book; their explanations contain no “ ” quotations
 - Non-software books may grade claims by certainty; `nutrition-science` uses Established, Strong, Uncertain and Not supported, and cites sources at the end of each section
 - Quote option text that YAML would read as a boolean, number or null (`"Yes"`, `"50"`), and avoid `yes`, `no`, `null`, `true` and `false` as ids
 - Quote YAML values that contain `: `, ` #` or start with a backtick or `@`

@@ -1,0 +1,12 @@
+title: "Timeless .NET: Modern C# 14 and .NET 10 Without the Vestiges"
+author: terlingua-team
+summary: A deep, quiz-heavy guide to writing .NET that ages well — records, C# 14, tasks and async, cancellation, dependency injection, explicit mapping, modern Dapper, stored procedures versus parameterized SQL, xUnit v3 on Microsoft.Testing.Platform, and a look ahead to .NET 11 and C# 15 — while learning to spot anachronisms, dogma, factoids and vestigial practices.
+date: 2026-11-10
+tags:
+  - dotnet
+  - csharp
+  - async
+  - dependency-injection
+  - dapper
+  - testing
+  - design

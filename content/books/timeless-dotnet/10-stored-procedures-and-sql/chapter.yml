@@ -1,0 +1,2 @@
+title: Stored Procedures versus Parameterized SQL
+summary: Retiring the 'procs are precompiled' factoid, and a precise rule for when a stored procedure is the right tool.
