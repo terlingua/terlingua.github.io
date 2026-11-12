@@ -145,4 +145,14 @@ Export complete: docs/llm/dump.txt
 real	0m0.888s
 user	0m0.409s
 sys	0m0.440s
-kushal@fedora:~/src/dotnet/terlingua$ 
+kushal@fedora:~/src/dotnet/terlingua$ cd ~/src/dotnet/terlingua/src/ObserverMagazine.Web/; dotnet run
+WasmAppHost --use-staticwebassets --runtime-config /home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/bin/Debug/net11.0/ObserverMagazine.Web.runtimeconfig.json
+warn: Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServer[9]
+      The ASP.NET Core developer certificate is only trusted by some clients. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert
+
+App url: http://127.0.0.1:37347/
+App url: https://127.0.0.1:33941/
+Debug at url: http://127.0.0.1:37347/_framework/debug
+Debug at url: https://127.0.0.1:33941/_framework/debug
+^CApplication is shutting down...
+kushal@fedora:~/src/dotnet/terlingua/src/ObserverMagazine.Web$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
