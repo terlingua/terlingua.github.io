@@ -1,25 +1,25 @@
-kushal@fedora:~/src/bash$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-252M	.
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+255M	.
 
-real	0m0.031s
-user	0m0.005s
-sys	0m0.017s
+real	0m0.118s
+user	0m0.002s
+sys	0m0.062s
 
-real	0m9.362s
-user	0m17.859s
-sys	0m1.290s
-Restore complete (0.6s)
+real	0m8.651s
+user	0m16.510s
+sys	0m1.142s
+Restore complete (0.5s)
 
-Build succeeded in 0.7s
+Build succeeded in 0.6s
 
-real	0m0.861s
-user	0m0.894s
-sys	0m0.167s
+real	0m0.766s
+user	0m0.787s
+sys	0m0.177s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-10 12:20:53 UTC
+Publish before:    2026-11-12 03:40:03 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -68,27 +68,27 @@ Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
 Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (14 books)
 Content processing complete.
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (771ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (973ms)
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (742ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (884ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (771ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (973ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (884ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (742ms)
 
   total: 159
   failed: 0
   succeeded: 159
   skipped: 0
-  duration: 1s 171ms
+  duration: 1s 058ms
 
-real	0m7.386s
-user	0m7.041s
-sys	0m1.162s
-Restore complete (0.6s)
+real	0m6.758s
+user	0m6.362s
+sys	0m1.043s
+Restore complete (0.5s)
 
-Build succeeded in 0.7s
+Build succeeded in 0.6s
 Project 'ObserverMagazine.Web' has the following package references
    [net10.0]: 
    Top-level Package                                        Requested      Resolved
@@ -121,31 +121,41 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.854s
-user	0m1.845s
-sys	0m0.373s
-Restore complete (0.6s)
+real	0m1.605s
+user	0m1.560s
+sys	0m0.345s
+Restore complete (0.5s)
 
-Build succeeded in 0.7s
+Build succeeded in 0.6s
 
 The following sources were used:
    https://api.nuget.org/v3/index.json
 
-The given project `ObserverMagazine.Web` has no updates given the current sources.
+Project `ObserverMagazine.Web` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package                                  Requested   Resolved   Latest
+   > Microsoft.AspNetCore.Components.WebAssembly      10.0.14     10.0.14    11.0.0
+   > Microsoft.Extensions.Http                        10.0.14     10.0.14    11.0.0
+   > Microsoft.Extensions.Logging.Configuration       10.0.14     10.0.14    11.0.0
+
 The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
+Project `ObserverMagazine.Web.Tests` has the following updates to its packages
+   [net10.0]: 
+   Top-level Package      Requested   Resolved   Latest
+   > bunit                2.14.0      2.14.0     2.15.2
+
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m3.236s
-user	0m2.675s
-sys	0m0.491s
+real	0m3.041s
+user	0m2.126s
+sys	0m0.434s
 Export complete: docs/llm/dump.txt
   Total files: 895
   Blog posts (front matter only): 5
   Full content files: 888
   Binary files skipped: 2
 
-real	0m0.956s
-user	0m0.364s
-sys	0m0.569s
+real	0m0.882s
+user	0m0.422s
+sys	0m0.442s
 kushal@fedora:~/src/dotnet/terlingua$ 
