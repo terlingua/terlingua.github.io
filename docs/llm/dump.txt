@@ -1,6 +1,6 @@
 ===============================================================================
 PROJECT EXPORT: terlingua.github.io
-DATE: 2026-11-12 03:40:16 UTC
+DATE: 2026-11-12 04:22:24 UTC
 ===============================================================================
 
 ===============================================================================
@@ -972,6 +972,7 @@ DIRECTORY TREE (all git-tracked files)
 │           │   │   ├── terlingua-books-library.tar.gz
 │           │   │   ├── terlingua-books.tar.gz
 │           │   │   ├── terlingua-ddia-companion.tar.gz
+│           │   │   ├── terlingua-dotnet11.tar.gz
 │           │   │   ├── terlingua-legacy-code-companion.tar.gz
 │           │   │   ├── terlingua-nutrition-science.tar.gz
 │           │   │   ├── terlingua-sewtha-companion.tar.gz
@@ -983,7 +984,8 @@ DIRECTORY TREE (all git-tracked files)
 │           │       ├── 4.md
 │           │       ├── 5.md
 │           │       ├── 6.md
-│           │       └── 7.md
+│           │       ├── 7.md
+│           │       └── 8.md
 │           └── terminal.txt
 ├── export.sh
 ├── .github
@@ -992,7 +994,6 @@ DIRECTORY TREE (all git-tracked files)
 │       └── pr-check.yml
 ├── .gitignore
 ├── global.json
-├── .nojekyll
 ├── ObserverMagazine.slnx
 ├── README.md
 ├── src
@@ -1003,6 +1004,7 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── AuthorCard.razor.css
 │       │   ├── BlogTtsPlayer.razor
 │       │   ├── BlogTtsPlayer.razor.css
+│       │   ├── BlogTtsPlayer.razor.js
 │       │   ├── MasterDetail.razor
 │       │   ├── MasterDetail.razor.css
 │       │   ├── ProgressMeter.razor
@@ -1015,6 +1017,7 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── ResponsiveTable.razor.css
 │       │   ├── RichContent.razor
 │       │   ├── RichContent.razor.css
+│       │   ├── RichContent.razor.js
 │       │   ├── SubchapterQuiz.razor
 │       │   └── SubchapterQuiz.razor.css
 │       ├── _Imports.razor
@@ -1022,8 +1025,8 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── MainLayout.razor
 │       │   ├── MainLayout.razor.css
 │       │   ├── NavMenu.razor
-│       │   └── NavMenu.razor.css
-│       ├── libman.json
+│       │   ├── NavMenu.razor.css
+│       │   └── NavMenu.razor.js
 │       ├── Models
 │       │   ├── AuthorProfile.cs
 │       │   ├── BlogPostMetadata.cs
@@ -1078,7 +1081,6 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── ReadingProgressService.cs
 │       │   └── TelemetryService.cs
 │       └── wwwroot
-│           ├── 404.html
 │           ├── css
 │           │   └── app.css
 │           ├── images
@@ -1088,7 +1090,8 @@ DIRECTORY TREE (all git-tracked files)
 │           │       └── terlingua-team.txt
 │           ├── index.html
 │           ├── js
-│           │   └── book-progress.js
+│           │   ├── book-progress.js
+│           │   └── theme.js
 │           ├── plaintext
 │           │   └── 2026-04-26-zelensky.txt
 │           ├── sample-data
@@ -1137,7 +1140,7 @@ DIRECTORY TREE (all git-tracked files)
     │   └── RssGenerator.cs
     └── requirements-audio.txt
 
-218 directories, 911 files
+218 directories, 914 files
 
 
 -------------------------------------------------------------------------------
@@ -74264,12 +74267,10 @@ FILE: Directory.Build.props
 -------------------------------------------------------------------------------
 <Project>
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <LangVersion>14.0</LangVersion>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 </Project>
 
@@ -74280,44 +74281,14 @@ FILE: Directory.Packages.props
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-
-    <!-- Version variables — touch these to update all related packages -->
-    <MicrosoftAspNetCoreVersion>10.0.14</MicrosoftAspNetCoreVersion>
-    <MicrosoftExtensionsVersion>10.0.14</MicrosoftExtensionsVersion>
-    <XunitVersion>4.0.3</XunitVersion>
-    <MarkdigVersion>1.6.0</MarkdigVersion>
-    <YamlDotNetVersion>18.1.0</YamlDotNetVersion>
-    <BunitVersion>2.14.0</BunitVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Web -->
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(MicrosoftAspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="$(MicrosoftExtensionsVersion)" />
-
-    <!-- Content Processing -->
-    <PackageVersion Include="Markdig" Version="$(MarkdigVersion)" />
-    <PackageVersion Include="YamlDotNet" Version="$(YamlDotNetVersion)" />
-
-    <!--
-      Testing — Microsoft.Testing.Platform (MTP) only.
-
-      xunit.v3 4.0 ships MTP v2 in the box and has dropped MTP v1. MTP v2 removed the
-      VSTest bridge on the .NET 10 SDK, so the two VSTest-only packages that used to
-      live here (xunit.runner.visualstudio, Microsoft.NET.Test.Sdk) are gone:
-
-        - xunit.runner.visualstudio -> VSTest adapter. Only needed by VSTest-era
-          runners; xunit.v3 carries its own MTP runner natively.
-        - Microsoft.NET.Test.Sdk    -> VSTest host. MTP test projects are plain
-          executables and do not need it.
-
-      `dotnet test` is switched into MTP mode by the "test" section in global.json.
-      Fewer packages also means a faster restore, which matters because these tests
-      are meant to run after every change.
-    -->
-    <PackageVersion Include="xunit.v3" Version="$(XunitVersion)" />
-    <PackageVersion Include="bunit" Version="$(BunitVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageVersion Include="Markdig" Version="1.6.0" />
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
+    <PackageVersion Include="xunit.v3" Version="4.0.3" />
+    <PackageVersion Include="bunit" Version="2.15.2" />
   </ItemGroup>
 </Project>
 
@@ -74540,7 +74511,6 @@ on:
   push:
     branches: [main]
   schedule:
-    # Rebuild daily at 6 AM UTC to publish scheduled posts
     - cron: '0 6 * * *'
   workflow_dispatch:
 
@@ -74550,13 +74520,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # xunit.v3 pulls in Microsoft.Testing.Extensions.Telemetry. Opt out in CI.
-  TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: true
 
 jobs:
   build-and-deploy:
@@ -74571,19 +74541,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
-      - name: Restore .NET dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Run content processor (markdown → JSON + HTML)
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
-
-      # ── Audio generation with caching ──────────────────────────────
-      # Cache key is based on the content of all blog markdown files.
-      # Exact hit  → all MP3s restored, ALL Python steps skipped.
-      # Partial hit → most MP3s restored, only changed posts regenerated.
-      # Miss        → full regeneration (first run or cache eviction).
+      - name: Process content
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor --no-restore
 
       - name: Restore audio cache
         id: audio-cache
@@ -74597,48 +74561,35 @@ jobs:
       - name: Copy cached audio to output
         run: |
           mkdir -p src/ObserverMagazine.Web/wwwroot/blog-data
-          if [ -d .audio-cache ] && [ "$(ls -A .audio-cache 2>/dev/null)" ]; then
-            cp .audio-cache/*.mp3 src/ObserverMagazine.Web/wwwroot/blog-data/ 2>/dev/null || true
-            cp .audio-cache/audio-manifest.json src/ObserverMagazine.Web/wwwroot/blog-data/ 2>/dev/null || true
-            echo "Restored $(ls .audio-cache/*.mp3 2>/dev/null | wc -l) cached MP3 file(s)"
-          else
-            echo "No audio cache to restore"
-          fi
+          shopt -s nullglob
+          files=(.audio-cache/*.mp3 .audio-cache/audio-manifest.json)
+          if (( ${#files[@]} )); then cp "${files[@]}" src/ObserverMagazine.Web/wwwroot/blog-data/; fi
+          echo "Restored ${#files[@]} cached audio file(s)"
 
-      # All Python/audio steps are skipped on exact cache hit
-      - name: Setup Python 3.12 (for TTS audio generation)
+      - name: Setup Python
         if: steps.audio-cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: tools/requirements-audio.txt
 
-      - name: Install system dependencies (espeak-ng + ffmpeg)
+      - name: Install system dependencies
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
 
-      - name: Cache HuggingFace model
+      - name: Cache Hugging Face model
         if: steps.audio-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v6
         with:
           path: ~/.cache/huggingface
           key: hf-kitten-tts-nano-0.8
 
-      - name: Cache pip packages
-        if: steps.audio-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/pip
-          key: pip-audio-${{ hashFiles('tools/requirements-audio.txt') }}
-          restore-keys: |
-            pip-audio-
-
       - name: Install Python audio dependencies
         if: steps.audio-cache.outputs.cache-hit != 'true'
-        run: |
-          pip install onnxruntime
-          pip install -r tools/requirements-audio.txt
+        run: pip install onnxruntime -r tools/requirements-audio.txt
 
-      - name: Generate TTS audio (markdown → MP3)
+      - name: Generate TTS audio
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: python tools/generate_audio.py --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot/blog-data --voice Bella --model KittenML/kitten-tts-nano-0.8
 
@@ -74646,30 +74597,20 @@ jobs:
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p .audio-cache
-          cp src/ObserverMagazine.Web/wwwroot/blog-data/*.mp3 .audio-cache/ 2>/dev/null || true
-          cp src/ObserverMagazine.Web/wwwroot/blog-data/audio-manifest.json .audio-cache/ 2>/dev/null || true
-          echo "Cached $(ls .audio-cache/*.mp3 2>/dev/null | wc -l) MP3 file(s) for next build"
+          shopt -s nullglob
+          files=(src/ObserverMagazine.Web/wwwroot/blog-data/*.mp3 src/ObserverMagazine.Web/wwwroot/blog-data/audio-manifest.json)
+          if (( ${#files[@]} )); then cp "${files[@]}" .audio-cache/; fi
+          echo "Cached ${#files[@]} audio file(s)"
 
-      # ── End audio generation ───────────────────────────────────────
-
-      # Microsoft.Testing.Platform mode (opted in via global.json).
-      # `dotnet test <path>` is no longer valid syntax; the target is named with
-      # --solution / --project / --test-modules. MTP fails the run if zero tests
-      # execute, so a silently empty run cannot pass CI.
-      - name: Run tests
+      - name: Test
         run: dotnet test --solution ObserverMagazine.slnx --no-restore
 
-      - name: Publish Blazor WASM
+      - name: Publish
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
 
-      - name: Strip source map references from framework JS
+      - name: Prepare site
         run: |
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/# sourceMappingURL=/d' {} + 2>/dev/null || true
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/@ sourceMappingURL=/d' {} + 2>/dev/null || true
-
-      - name: Prepare GitHub Pages artifacts
-        run: |
-          cp publish/wwwroot/.nojekyll publish/wwwroot/.nojekyll 2>/dev/null || touch publish/wwwroot/.nojekyll
+          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
           cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Setup Pages
@@ -74680,7 +74621,7 @@ jobs:
         with:
           path: publish/wwwroot
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
 
@@ -74694,10 +74635,17 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # xunit.v3 pulls in Microsoft.Testing.Extensions.Telemetry. Opt out in CI.
-  TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: true
 
 jobs:
   build-and-test:
@@ -74709,29 +74657,23 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Run content processor
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
+      - name: Process content
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor --no-restore
 
-      # Microsoft.Testing.Platform mode (opted in via global.json).
-      - name: Run tests
+      - name: Test
         run: dotnet test --solution ObserverMagazine.slnx --no-restore
 
-      - name: Publish Blazor WASM
+      - name: Publish
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
-
-      - name: Strip source map references from framework JS
-        run: |
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/# sourceMappingURL=/d' {} + 2>/dev/null || true
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/@ sourceMappingURL=/d' {} + 2>/dev/null || true
 
       - name: Prepare preview
         run: |
-          touch publish/wwwroot/.nojekyll
+          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
           cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Upload preview site
@@ -74803,9 +74745,6 @@ src/ObserverMagazine.Web/wwwroot/book-data/
 ## Generated RSS feed
 src/ObserverMagazine.Web/wwwroot/feed.xml
 
-## Client-side libraries (restored by LibMan at build time)
-src/ObserverMagazine.Web/wwwroot/lib/
-
 ## Python
 __pycache__/
 *.pyc
@@ -74820,18 +74759,14 @@ FILE: global.json
 -------------------------------------------------------------------------------
 {
   "sdk": {
-    "version": "10.0.104",
+    "version": "11.0.100-rc.3.26522.148",
+    "allowPrerelease": true,
     "rollForward": "latestFeature"
   },
   "test": {
     "runner": "Microsoft.Testing.Platform"
   }
 }
-
-
--------------------------------------------------------------------------------
-FILE: .nojekyll
--------------------------------------------------------------------------------
 
 
 -------------------------------------------------------------------------------
@@ -74864,7 +74799,8 @@ FILE: README.md
 
 A free, open-source Blazor WebAssembly application deployed to GitHub Pages.
 
-Built with **.NET 10** (LTS) and **C# 14**.
+Built with **.NET 11** and **C# 15**. Targets the current stable releases of evergreen browsers only
+(Chrome, Edge, Firefox, Safari); there are no polyfills, vendor prefixes or legacy fallbacks.
 
 ## Features
 
@@ -74877,8 +74813,12 @@ Built with **.NET 10** (LTS) and **C# 14**.
 - **Full Test Suite** — bUnit component tests + xUnit.net v3 integration tests, running on Microsoft.Testing.Platform
 
 ## Quick Start
+
+`global.json` asks for SDK `11.0.100-rc.3` or any later 11.0.1xx SDK, so the Fedora RC 3 SDK works
+locally and CI uses the latest .NET 11 GA SDK.
+
 ```bash
-# Restore & process blog posts and books
+# Process blog posts and books
 dotnet run --project tools/ObserverMagazine.ContentProcessor
 
 # Run the app locally
@@ -74982,6 +74922,20 @@ Content guidelines for new sections:
   local progress record to avoid counting repeat visits. Quiz answers are sent as
   interaction events. Nothing is shown and nothing breaks when the backend is down.
 
+## Front end
+
+- `wwwroot/index.html` contains no inline script. `js/theme.js` applies the saved theme before
+  first paint; everything else is an ES module loaded through `IJSRuntime` `import`.
+- JavaScript lives next to the component that uses it (`Components/RichContent.razor.js`,
+  `Components/BlogTtsPlayer.razor.js`, `Layout/NavMenu.razor.js`). `wwwroot/js/book-progress.js`
+  backs `IndexedDbProgressStore`.
+- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js` and fills the import map, so
+  JS modules are cache-busted on every deploy.
+- Themes are CSS custom properties. The default `system` theme uses `light-dark()` and
+  `color-scheme`, so it follows the OS setting live without script. Other themes set
+  `data-theme` on `<html>` and their own `color-scheme`.
+- GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
+
 ## Testing
 
 Tests run on **Microsoft.Testing.Platform (MTP)**, not VSTest. The opt-in lives in
@@ -75018,11 +74972,11 @@ xUnit configuration for MTP lives in `testconfig.json` next to a test project
 
 | Component | Technology | License |
 |-----------|-----------|---------|
-| Framework | .NET 10 / Blazor WASM 10.0.14 | MIT |
+| Framework | .NET 11 / Blazor WASM 11.0.0 | MIT |
 | Markdown | Markdig 1.6.0 | BSD-2-Clause |
 | YAML | YamlDotNet 18.1.0 | MIT |
-| Test framework | xUnit.net v3 4.0.2 | Apache-2.0 |
-| Component testing | bUnit 2.14.0 | MIT |
+| Test framework | xUnit.net v3 4.0.3 | Apache-2.0 |
+| Component testing | bUnit 2.15.2 | MIT |
 | Test runner | Microsoft.Testing.Platform v2 | MIT |
 
 All dependencies are free for any use — no payment required, ever.
@@ -75275,271 +75229,110 @@ FILE: src/ObserverMagazine.Web/Components/AuthorCard.razor.css
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
 -------------------------------------------------------------------------------
-@implements IDisposable
+@using System.Globalization
+@implements IAsyncDisposable
 @inject IAnalyticsService Analytics
 @inject ILogger<BlogTtsPlayer> Logger
 @inject IJSRuntime Js
 
-@if (!_hidden)
-{
-    <div class="tts-player">
-        <span class="tts-icon" aria-hidden="true">🔊</span>
-        <span class="tts-label">Listen to this post</span>
+<div class="tts-player" hidden="@(!_available)">
+    <span class="tts-icon" aria-hidden="true">🔊</span>
+    <span class="tts-label">Listen to this post</span>
 
-        @if (_useFallbackControls)
-        {
-            @* Fallback: custom play/pause + seek when native controls don't render *@
-            <audio id="tts-audio-@Slug"
-                   preload="metadata"
-                   playsinline
-                   src="blog-data/@(Slug).mp3"
-                   style="display:none;">
-                Your browser does not support audio playback.
-            </audio>
-            <div class="tts-fallback">
-                <button class="tts-fallback-btn" @onclick="ToggleFallbackPlay">
-                    @(_fallbackPlaying ? "⏸ Pause" : "▶ Play")
-                </button>
-                <input type="range" class="tts-fallback-seek"
-                       min="0" max="@_fallbackDuration" step="1"
-                       value="@_fallbackCurrentTime"
-                       @oninput="OnSeek" />
-                <span class="tts-fallback-time">@FormatTime(_fallbackCurrentTime)</span>
-            </div>
-        }
-        else
-        {
-            @* Default: native browser audio controls *@
-            <audio id="tts-audio-@Slug"
-                   controls
-                   preload="metadata"
-                   playsinline
-                   src="blog-data/@(Slug).mp3"
-                   @onplay="OnPlay"
-                   @onpause="OnPause"
-                   @onended="OnEnded">
-                Your browser does not support audio playback.
-            </audio>
-        }
+    <audio @ref="_audio"
+           controls
+           preload="metadata"
+           src="@AudioUrl"
+           @onloadedmetadata="OnLoadedMetadata"
+           @onplay="OnPlay"
+           @onpause="OnPause"
+           @onended="OnEnded"></audio>
 
-        @* Playback speed selector — shared across both native and fallback modes *@
-        <div class="tts-speed">
-            <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
-            <select id="tts-speed-@Slug"
-                    class="tts-speed-select"
-                    value="@_currentRate.ToString("0.##")"
-                    @onchange="OnSpeedChange">
-                @foreach (var rate in PlaybackRates)
-                {
-                    <option value="@rate.ToString("0.##")"
-                            selected="@(Math.Abs(rate - _currentRate) < 0.01)">
-                        @(rate.ToString("0.##"))x
-                    </option>
-                }
-            </select>
-        </div>
-
-        <a class="tts-direct-link" href="blog-data/@(Slug).mp3" target="_blank" rel="noopener noreferrer"
-           title="Open audio file directly in a new tab">
-            Open audio ↗
-        </a>
+    <div class="tts-speed">
+        <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
+        <select id="tts-speed-@Slug"
+                class="tts-speed-select"
+                value="@FormatRate(_currentRate)"
+                @onchange="OnSpeedChange">
+            @foreach (var rate in PlaybackRates)
+            {
+                <option value="@FormatRate(rate)">@(FormatRate(rate))x</option>
+            }
+        </select>
     </div>
-}
+
+    <a class="tts-direct-link" href="@AudioUrl" target="_blank" rel="noopener noreferrer"
+       title="Open audio file directly in a new tab">
+        Open audio ↗
+    </a>
+</div>
 
 @code {
-    /// <summary>Blog post slug — matches the MP3 filename in blog-data/</summary>
-    [Parameter, EditorRequired]
-    public string Slug { get; set; } = string.Empty;
-
-    private bool _hidden;
-    private bool _useFallbackControls;
-    private bool _fallbackPlaying;
-    private int _fallbackCurrentTime;
-    private int _fallbackDuration = 1; // avoid div-by-zero on range
-    private double _currentRate = 1.0;
-
-    private Timer? _pollTimer;
-
-    /// <summary>Available playback speed options.</summary>
     private static readonly double[] PlaybackRates = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                // Check if the audio source is available at all
-                var canPlay = await Js.InvokeAsync<bool>("observerAudio.checkAvailability",
-                    $"tts-audio-{Slug}");
-                if (!canPlay)
-                {
-                    _hidden = true;
-                    StateHasChanged();
-                    return;
-                }
+    [Parameter, EditorRequired]
+    public string Slug { get; set; } = "";
 
-                // Restore saved playback rate from localStorage
-                var savedRate = await Js.InvokeAsync<double>("observerAudio.getSavedPlaybackRate");
-                if (savedRate > 0)
-                {
-                    _currentRate = savedRate;
-                    await Js.InvokeVoidAsync("observerAudio.setPlaybackRate",
-                        $"tts-audio-{Slug}", _currentRate);
-                }
+    private ElementReference _audio;
+    private Task<IJSObjectReference>? _module;
+    private string? _currentSlug;
+    private bool _available;
+    private double _currentRate = 1.0;
 
-                // Check if native controls rendered properly (height > 0).
-                // Chrome Android clips the controls to 0px height in some CSS scenarios.
-                var controlsRendered = await Js.InvokeAsync<bool>("observerAudio.checkControlsRendered",
-                    $"tts-audio-{Slug}");
-                if (!controlsRendered)
-                {
-                    Logger.LogInformation("Native audio controls not rendered for {Slug}, using fallback", Slug);
-                    _useFallbackControls = true;
-                    StateHasChanged();
+    private string AudioUrl => $"blog-data/{Slug}.mp3";
 
-                    // After switching to fallback, get duration
-                    await Task.Delay(100); // let DOM update
-                    var dur = await Js.InvokeAsync<double>("observerAudio.getDuration", $"tts-audio-{Slug}");
-                    if (dur > 0)
-                        _fallbackDuration = (int)Math.Ceiling(dur);
-
-                    // Re-apply playback rate after fallback switch (new audio element may have reset)
-                    await Js.InvokeVoidAsync("observerAudio.setPlaybackRate",
-                        $"tts-audio-{Slug}", _currentRate);
-
-                    StateHasChanged();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Audio availability check failed for {Slug}", Slug);
-            }
-        }
-    }
+    private Task<IJSObjectReference> Module =>
+        _module ??= Js.InvokeAsync<IJSObjectReference>("import", "./Components/BlogTtsPlayer.razor.js").AsTask();
 
     protected override void OnParametersSet()
     {
-        _hidden = false;
-        _useFallbackControls = false;
-        _fallbackPlaying = false;
-        _fallbackCurrentTime = 0;
-    }
-
-    // --- Speed control ---
-
-    private async Task OnSpeedChange(ChangeEventArgs e)
-    {
-        if (double.TryParse(e.Value?.ToString(),
-            System.Globalization.NumberStyles.Float,
-            System.Globalization.CultureInfo.InvariantCulture, out var rate) && rate >= 0.5 && rate <= 3.0)
+        if (Slug == _currentSlug)
         {
-            _currentRate = rate;
-            try
-            {
-                await Js.InvokeVoidAsync("observerAudio.setPlaybackRate", $"tts-audio-{Slug}", rate);
-                await Js.InvokeVoidAsync("observerAudio.savePlaybackRate", rate);
-                Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
-                await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{rate}x");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
-            }
+            return;
         }
+
+        _currentSlug = Slug;
+        _available = false;
     }
 
-    // --- Fallback controls ---
-
-    private async Task ToggleFallbackPlay()
+    private async Task OnLoadedMetadata()
     {
+        _available = true;
         try
         {
-            if (_fallbackPlaying)
-            {
-                await Js.InvokeVoidAsync("observerAudio.pause", $"tts-audio-{Slug}");
-                _fallbackPlaying = false;
-                StopPolling();
-                await OnPause();
-            }
-            else
-            {
-                await Js.InvokeVoidAsync("observerAudio.play", $"tts-audio-{Slug}");
-                _fallbackPlaying = true;
-                StartPolling();
-                await OnPlay();
-            }
+            var module = await Module;
+            var saved = await module.InvokeAsync<double>("getSavedRate");
+            _currentRate = PlaybackRates.Contains(saved) ? saved : 1.0;
+            await module.InvokeVoidAsync("applyRate", _audio, _currentRate);
         }
         catch (Exception ex)
         {
-            Logger.LogWarning(ex, "Fallback play/pause failed for {Slug}", Slug);
+            Logger.LogDebug(ex, "Failed to restore playback rate for {Slug}", Slug);
         }
     }
 
-    private async Task OnSeek(ChangeEventArgs e)
+    private async Task OnSpeedChange(ChangeEventArgs e)
     {
-        if (double.TryParse(e.Value?.ToString(), out var time))
+        if (!double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var rate) ||
+            !PlaybackRates.Contains(rate))
         {
-            _fallbackCurrentTime = (int)time;
-            try
-            {
-                await Js.InvokeVoidAsync("observerAudio.setCurrentTime", $"tts-audio-{Slug}", time);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Seek failed for {Slug}", Slug);
-            }
+            return;
         }
-    }
 
-    private void StartPolling()
-    {
-        StopPolling();
-        _pollTimer = new Timer(PollTimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
-    }
-
-    /// <summary>
-    /// Timer callback — uses async void because TimerCallback returns void.
-    /// All async work is wrapped in try-catch to prevent unobserved exceptions.
-    /// </summary>
-    private async void PollTimerCallback(object? state)
-    {
+        _currentRate = rate;
         try
         {
-            var time = await Js.InvokeAsync<double>("observerAudio.getCurrentTime", $"tts-audio-{Slug}");
-            var ended = await Js.InvokeAsync<bool>("observerAudio.hasEnded", $"tts-audio-{Slug}");
-            await InvokeAsync(() =>
-            {
-                _fallbackCurrentTime = (int)time;
-                if (ended)
-                {
-                    _fallbackPlaying = false;
-                    StopPolling();
-                    _ = OnEnded();
-                }
-                StateHasChanged();
-            });
+            var module = await Module;
+            await module.InvokeVoidAsync("applyRate", _audio, rate);
+            await module.InvokeVoidAsync("saveRate", rate);
+            Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
+            await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{FormatRate(rate)}x");
         }
-        catch
+        catch (Exception ex)
         {
-            // Component may have been disposed — ignore
+            Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
         }
     }
-
-    private void StopPolling()
-    {
-        _pollTimer?.Dispose();
-        _pollTimer = null;
-    }
-
-    private static string FormatTime(int seconds)
-    {
-        var m = seconds / 60;
-        var s = seconds % 60;
-        return $"{m}:{s:D2}";
-    }
-
-    // --- Analytics events ---
 
     private async Task OnPlay()
     {
@@ -75559,9 +75352,22 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
         await Analytics.TrackInteractionAsync("TTS.Finished", Slug);
     }
 
-    public void Dispose()
+    private static string FormatRate(double rate) => rate.ToString("0.##", CultureInfo.InvariantCulture);
+
+    public async ValueTask DisposeAsync()
     {
-        StopPolling();
+        if (_module is not { IsCompletedSuccessfully: true })
+        {
+            return;
+        }
+
+        try
+        {
+            await _module.Result.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
     }
 }
 
@@ -75582,44 +75388,14 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.css
     min-width: 0;
 }
 
+.tts-player[hidden] {
+    display: none;
+}
+
 .tts-player audio {
-    height: 2rem;
     flex: 1;
     min-width: 7.5rem;
     accent-color: var(--color-primary);
-}
-
-.tts-fallback {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex: 1;
-    min-width: 7.5rem;
-}
-
-.tts-fallback-btn {
-    background: var(--color-primary);
-    color: var(--color-primary-fg);
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.25rem 0.6rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-
-.tts-fallback-seek {
-    flex: 1;
-    accent-color: var(--color-primary);
-    min-width: 0;
-}
-
-.tts-fallback-time {
-    font-size: 0.75rem;
-    color: var(--color-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .tts-icon {
@@ -75652,16 +75428,16 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.css
     cursor: pointer;
 }
 
+.tts-speed-select:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -1px;
+}
+
 .tts-direct-link {
     font-size: 0.8rem;
     color: var(--color-muted);
     flex-shrink: 0;
     white-space: nowrap;
-}
-
-.tts-speed-select:focus {
-    outline: 2px solid var(--color-primary);
-    outline-offset: -1px;
 }
 
 @media (max-width: 40em) {
@@ -75672,9 +75448,35 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.css
         padding: 0.5rem 0.75rem;
     }
     .tts-player audio { width: 100%; }
-    .tts-fallback { width: 100%; }
-    .tts-speed { align-self: flex-start; }
+    .tts-speed,
     .tts-direct-link { align-self: flex-start; }
+}
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.js
+-------------------------------------------------------------------------------
+const STORAGE_KEY = 'observer-audio-speed';
+
+export function getSavedRate() {
+    try {
+        const rate = Number.parseFloat(localStorage.getItem(STORAGE_KEY));
+        return Number.isFinite(rate) && rate >= 0.5 && rate <= 3 ? rate : 1;
+    } catch {
+        return 1;
+    }
+}
+
+export function applyRate(audio, rate) {
+    audio.defaultPlaybackRate = rate;
+    audio.playbackRate = rate;
+}
+
+export function saveRate(rate) {
+    try {
+        localStorage.setItem(STORAGE_KEY, String(rate));
+    } catch {
+    }
 }
 
 
@@ -76108,17 +75910,16 @@ FILE: src/ObserverMagazine.Web/Components/MasterDetail.razor.css
     min-width: 0;
 }
 
-.md-list li:hover { background: var(--color-border); }
+.md-list li:not(.md-selected):hover { background: var(--color-border); }
 
 .md-selected {
-    background: var(--color-primary) !important;
+    background: var(--color-primary);
     color: var(--color-primary-fg);
 }
 
 .md-item-name {
     font-weight: 500;
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .md-item-price { font-size: 0.9rem; opacity: 0.8; white-space: nowrap; }
@@ -76154,7 +75955,6 @@ FILE: src/ObserverMagazine.Web/Components/MasterDetail.razor.css
 .md-content h3 {
     font-size: 1.35rem;
     margin-bottom: 1rem;
-    overflow-wrap: break-word;
 }
 
 .md-content dl {
@@ -76167,8 +75967,7 @@ FILE: src/ObserverMagazine.Web/Components/MasterDetail.razor.css
 
 .md-content dd {
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .md-star { color: var(--color-accent); }
@@ -76177,7 +75976,7 @@ FILE: src/ObserverMagazine.Web/Components/MasterDetail.razor.css
 .confirm-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76193,13 +75992,12 @@ FILE: src/ObserverMagazine.Web/Components/MasterDetail.razor.css
     width: 90%;
 }
 
-.confirm-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.confirm-dialog h4 { margin-bottom: 0.75rem; }
 
 .confirm-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
     font-size: 0.95rem;
-    overflow-wrap: break-word;
 }
 
 @media (max-width: 40em) {
@@ -76492,7 +76290,6 @@ FILE: src/ObserverMagazine.Web/Components/QuizQuestionCard.razor.css
 
 .quiz-prompt {
     margin: 0.5rem 0 0.75rem;
-    overflow-wrap: break-word;
 }
 
 .quiz-prompt ::deep p:last-child { margin-bottom: 0; }
@@ -76521,12 +76318,12 @@ FILE: src/ObserverMagazine.Web/Components/QuizQuestionCard.razor.css
 
 .quiz-option.is-answer {
     border-color: #16a34a;
-    background: rgba(22, 163, 74, 0.1);
+    background: rgb(22 163 74 / 0.1);
 }
 
 .quiz-option.is-wrong {
     border-color: #dc2626;
-    background: rgba(220, 38, 38, 0.1);
+    background: rgb(220 38 38 / 0.1);
 }
 
 .quiz-option input {
@@ -76539,7 +76336,6 @@ FILE: src/ObserverMagazine.Web/Components/QuizQuestionCard.razor.css
     flex: 1;
     min-width: 0;
     cursor: pointer;
-    overflow-wrap: break-word;
 }
 
 .quiz-option label ::deep code,
@@ -76547,8 +76343,8 @@ FILE: src/ObserverMagazine.Web/Components/QuizQuestionCard.razor.css
 .quiz-explanation ::deep code {
     font-family: var(--font-mono);
     font-size: 0.875em;
-    background: var(--color-inline-code-bg, var(--color-surface));
-    border: 1px solid var(--color-inline-code-border, var(--color-border));
+    background: var(--color-inline-code-bg);
+    border: 1px solid var(--color-inline-code-border);
     border-radius: 4px;
     padding: 0.1em 0.35em;
 }
@@ -76577,7 +76373,6 @@ FILE: src/ObserverMagazine.Web/Components/QuizQuestionCard.razor.css
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
     background: var(--color-surface);
-    overflow-wrap: break-word;
 }
 
 .quiz-question.is-correct .quiz-verdict { color: #16a34a; }
@@ -76840,7 +76635,6 @@ FILE: src/ObserverMagazine.Web/Components/ResponsiveTable.razor.css
     text-align: left;
     padding: 0.6rem 0.75rem;
     border-bottom: 1px solid var(--color-border);
-    overflow-wrap: break-word;
 }
 
 .rt-data-table th { font-weight: 600; white-space: nowrap; }
@@ -76888,16 +76682,19 @@ FILE: src/ObserverMagazine.Web/Components/ResponsiveTable.razor.css
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Components/RichContent.razor
 -------------------------------------------------------------------------------
+@implements IAsyncDisposable
 @inject IJSRuntime Js
 @inject ILogger<RichContent> Logger
 
-<div class="blog-content">
+<div class="blog-content" @ref="_container">
     @((MarkupString)_processedHtml)
 </div>
 
 @code {
     [Parameter, EditorRequired] public string Html { get; set; } = "";
 
+    private ElementReference _container;
+    private IJSObjectReference? _module;
     private string _processedHtml = "";
     private string? _sourceHtml;
     private bool _enhancementPending;
@@ -76924,12 +76721,26 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor
         _enhancementPending = false;
         try
         {
-            await Js.InvokeVoidAsync("observerHighlight.highlightAll");
-            await Js.InvokeVoidAsync("observerCodeScroll.init");
+            _module ??= await Js.InvokeAsync<IJSObjectReference>("import", "./Components/RichContent.razor.js");
+            await _module.InvokeVoidAsync("enhance", _container);
         }
         catch (Exception ex)
         {
             Logger.LogDebug(ex, "Post-render content enhancement failed");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
         }
     }
 }
@@ -76940,8 +76751,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 -------------------------------------------------------------------------------
 .blog-content {
     line-height: 1.8;
-    overflow-wrap: break-word;
-    word-break: normal;
     min-width: 0;
     width: 100%;
 }
@@ -76949,24 +76758,20 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 .blog-content ::deep h2 {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep h3 {
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep h4 {
     margin-top: 1.25rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep p {
     margin-bottom: 1rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep .code-block-wrap {
@@ -76983,7 +76788,7 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     right: 1px;
     bottom: 1px;
     width: 2.5rem;
-    background: linear-gradient(to right, transparent, var(--hl-bg, #f3f4f6));
+    background: linear-gradient(to right, transparent, var(--hl-bg));
     border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
     pointer-events: none;
     z-index: 1;
@@ -77002,7 +76807,7 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     font-size: 0.7rem;
     font-family: var(--font-sans);
     color: var(--color-muted);
-    background: var(--hl-bg, #f3f4f6);
+    background: var(--hl-bg);
     padding: 0.1rem 0.45rem;
     border-radius: 3px;
     opacity: 0.7;
@@ -77023,17 +76828,15 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     border-radius: var(--radius);
     padding: 1.15rem 1.25rem;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     min-width: 0;
     width: 100%;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.7;
     tab-size: 4;
-    -moz-tab-size: 4;
     margin-bottom: 1.25rem;
     white-space: pre;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.06);
 }
 
 .blog-content ::deep .code-block-wrap pre {
@@ -77056,9 +76859,9 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 .blog-content ::deep code {
     font-family: var(--font-mono);
     font-size: 0.875em;
-    background: var(--color-inline-code-bg, var(--color-surface));
-    color: var(--color-inline-code-fg, var(--color-text));
-    border: 1px solid var(--color-inline-code-border, var(--color-border));
+    background: var(--color-inline-code-bg);
+    color: var(--color-inline-code-fg);
+    border: 1px solid var(--color-inline-code-border);
     border-radius: 4px;
     padding: 0.15em 0.4em;
     word-break: break-all;
@@ -77076,8 +76879,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     padding-left: 1.5rem;
 }
 
-.blog-content ::deep li { overflow-wrap: break-word; }
-
 .blog-content ::deep img { max-width: 100%; height: auto; }
 
 .blog-content ::deep blockquote {
@@ -77087,7 +76888,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     color: var(--color-muted);
     background: var(--color-surface);
     border-radius: 0 var(--radius) var(--radius) 0;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep hr {
@@ -77098,7 +76898,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 
 .blog-content ::deep .table-scroll-wrap {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     margin-bottom: 1rem;
     min-width: 0;
     width: 100%;
@@ -77133,7 +76932,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 .blog-content ::deep dd {
     margin-left: 1.5rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep .hl-keyword  { color: var(--hl-keyword); }
@@ -77196,6 +76994,412 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 .blog-content ::deep .terminal-prompt { color: var(--terminal-prompt); font-weight: 700; }
 .blog-content ::deep .terminal-out    { color: var(--terminal-out); }
 .blog-content ::deep .terminal-ok     { color: var(--terminal-ok); }
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Components/RichContent.razor.js
+-------------------------------------------------------------------------------
+const KEYWORDS = {
+    csharp: /^(abstract|as|async|await|base|bool|break|byte|case|catch|char|checked|class|closed|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extension|extern|false|field|finally|fixed|float|for|foreach|goto|if|implicit|in|init|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|record|ref|required|return|sbyte|scoped|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|union|unsafe|ushort|using|var|virtual|void|volatile|when|where|while|with|yield|and|or|not|global|file|nint|nuint|nameof|value)$/,
+    javascript: /^(async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|static|super|switch|this|throw|true|try|typeof|undefined|var|void|while|with|yield)$/,
+    typescript: /^(abstract|as|async|await|break|case|catch|class|const|continue|debugger|declare|default|delete|do|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|instanceof|interface|keyof|let|module|namespace|new|null|of|override|readonly|return|satisfies|static|super|switch|this|throw|true|try|type|typeof|undefined|var|void|while|with|yield|infer|never|unknown|any|string|number|boolean|symbol|bigint)$/,
+    python: /^(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|self|print)$/,
+    sql: /^(SELECT|FROM|WHERE|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|JOIN|INNER|LEFT|RIGHT|OUTER|CROSS|ON|AND|OR|NOT|NULL|IS|IN|LIKE|BETWEEN|EXISTS|HAVING|GROUP|BY|ORDER|ASC|DESC|LIMIT|OFFSET|UNION|ALL|AS|SET|INTO|VALUES|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|BEGIN|COMMIT|ROLLBACK|TRANSACTION|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|DEFAULT|CHECK|UNIQUE|TOP|GO|USE|EXEC|DECLARE|NVARCHAR|VARCHAR|INT|BIT|DATETIME|IDENTITY|NOLOCK|WITH)$/i,
+    bash: /^(if|then|else|elif|fi|for|while|do|done|case|esac|function|return|in|select|until|echo|exit|export|source|alias|set|unset|readonly|local|declare|eval|exec|trap|cd|ls|grep|awk|sed|cat|mkdir|rm|cp|mv|chmod|chown|sudo|apt|dnf|pip|npm|dotnet|git|docker|podman)$/
+};
+
+const ALIASES = { cs: 'csharp', ts: 'typescript', js: 'javascript', sh: 'bash', shell: 'bash', zsh: 'bash', yml: 'yaml', xml: 'html' };
+
+const esc = s => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+const span = (cls, text) => `<span class="hl-${cls}">${esc(text)}</span>`;
+
+function highlightGeneral(code, lang) {
+    const kw = KEYWORDS[lang];
+    const hashComments = lang === 'python' || lang === 'bash';
+    const dashComments = lang === 'sql';
+    const n = code.length;
+    let out = '';
+    let i = 0;
+
+    const identifier = () => {
+        let j = i;
+        while (j < n && /[a-zA-Z0-9_$]/.test(code[j])) j++;
+        if (j === i) {
+            out += esc(code[i]);
+            i++;
+            return;
+        }
+        const word = code.slice(i, j);
+        if (kw?.test(word)) {
+            out += span('keyword', word);
+        } else if (/^[A-Z][a-zA-Z0-9]*$/.test(word) && word.length > 1 && !/^(False|True|None)$/.test(word)) {
+            out += span('type', word);
+        } else {
+            let k = j;
+            while (k < n && code[k] === ' ') k++;
+            out += code[k] === '(' ? span('function', word) : esc(word);
+        }
+        i = j;
+    };
+
+    while (i < n) {
+        const ch = code[i];
+
+        if ((ch === '/' && code[i + 1] === '/') ||
+            (hashComments && ch === '#' && (i === 0 || /\s/.test(code[i - 1]))) ||
+            (dashComments && ch === '-' && code[i + 1] === '-')) {
+            let end = code.indexOf('\n', i);
+            if (end === -1) end = n;
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+
+        if (ch === '/' && code[i + 1] === '*') {
+            const close = code.indexOf('*/', i + 2);
+            const end = close === -1 ? n : close + 2;
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === '`') {
+            if (code[i + 1] === ch && code[i + 2] === ch) {
+                const close = code.indexOf(ch.repeat(3), i + 3);
+                const end = close === -1 ? n : close + 3;
+                out += span('string', code.slice(i, end));
+                i = end;
+                continue;
+            }
+            let j = i + 1;
+            while (j < n) {
+                if (code[j] === '\\') { j += 2; continue; }
+                if (code[j] === ch) { j++; break; }
+                if (ch !== '`' && code[j] === '\n') break;
+                j++;
+            }
+            out += span('string', code.slice(i, j));
+            i = j;
+            continue;
+        }
+
+        if (lang === 'csharp' && (ch === '@' || ch === '$')) {
+            const next = code[i + 1] ?? '';
+            const start = i;
+            if (next === '"') {
+                i += 2;
+            } else if ((next === '@' || next === '$') && code[i + 2] === '"') {
+                i += 3;
+            } else {
+                identifier();
+                continue;
+            }
+            let j = i;
+            while (j < n) {
+                if (code[j] === '"') {
+                    if (code[j + 1] === '"') { j += 2; continue; }
+                    j++;
+                    break;
+                }
+                j++;
+            }
+            out += span('string', code.slice(start, j));
+            i = j;
+            continue;
+        }
+
+        if (/\d/.test(ch) && (i === 0 || !/[a-zA-Z_$]/.test(code[i - 1]))) {
+            let j = i;
+            if (ch === '0' && /[xXbBoO]/.test(code[j + 1] ?? '')) j += 2;
+            while (j < n && /[\da-fA-F._eEuUlLfFdDmMnN]/.test(code[j])) j++;
+            out += span('number', code.slice(i, j));
+            i = j;
+            continue;
+        }
+
+        if (/[a-zA-Z_$]/.test(ch)) {
+            identifier();
+            continue;
+        }
+
+        out += esc(ch);
+        i++;
+    }
+
+    return out;
+}
+
+function highlightJson(code) {
+    const n = code.length;
+    let out = '';
+    let i = 0;
+
+    while (i < n) {
+        if (code[i] === '"') {
+            let j = i + 1;
+            while (j < n && code[j] !== '"') {
+                if (code[j] === '\\') j++;
+                j++;
+            }
+            if (j < n) j++;
+            const str = code.slice(i, j);
+            let k = j;
+            while (k < n && /\s/.test(code[k])) k++;
+            out += span(code[k] === ':' ? 'attr' : 'string', str);
+            i = j;
+            continue;
+        }
+        if (/\d/.test(code[i]) || (code[i] === '-' && /\d/.test(code[i + 1] ?? ''))) {
+            let j = i;
+            if (code[j] === '-') j++;
+            while (j < n && /[\d.eE+\-]/.test(code[j])) j++;
+            out += span('number', code.slice(i, j));
+            i = j;
+            continue;
+        }
+        if (/[a-zA-Z]/.test(code[i])) {
+            let j = i;
+            while (j < n && /[a-zA-Z]/.test(code[j])) j++;
+            const word = code.slice(i, j);
+            out += /^(true|false|null)$/.test(word) ? span('literal', word) : esc(word);
+            i = j;
+            continue;
+        }
+        out += esc(code[i]);
+        i++;
+    }
+
+    return out;
+}
+
+function highlightYamlValue(raw) {
+    const val = raw.trim();
+    if (!val) return '';
+    if (/^(true|false|yes|no|on|off|null|~)$/i.test(val)) return ' ' + span('literal', val);
+    if (/^-?\d/.test(val)) return ' ' + span('number', val);
+    if (/^["']/.test(val)) return ' ' + span('string', val);
+    return ' ' + esc(val);
+}
+
+function highlightYaml(code) {
+    return code.split('\n').map(line => {
+        if (/^\s*#/.test(line)) return span('comment', line);
+        const m = line.match(/^(\s*)([\w][\w.-]*\s*)(:)(.*)/);
+        return m
+            ? esc(m[1]) + span('attr', m[2]) + esc(m[3]) + highlightYamlValue(m[4])
+            : esc(line);
+    }).join('\n');
+}
+
+function highlightHtml(code) {
+    const n = code.length;
+    let out = '';
+    let i = 0;
+
+    const until = (marker, from, extra) => {
+        const found = code.indexOf(marker, from);
+        return found === -1 ? n : found + extra;
+    };
+
+    while (i < n) {
+        const ch = code[i];
+
+        if (ch === '<' && code.startsWith('<!--', i)) {
+            const end = until('-->', i + 4, 3);
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+
+        if (ch === '<' && code.startsWith('<![CDATA[', i)) {
+            const end = until(']]>', i + 9, 3);
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+
+        if (ch === '<' && (code[i + 1] === '!' || code[i + 1] === '?')) {
+            const end = until('>', i, 1);
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+
+        if (ch === '<' && i + 1 < n && /[a-zA-Z\/]/.test(code[i + 1])) {
+            out += '&lt;';
+            i++;
+
+            if (code[i] === '/') {
+                out += '/';
+                i++;
+            }
+
+            const nameStart = i;
+            while (i < n && /[\w:-]/.test(code[i])) i++;
+            if (i > nameStart) out += span('tag', code.slice(nameStart, i));
+
+            while (i < n && code[i] !== '>') {
+                if (/\s/.test(code[i]) || code[i] === '/') {
+                    out += code[i];
+                    i++;
+                    continue;
+                }
+
+                if (/[\w:-]/.test(code[i])) {
+                    const attrStart = i;
+                    while (i < n && /[\w:.-]/.test(code[i])) i++;
+                    out += span('attr', code.slice(attrStart, i));
+
+                    let look = i;
+                    while (look < n && /\s/.test(code[look])) look++;
+                    if (code[look] === '=') {
+                        out += code.slice(i, look) + '=';
+                        i = look + 1;
+                        while (i < n && /\s/.test(code[i])) {
+                            out += code[i];
+                            i++;
+                        }
+                        const valStart = i;
+                        if (code[i] === '"' || code[i] === "'") {
+                            const q = code[i];
+                            i++;
+                            while (i < n && code[i] !== q) i++;
+                            if (i < n) i++;
+                        } else {
+                            while (i < n && !/\s/.test(code[i]) && code[i] !== '>' && code[i] !== '/') i++;
+                        }
+                        if (i > valStart) out += span('string', code.slice(valStart, i));
+                    }
+                    continue;
+                }
+
+                out += esc(code[i]);
+                i++;
+            }
+
+            if (i < n) {
+                out += '&gt;';
+                i++;
+            }
+            continue;
+        }
+
+        out += esc(ch);
+        i++;
+    }
+
+    return out;
+}
+
+function highlightCss(code) {
+    const n = code.length;
+    let out = '';
+    let i = 0;
+
+    while (i < n) {
+        if (code[i] === '/' && code[i + 1] === '*') {
+            const close = code.indexOf('*/', i + 2);
+            const end = close === -1 ? n : close + 2;
+            out += span('comment', code.slice(i, end));
+            i = end;
+            continue;
+        }
+        if (code[i] === '"' || code[i] === "'") {
+            const q = code[i];
+            let j = i + 1;
+            while (j < n && code[j] !== q) {
+                if (code[j] === '\\') j++;
+                j++;
+            }
+            if (j < n) j++;
+            out += span('string', code.slice(i, j));
+            i = j;
+            continue;
+        }
+        if (/\d/.test(code[i]) && (i === 0 || !/[a-zA-Z_-]/.test(code[i - 1]))) {
+            let j = i;
+            while (j < n && /[\d.%a-zA-Z]/.test(code[j])) j++;
+            out += span('number', code.slice(i, j));
+            i = j;
+            continue;
+        }
+        if (code[i] === '#' && /[0-9a-fA-F]/.test(code[i + 1] ?? '')) {
+            let j = i + 1;
+            while (j < n && /[0-9a-fA-F]/.test(code[j])) j++;
+            out += span('number', code.slice(i, j));
+            i = j;
+            continue;
+        }
+        if (/[.#@:[]/.test(code[i]) || (/[a-zA-Z]/.test(code[i]) && (i === 0 || code[i - 1] === '\n' || code[i - 1] === '}'))) {
+            let j = i;
+            while (j < n && code[j] !== '{' && code[j] !== ';' && code[j] !== '\n') j++;
+            if (code[j] === '{') {
+                out += span('selector', code.slice(i, j));
+                i = j;
+                continue;
+            }
+        }
+        if (/[a-zA-Z-]/.test(code[i])) {
+            let j = i;
+            while (j < n && /[a-zA-Z0-9-]/.test(code[j])) j++;
+            const word = code.slice(i, j);
+            let k = j;
+            while (k < n && code[k] === ' ') k++;
+            out += code[k] === ':' && code[k + 1] !== ':' ? span('property', word) : esc(word);
+            i = j;
+            continue;
+        }
+        out += esc(code[i]);
+        i++;
+    }
+
+    return out;
+}
+
+export function highlight(code, language) {
+    let lang = (language ?? '').toLowerCase().replace(/^language-/, '');
+    lang = ALIASES[lang] ?? lang;
+
+    switch (lang) {
+        case 'json': return highlightJson(code);
+        case 'yaml': return highlightYaml(code);
+        case 'html': return highlightHtml(code);
+        case 'css': return highlightCss(code);
+        default: return highlightGeneral(code, KEYWORDS[lang] ? lang : '');
+    }
+}
+
+function highlightAll(root) {
+    for (const el of root.querySelectorAll('pre code:not([data-highlighted])')) {
+        const lang = el.className.match(/language-(\S+)/)?.[1] ?? '';
+        el.innerHTML = highlight(el.textContent, lang);
+        el.dataset.highlighted = '';
+    }
+}
+
+function trackScroll(root) {
+    for (const wrap of root.querySelectorAll('.code-block-wrap:not([data-scroll-tracked])')) {
+        const pre = wrap.querySelector('pre');
+        if (!pre) continue;
+        wrap.dataset.scrollTracked = '';
+
+        const update = () => {
+            const overflows = pre.scrollWidth > pre.clientWidth + 2;
+            wrap.classList.toggle('no-overflow', !overflows);
+            wrap.classList.toggle('scrolled', pre.scrollLeft > 8);
+            wrap.classList.toggle('scrolled-end', pre.scrollLeft + pre.clientWidth >= pre.scrollWidth - 4);
+        };
+
+        pre.addEventListener('scroll', update, { passive: true });
+        new ResizeObserver(update).observe(pre);
+    }
+}
+
+export function enhance(root) {
+    if (!root) return;
+    highlightAll(root);
+    trackScroll(root);
+}
 
 
 -------------------------------------------------------------------------------
@@ -77290,7 +77494,7 @@ FILE: src/ObserverMagazine.Web/Components/SubchapterQuiz.razor.css
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
     border: 1px solid #16a34a;
-    background: rgba(22, 163, 74, 0.1);
+    background: rgb(22 163 74 / 0.1);
     font-weight: 600;
 }
 
@@ -77340,7 +77544,7 @@ FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor
                 &copy; @DateTime.UtcNow.Year Terlingua Magazine &mdash; Built with
                 <a href="https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor" target="_blank"
                    rel="noopener noreferrer">Blazor WebAssembly</a>
-                on .NET 10.
+                on .NET 11.
             </p>
             <p>
                 <a href="/feed.xml">RSS Feed</a>
@@ -77361,7 +77565,6 @@ FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor.css
 .page {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
     min-height: 100dvh;
     width: 100%;
     max-width: 100%;
@@ -77416,9 +77619,9 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
 -------------------------------------------------------------------------------
 @inject IJSRuntime Js
 @inject NavigationManager Nav
-@implements IDisposable
+@implements IAsyncDisposable
 
-<nav class="nav-menu" role="navigation">
+<nav class="nav-menu">
     <button class="nav-toggle" @onclick="ToggleMenu" @onclick:stopPropagation="true" aria-label="Toggle navigation">
         ☰
     </button>
@@ -77471,6 +77674,7 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
 </nav>
 
 @code {
+    private IJSObjectReference? _module;
     private bool _isOpen;
     private string _currentTheme = "system";
 
@@ -77496,7 +77700,8 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
     {
         if (firstRender)
         {
-            _currentTheme = await Js.InvokeAsync<string>("observerTheme.get");
+            _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Layout/NavMenu.razor.js");
+            _currentTheme = await _module.InvokeAsync<string>("getTheme");
             StateHasChanged();
         }
     }
@@ -77504,12 +77709,25 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
     private async Task OnThemeChanged(ChangeEventArgs e)
     {
         _currentTheme = e.Value?.ToString() ?? "system";
-        await Js.InvokeVoidAsync("observerTheme.set", _currentTheme);
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("setTheme", _currentTheme);
+        }
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         Nav.LocationChanged -= OnLocationChanged;
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+        }
     }
 }
 
@@ -77568,7 +77786,7 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor.css
     font-size: 0.8rem;
     padding: 0.2rem 0.4rem;
     border-radius: var(--radius);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid color-mix(in srgb, var(--color-header-fg) 30%, transparent);
     background: transparent;
     color: var(--color-header-fg);
     cursor: pointer;
@@ -77612,12 +77830,20 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor.css
 
 
 -------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/libman.json
+FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor.js
 -------------------------------------------------------------------------------
-{
-  "version": "1.0",
-  "defaultProvider": "cdnjs",
-  "libraries": []
+const STORAGE_KEY = 'observer-theme';
+
+export function getTheme() {
+    return document.documentElement.dataset.theme ?? 'system';
+}
+
+export function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try {
+        localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+    }
 }
 
 
@@ -77674,7 +77900,7 @@ public sealed class BookProgress
     public DateTimeOffset? UpdatedAt { get; set; }
     public string? LastChapterSlug { get; set; }
     public string? LastSubchapterSlug { get; set; }
-    public Dictionary<string, SubchapterProgress> Subchapters { get; set; } = new(StringComparer.Ordinal);
+    public Dictionary<string, SubchapterProgress> Subchapters { get; set; } = [with(StringComparer.Ordinal)];
 
     public bool IsStarted => StartedAt is not null;
 
@@ -77685,7 +77911,7 @@ public sealed class SubchapterProgress
 {
     public DateTimeOffset? FirstVisitedAt { get; set; }
     public DateTimeOffset? LastVisitedAt { get; set; }
-    public Dictionary<string, QuestionProgress> Questions { get; set; } = new(StringComparer.Ordinal);
+    public Dictionary<string, QuestionProgress> Questions { get; set; } = [with(StringComparer.Ordinal)];
 }
 
 public sealed class QuestionProgress
@@ -77893,12 +78119,11 @@ FILE: src/ObserverMagazine.Web/ObserverMagazine.Web.csproj
   <PropertyGroup>
     <RootNamespace>ObserverMagazine.Web</RootNamespace>
     <AssemblyName>ObserverMagazine.Web</AssemblyName>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
-    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
 </Project>
@@ -77917,7 +78142,7 @@ FILE: src/ObserverMagazine.Web/Pages/About.razor
 <p>
     Terlingua Magazine is a free, open-source sample project demonstrating how to build
     a modern static web application using <strong>Blazor WebAssembly</strong> on
-    <strong>.NET 10</strong>.
+    <strong>.NET 11</strong>.
 </p>
 
 <h2>Goals</h2>
@@ -77937,11 +78162,11 @@ FILE: src/ObserverMagazine.Web/Pages/About.razor
         </tr>
     </thead>
     <tbody>
-        <tr><td>Runtime</td><td>.NET 10 (LTS)</td><td>MIT</td></tr>
+        <tr><td>Runtime</td><td>.NET 11</td><td>MIT</td></tr>
         <tr><td>UI Framework</td><td>Blazor WebAssembly</td><td>MIT</td></tr>
-        <tr><td>Language</td><td>C# 14</td><td>MIT</td></tr>
-        <tr><td>Markdown</td><td>Markdig 1.1.1</td><td>BSD-2-Clause</td></tr>
-        <tr><td>YAML</td><td>YamlDotNet 16.3.0</td><td>MIT</td></tr>
+        <tr><td>Language</td><td>C# 15</td><td>MIT</td></tr>
+        <tr><td>Markdown</td><td>Markdig 1.6.0</td><td>BSD-2-Clause</td></tr>
+        <tr><td>YAML</td><td>YamlDotNet 18.1.0</td><td>MIT</td></tr>
         <tr><td>Testing</td><td>xUnit v3 + bUnit</td><td>Apache-2.0 / MIT</td></tr>
         <tr><td>Hosting</td><td>GitHub Pages</td><td>Free</td></tr>
         <tr><td>Backend</td><td>Cloudflare Workers (D1)</td><td>Free tier</td></tr>
@@ -78105,8 +78330,7 @@ FILE: src/ObserverMagazine.Web/Pages/BlogPost.razor.css
 .blog-post h1 {
     font-size: clamp(1.4rem, 4.5vw, 2rem);
     line-height: 1.25;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .blog-post-footer {
@@ -78255,17 +78479,13 @@ FILE: src/ObserverMagazine.Web/Pages/Blog.razor.css
     background: var(--color-card-bg);
     position: relative;
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .blog-card h2,
 .blog-card h3 {
     font-size: 1.35rem;
     margin-bottom: 0.25rem;
-    overflow-wrap: break-word;
 }
-
-.blog-card p { overflow-wrap: break-word; }
 
 .tag-filter-bar {
     display: flex;
@@ -78554,12 +78774,10 @@ FILE: src/ObserverMagazine.Web/Pages/BookDetail.razor.css
 .book-header h1 {
     font-size: clamp(1.4rem, 4.5vw, 2rem);
     line-height: 1.25;
-    overflow-wrap: break-word;
 }
 
 .book-summary {
     margin: 0.5rem 0;
-    overflow-wrap: break-word;
 }
 
 .book-progress-panel {
@@ -78614,7 +78832,6 @@ FILE: src/ObserverMagazine.Web/Pages/BookDetail.razor.css
     display: flex;
     flex-direction: column;
     font-size: 1.15rem;
-    overflow-wrap: break-word;
 }
 
 .chapter-number {
@@ -78648,7 +78865,7 @@ FILE: src/ObserverMagazine.Web/Pages/BookDetail.razor.css
     min-width: 0;
 }
 
-.subchapter-item a { overflow-wrap: break-word; min-width: 0; }
+.subchapter-item a { min-width: 0; }
 
 .subchapter-number {
     font-weight: 600;
@@ -78916,7 +79133,6 @@ FILE: src/ObserverMagazine.Web/Pages/BookReader.razor.css
 .reader-header h1 {
     font-size: clamp(1.4rem, 4.5vw, 2rem);
     line-height: 1.25;
-    overflow-wrap: break-word;
 }
 
 .reader-header .blog-meta { margin-bottom: 0; }
@@ -78950,7 +79166,6 @@ FILE: src/ObserverMagazine.Web/Pages/BookReader.razor.css
     border-radius: var(--radius);
     background: var(--color-card-bg);
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .reader-pager-link:hover {
@@ -79134,12 +79349,10 @@ FILE: src/ObserverMagazine.Web/Pages/Books.razor.css
     padding: 1.5rem;
     background: var(--color-card-bg);
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .book-card h2 {
     font-size: 1.35rem;
-    overflow-wrap: break-word;
 }
 
 .book-card .blog-meta { margin-bottom: 0; }
@@ -79157,7 +79370,7 @@ FILE: src/ObserverMagazine.Web/Pages/Home.razor
 <section class="hero">
     <h1>Terlingua Magazine</h1>
     <p class="lead">
-        A free, open-source Blazor WebAssembly showcase built on .NET 10.
+        A free, open-source Blazor WebAssembly showcase built on .NET 11.
         Explore modern web patterns, read our blog, and use this as a starting point
         for your own projects.
     </p>
@@ -79265,7 +79478,6 @@ FILE: src/ObserverMagazine.Web/Pages/Home.razor.css
 .hero h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    overflow-wrap: break-word;
 }
 
 .lead {
@@ -79273,7 +79485,6 @@ FILE: src/ObserverMagazine.Web/Pages/Home.razor.css
     color: var(--color-muted);
     max-width: 43.75rem;
     margin: 0 auto 1.5rem;
-    overflow-wrap: break-word;
 }
 
 .hero-actions {
@@ -79301,10 +79512,7 @@ FILE: src/ObserverMagazine.Web/Pages/Home.razor.css
 .feature-card h3 {
     margin-bottom: 0.5rem;
     color: var(--color-primary);
-    overflow-wrap: break-word;
 }
-
-.feature-card p { overflow-wrap: break-word; }
 
 
 -------------------------------------------------------------------------------
@@ -79702,14 +79910,12 @@ FILE: src/ObserverMagazine.Web/Pages/ShowcaseDetail.razor.css
     border-radius: var(--radius);
     padding: 1.5rem;
     background: var(--color-card-bg);
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sd-card h2 {
     font-size: 1.5rem;
     margin-bottom: 0.75rem;
-    overflow-wrap: break-word;
 }
 
 .sd-badge {
@@ -79737,8 +79943,7 @@ FILE: src/ObserverMagazine.Web/Pages/ShowcaseDetail.razor.css
 .sd-details dt { font-weight: 600; color: var(--color-muted); }
 .sd-details dd {
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sd-star { color: var(--color-accent); }
@@ -79754,7 +79959,7 @@ FILE: src/ObserverMagazine.Web/Pages/ShowcaseDetail.razor.css
 .sd-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79769,11 +79974,10 @@ FILE: src/ObserverMagazine.Web/Pages/ShowcaseDetail.razor.css
     max-width: 25rem;
     width: 90%;
 }
-.sd-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.sd-dialog h4 { margin-bottom: 0.75rem; }
 .sd-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
-    overflow-wrap: break-word;
 }
 
 @media (max-width: 40em) {
@@ -80491,7 +80695,7 @@ FILE: src/ObserverMagazine.Web/Pages/Showcase.razor.css
     min-width: 11.25rem;
     max-height: 20rem;
     overflow-y: auto;
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 0.12);
 }
 
 .sc-col-option {
@@ -80614,8 +80818,7 @@ FILE: src/ObserverMagazine.Web/Pages/Showcase.razor.css
     padding: 0.5rem 0.6rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border);
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sc-table th {
@@ -80665,7 +80868,7 @@ FILE: src/ObserverMagazine.Web/Pages/Showcase.razor.css
 .sc-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80680,12 +80883,11 @@ FILE: src/ObserverMagazine.Web/Pages/Showcase.razor.css
     max-width: 25rem;
     width: 90%;
 }
-.sc-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.sc-dialog h4 { margin-bottom: 0.75rem; }
 .sc-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
     font-size: 0.95rem;
-    overflow-wrap: break-word;
 }
 
 /* ---- Mobile: collapse table to cards ---- */
@@ -80699,10 +80901,9 @@ FILE: src/ObserverMagazine.Web/Pages/Showcase.razor.css
         bottom: 0;
         left: 0;
         right: 0;
-        max-height: 50vh;
         max-height: 50dvh;
         border-radius: var(--radius) var(--radius) 0 0;
-        box-shadow: 0 -0.25rem 1.25rem rgba(0, 0, 0, 0.2);
+        box-shadow: 0 -0.25rem 1.25rem rgb(0 0 0 / 0.2);
         z-index: 100;
     }
 
@@ -80788,21 +80989,22 @@ using System.Net.Http.Json;
 
 namespace ObserverMagazine.Web.Services;
 
-public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> logger) : IAnalyticsService
+public sealed class AnalyticsService(HttpClient http, TimeProvider time, ILogger<AnalyticsService> logger) : IAnalyticsService
 {
     private const string BackendBaseUrl = "https://my-api.2w7sp317.workers.dev";
     private static readonly TimeSpan HealthCacheDuration = TimeSpan.FromMinutes(5);
 
     private bool _backendAvailable;
-    private DateTime _lastHealthCheck = DateTime.MinValue;
+    private DateTimeOffset? _lastHealthCheck;
 
     public bool IsBackendAvailable => _backendAvailable;
 
     public async Task CheckHealthAsync()
     {
-        // Cache health check result for 5 minutes
-        if (DateTime.UtcNow - _lastHealthCheck < HealthCacheDuration)
+        if (_lastHealthCheck is { } last && time.GetUtcNow() - last < HealthCacheDuration)
+        {
             return;
+        }
 
         try
         {
@@ -80817,7 +81019,7 @@ public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> 
         }
         finally
         {
-            _lastHealthCheck = DateTime.UtcNow;
+            _lastHealthCheck = time.GetUtcNow();
         }
     }
 
@@ -80911,8 +81113,10 @@ public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> 
 
     private async Task EnsureHealthChecked()
     {
-        if (_lastHealthCheck == DateTime.MinValue)
+        if (_lastHealthCheck is null)
+        {
             await CheckHealthAsync();
+        }
     }
 
     private async Task SendEventAsync(string title, string content)
@@ -81249,7 +81453,7 @@ public sealed class BookService(HttpClient http, ILogger<BookService> logger) : 
 {
     public const string DataRoot = "book-data";
 
-    private readonly Dictionary<string, BookToc> _tocCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, BookToc> _tocCache = [with(StringComparer.Ordinal)];
     private BookSummary[]? _indexCache;
 
     public async Task<BookSummary[]> GetBooksAsync()
@@ -81597,7 +81801,7 @@ namespace ObserverMagazine.Web.Services;
 
 public sealed class InMemoryProgressStore : IProgressStore
 {
-    private readonly Dictionary<string, string> _items = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _items = [with(StringComparer.Ordinal)];
 
     public ValueTask<string?> GetAsync(string key) =>
         ValueTask.FromResult(_items.GetValueOrDefault(key));
@@ -81850,7 +82054,7 @@ public sealed class ReadingProgressService(
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    private readonly Dictionary<string, BookProgress> _cache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, BookProgress> _cache = [with(StringComparer.Ordinal)];
     private readonly SemaphoreSlim _gate = new(1, 1);
 
     public static string StorageKey(string bookSlug) => KeyPrefix + bookSlug;
@@ -82047,17 +82251,17 @@ public sealed class ReadingProgressService(
 
     private static BookProgress Normalize(BookProgress progress)
     {
-        var subchapters = new Dictionary<string, SubchapterProgress>(StringComparer.Ordinal);
+        Dictionary<string, SubchapterProgress> subchapters = [with(StringComparer.Ordinal)];
 
-        foreach (var (key, subchapter) in progress.Subchapters ?? new Dictionary<string, SubchapterProgress>())
+        foreach (var (key, subchapter) in progress.Subchapters ?? [])
         {
             if (subchapter is null)
             {
                 continue;
             }
 
-            var questions = new Dictionary<string, QuestionProgress>(StringComparer.Ordinal);
-            foreach (var (questionId, question) in subchapter.Questions ?? new Dictionary<string, QuestionProgress>())
+            Dictionary<string, QuestionProgress> questions = [with(StringComparer.Ordinal)];
+            foreach (var (questionId, question) in subchapter.Questions ?? [])
             {
                 if (question is null)
                 {
@@ -82082,15 +82286,10 @@ FILE: src/ObserverMagazine.Web/Services/TelemetryService.cs
 -------------------------------------------------------------------------------
 namespace ObserverMagazine.Web.Services;
 
-/// <summary>
-/// Lightweight telemetry service for tracking events and metrics in the browser.
-/// Logs to ILogger (browser console). Can be extended with a real OpenTelemetry
-/// collector endpoint when one is available.
-/// </summary>
 public sealed class TelemetryService(ILogger<TelemetryService> logger)
 {
-    private readonly Dictionary<string, long> _counters = new();
-    private readonly object _lockObj = new();
+    private readonly Dictionary<string, long> _counters = [];
+    private readonly Lock _lock = new();
 
     public void TrackEvent(string eventName, IDictionary<string, string>? properties = null)
     {
@@ -82102,7 +82301,7 @@ public sealed class TelemetryService(ILogger<TelemetryService> logger)
 
     public void IncrementCounter(string counterName, long value = 1)
     {
-        lock (_lockObj)
+        lock (_lock)
         {
             _counters.TryGetValue(counterName, out var current);
             _counters[counterName] = current + value;
@@ -82112,7 +82311,7 @@ public sealed class TelemetryService(ILogger<TelemetryService> logger)
 
     public long GetCounter(string counterName)
     {
-        lock (_lockObj)
+        lock (_lock)
         {
             return _counters.GetValueOrDefault(counterName, 0);
         }
@@ -82127,32 +82326,6 @@ public sealed class TelemetryService(ILogger<TelemetryService> logger)
 
 
 -------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/wwwroot/404.html
--------------------------------------------------------------------------------
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Terlingua Magazine</title>
-    <script>
-        // Single-page app redirect for GitHub Pages.
-        // Converts the path to a query string so the SPA router can pick it up.
-        var pathSegmentsToKeep = 0;
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
-    </script>
-</head>
-<body></body>
-</html>
-
-
--------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
 -------------------------------------------------------------------------------
 /* ===========================================================================
@@ -82160,99 +82333,50 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
    Component-specific styles live in their .razor.css files.
    =========================================================================== */
 
-/* ========== DESIGN TOKENS (Light — default) ========== */
-:root,
-[data-theme="light"] {
-    --color-bg: #ffffff;
-    --color-text: #1a1a2e;
-    --color-muted: #6b7280;
-    --color-primary: #2563eb;
-    --color-primary-fg: #ffffff;
-    --color-accent: #3b82f6;
-    --color-surface: #f3f4f6;
-    --color-border: #e5e7eb;
-    --color-card-bg: #ffffff;
-    --color-header-bg: #2563eb;
-    --color-header-fg: #ffffff;
-    --color-footer-bg: #f3f4f6;
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", "Courier New", monospace;
+/* ========== DESIGN TOKENS ========== */
+:root {
+    color-scheme: light dark;
+
+    --font-sans: system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
     --radius: 0.375rem;
     --max-width: 60rem;
 
-    /* Inline code */
-    --color-inline-code-bg: #eff1f5;
-    --color-inline-code-fg: #1a1a2e;
-    --color-inline-code-border: #dde0e6;
-
-    /* Syntax highlighting tokens (bg #f3f4f6) — contrast verified vs bg */
-    --hl-bg: #f3f4f6;
-    --hl-fg: #1a1a2e;
-    --hl-keyword: #6f42c1;
-    --hl-string: #0a3069;
-    --hl-comment: #636c76;
-    --hl-number: #cf7700;
-    --hl-function: #0550ae;
-    --hl-title: #c11e3a;
-    --hl-type: #0b6e6e;
-    --hl-literal: #cf7700;
-    --hl-attr: #4f46e5;
-    --hl-built-in: #0b6e6e;
-    --hl-tag: #0550ae;
-    --hl-selector: #6f42c1;
-    --hl-property: #4f46e5;
-    --hl-punctuation: #1a1a2e;
-
-    /* Terminal box — always dark-tinted */
-    --terminal-bg: #1e1e2e;
-    --terminal-fg: #cdd6f4;
-    --terminal-prompt: #a6e3a1;
-    --terminal-ok: #a6e3a1;
-    --terminal-out: #cdd6f4;
-    --terminal-dot-red: #f38ba8;
-    --terminal-dot-amber: #f9e2af;
-    --terminal-dot-green: #a6e3a1;
-    --terminal-header-bg: #313244;
-    --terminal-title-fg: #bac2de;
-}
-
-/* ---- Dark ---- */
-[data-theme="dark"] {
-    --color-bg: #0f172a;
-    --color-text: #e2e8f0;
-    --color-muted: #94a3b8;
-    --color-primary: #60a5fa;
-    --color-primary-fg: #0f172a;
+    --color-bg: light-dark(#ffffff, #0f172a);
+    --color-text: light-dark(#1a1a2e, #e2e8f0);
+    --color-muted: light-dark(#6b7280, #94a3b8);
+    --color-primary: light-dark(#2563eb, #60a5fa);
+    --color-primary-fg: light-dark(#ffffff, #0f172a);
     --color-accent: #3b82f6;
-    --color-surface: #1e293b;
-    --color-border: #334155;
-    --color-card-bg: #1e293b;
-    --color-header-bg: #1e293b;
-    --color-header-fg: #e2e8f0;
-    --color-footer-bg: #1e293b;
+    --color-surface: light-dark(#f3f4f6, #1e293b);
+    --color-border: light-dark(#e5e7eb, #334155);
+    --color-card-bg: light-dark(#ffffff, #1e293b);
+    --color-header-bg: light-dark(#2563eb, #1e293b);
+    --color-header-fg: light-dark(#ffffff, #e2e8f0);
+    --color-footer-bg: light-dark(#f3f4f6, #1e293b);
 
-    --color-inline-code-bg: #1c2433;
-    --color-inline-code-fg: #e2e8f0;
-    --color-inline-code-border: #2d3a4d;
+    --color-inline-code-bg: light-dark(#eff1f5, #1c2433);
+    --color-inline-code-fg: light-dark(#1a1a2e, #e2e8f0);
+    --color-inline-code-border: light-dark(#dde0e6, #2d3a4d);
 
-    --hl-bg: #1e293b;
-    --hl-fg: #e2e8f0;
-    --hl-keyword: #c084fc;
-    --hl-string: #7ee7a8;
-    --hl-comment: #8b949e;
-    --hl-number: #fbbf24;
-    --hl-function: #6cb6ff;
-    --hl-title: #f87171;
-    --hl-type: #22d3ee;
-    --hl-literal: #fbbf24;
-    --hl-attr: #a5b4fc;
-    --hl-built-in: #22d3ee;
-    --hl-tag: #6cb6ff;
-    --hl-selector: #c084fc;
-    --hl-property: #a5b4fc;
-    --hl-punctuation: #e2e8f0;
+    --hl-bg: light-dark(#f3f4f6, #1e293b);
+    --hl-fg: light-dark(#1a1a2e, #e2e8f0);
+    --hl-keyword: light-dark(#6f42c1, #c084fc);
+    --hl-string: light-dark(#0a3069, #7ee7a8);
+    --hl-comment: light-dark(#636c76, #8b949e);
+    --hl-number: light-dark(#cf7700, #fbbf24);
+    --hl-function: light-dark(#0550ae, #6cb6ff);
+    --hl-title: light-dark(#c11e3a, #f87171);
+    --hl-type: light-dark(#0b6e6e, #22d3ee);
+    --hl-literal: light-dark(#cf7700, #fbbf24);
+    --hl-attr: light-dark(#4f46e5, #a5b4fc);
+    --hl-built-in: light-dark(#0b6e6e, #22d3ee);
+    --hl-tag: light-dark(#0550ae, #6cb6ff);
+    --hl-selector: light-dark(#6f42c1, #c084fc);
+    --hl-property: light-dark(#4f46e5, #a5b4fc);
+    --hl-punctuation: light-dark(#1a1a2e, #e2e8f0);
 
-    --terminal-bg: #11111b;
+    --terminal-bg: light-dark(#1e1e2e, #11111b);
     --terminal-fg: #cdd6f4;
     --terminal-prompt: #a6e3a1;
     --terminal-ok: #a6e3a1;
@@ -82260,12 +82384,17 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
     --terminal-dot-red: #f38ba8;
     --terminal-dot-amber: #f9e2af;
     --terminal-dot-green: #a6e3a1;
-    --terminal-header-bg: #1e1e2e;
+    --terminal-header-bg: light-dark(#313244, #1e1e2e);
     --terminal-title-fg: #bac2de;
 }
+
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
 
 /* ---- Sepia ---- */
 [data-theme="sepia"] {
+    color-scheme: light;
+
     --color-bg: #f4ecd8;
     --color-text: #433422;
     --color-muted: #7a6652;
@@ -82314,6 +82443,8 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
 
 /* ---- Solarized Light ---- */
 [data-theme="solarized-light"] {
+    color-scheme: light;
+
     --color-bg: #fdf6e3;
     --color-text: #657b83;
     --color-muted: #93a1a1;
@@ -82362,6 +82493,8 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
 
 /* ---- Solarized Dark ---- */
 [data-theme="solarized-dark"] {
+    color-scheme: dark;
+
     --color-bg: #002b36;
     --color-text: #839496;
     --color-muted: #586e75;
@@ -82410,6 +82543,8 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
 
 /* ---- High Contrast ---- */
 [data-theme="high-contrast"] {
+    color-scheme: dark;
+
     --color-bg: #000000;
     --color-text: #ffffff;
     --color-muted: #cccccc;
@@ -82459,18 +82594,12 @@ FILE: src/ObserverMagazine.Web/wwwroot/css/app.css
 /* ========== RESET ========== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-    /* overflow-x: hidden removed to prevent viewport scaling bugs on mobile */
-}
-
 body {
     font-family: var(--font-sans);
     background: var(--color-bg);
     color: var(--color-text);
     line-height: 1.6;
     overflow-wrap: break-word;
-    word-break: normal;
-    /* Removed width: 100%, max-width: 100vw, and overflow-x: hidden */
 }
 
 a { color: var(--color-primary); text-decoration: none; }
@@ -82487,7 +82616,6 @@ pre { min-width: 0; }
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 1rem;
-    overflow-wrap: break-word;
 }
 
 /* ========== BUTTONS (shared utility) ========== */
@@ -82572,25 +82700,47 @@ a.tag:hover {
     font-family: var(--font-sans);
     background: var(--color-bg);
     color: var(--color-text);
-    overflow-wrap: break-word;
 }
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 15%, transparent);
 }
 .form-group textarea {
     resize: vertical;
     min-height: 5rem;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
 }
 .form-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
 .form-validation { color: #dc2626; font-size: 0.8rem; margin-top: 0.25rem; }
 
 /* ========== LOADING ========== */
 .loading { text-align: center; padding: 2rem; color: var(--color-muted); }
+
+.app-loading {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+}
+
+/* ========== BLAZOR ERROR UI ========== */
+#blazor-error-ui {
+    display: none;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 1000;
+    padding: 0.75rem 1.25rem;
+    background: light-dark(#fffbe6, #3a3000);
+    color: var(--color-text);
+    box-shadow: 0 -1px 2px rgb(0 0 0 / 0.2);
+}
+#blazor-error-ui .dismiss {
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    cursor: pointer;
+}
 
 
 -------------------------------------------------------------------------------
@@ -82606,602 +82756,31 @@ can you please generate a 200px by 200px png image for src/ObserverMagazine.Web
 FILE: src/ObserverMagazine.Web/wwwroot/index.html
 -------------------------------------------------------------------------------
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="system">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Terlingua Magazine</title>
     <base href="/" />
+    <link rel="preload" id="webassembly" />
     <link rel="alternate" type="application/rss+xml" title="Terlingua Magazine RSS" href="/feed.xml" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="ObserverMagazine.Web.styles.css" />
-
-    <!-- Apply saved theme BEFORE first paint to prevent flash -->
-    <script>
-        (function () {
-            var stored = localStorage.getItem('observer-theme') || 'system';
-            var resolved = stored;
-            if (stored === 'system') {
-                resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-            document.documentElement.setAttribute('data-theme', resolved);
-        })();
-    </script>
+    <script src="js/theme.js"></script>
+    <script type="importmap"></script>
 </head>
 <body>
     <div id="app">
-        <div style="display:flex;align-items:center;justify-content:center;height:100vh;height:100dvh;">
-            <p>Loading Terlingua Magazine...</p>
-        </div>
+        <p class="app-loading">Loading Terlingua Magazine…</p>
     </div>
 
-    <div id="blazor-error-ui" style="display:none;">
+    <div id="blazor-error-ui">
         An unhandled error has occurred.
-        <a href="/" class="reload">Reload</a>
+        <a href="." class="reload">Reload</a>
         <span class="dismiss">🗙</span>
     </div>
 
-    <!-- Theme management API for Blazor interop -->
-    <script>
-        window.observerTheme = {
-            set: function (theme) {
-                var resolved = theme;
-                if (theme === 'system') {
-                    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                }
-                document.documentElement.setAttribute('data-theme', resolved);
-                localStorage.setItem('observer-theme', theme);
-            },
-            get: function () {
-                return localStorage.getItem('observer-theme') || 'system';
-            }
-        };
-    </script>
-
-    <!-- ================================================================
-         Custom syntax highlighter — replaces highlight.js.
-         No external dependencies. Handles C#, JS/TS, HTML, CSS, JSON,
-         YAML, Bash, SQL, Python. Degrades gracefully for unknowns.
-         ================================================================ -->
-    <script>
-    (function () {
-        'use strict';
-
-        function esc(s) {
-            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
-        function sp(cls, txt) {
-            return '<span class="hl-' + cls + '">' + esc(txt) + '</span>';
-        }
-
-        var KW = {
-            csharp: /^(abstract|as|async|await|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|record|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|var|virtual|void|volatile|where|while|yield|when|and|or|not|init|required|global|file|scoped|nint|nuint|nameof|value)$/,
-            javascript: /^(async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|static|super|switch|this|throw|true|try|typeof|undefined|var|void|while|with|yield)$/,
-            typescript: /^(abstract|as|async|await|break|case|catch|class|const|continue|debugger|declare|default|delete|do|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|instanceof|interface|keyof|let|module|namespace|new|null|of|override|readonly|return|satisfies|static|super|switch|this|throw|true|try|type|typeof|undefined|var|void|while|with|yield|infer|never|unknown|any|string|number|boolean|symbol|bigint)$/,
-            python: /^(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|self|print)$/,
-            sql: /^(SELECT|FROM|WHERE|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|JOIN|INNER|LEFT|RIGHT|OUTER|CROSS|ON|AND|OR|NOT|NULL|IS|IN|LIKE|BETWEEN|EXISTS|HAVING|GROUP|BY|ORDER|ASC|DESC|LIMIT|OFFSET|UNION|ALL|AS|SET|INTO|VALUES|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|BEGIN|COMMIT|ROLLBACK|TRANSACTION|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|DEFAULT|CHECK|UNIQUE|TOP|GO|USE|EXEC|DECLARE|NVARCHAR|VARCHAR|INT|BIT|DATETIME|IDENTITY|NOLOCK|WITH)$/i,
-            bash: /^(if|then|else|elif|fi|for|while|do|done|case|esac|function|return|in|select|until|echo|exit|export|source|alias|set|unset|readonly|local|declare|eval|exec|trap|cd|ls|grep|awk|sed|cat|mkdir|rm|cp|mv|chmod|chown|sudo|apt|dnf|pip|npm|dotnet|git|docker|podman)$/
-        };
-
-        function highlightGeneral(code, lang) {
-            var kw = KW[lang];
-            var hashC = lang === 'python' || lang === 'bash';
-            var dashC = lang === 'sql';
-            var out = '', i = 0, n = code.length;
-
-            while (i < n) {
-                var ch = code[i];
-                // Line comment
-                if ((ch === '/' && code[i + 1] === '/') ||
-                    (hashC && ch === '#' && (i === 0 || code[i - 1] === '\n' || /\s/.test(code[i - 1]))) ||
-                    (dashC && ch === '-' && code[i + 1] === '-')) {
-                    var end = code.indexOf('\n', i);
-                    if (end === -1) end = n;
-                    out += sp('comment', code.slice(i, end));
-                    i = end; continue;
-                }
-                // Block comment
-                if (ch === '/' && code[i + 1] === '*') {
-                    var end = code.indexOf('*/', i + 2);
-                    end = end === -1 ? n : end + 2;
-                    out += sp('comment', code.slice(i, end));
-                    i = end; continue;
-                }
-                // Strings: triple-quote, regular, verbatim/interpolated C#
-                if (ch === '"' || ch === "'" || ch === '`') {
-                    var q = ch, j = i + 1;
-                    if (code[i + 1] === q && code[i + 2] === q) {
-                        j = i + 3;
-                        var close = code.indexOf(q + q + q, j);
-                        close = close === -1 ? n : close + 3;
-                        out += sp('string', code.slice(i, close));
-                        i = close; continue;
-                    }
-                    while (j < n) {
-                        if (code[j] === '\\') { j += 2; continue; }
-                        if (code[j] === q) { j++; break; }
-                        if (q !== '`' && code[j] === '\n') break;
-                        j++;
-                    }
-                    out += sp('string', code.slice(i, j));
-                    i = j; continue;
-                }
-                // C# verbatim/interpolated @" $" $@" @$"
-                if (lang === 'csharp' && (ch === '@' || ch === '$')) {
-                    var next = code[i + 1] || '';
-                    var start = i;
-                    if (next === '"') {
-                        i += 2;
-                    } else if ((next === '@' || next === '$') && code[i + 2] === '"') {
-                        i += 3;
-                    } else {
-                        // Not a string prefix — fall through to identifier
-                        goto_ident(); continue;
-                    }
-                    var j = i;
-                    while (j < n) {
-                        if (code[j] === '"') {
-                            if (code[j + 1] === '"') { j += 2; continue; }
-                            j++; break;
-                        }
-                        j++;
-                    }
-                    out += sp('string', code.slice(start, j));
-                    i = j; continue;
-                }
-                // Number
-                if (/\d/.test(ch) && (i === 0 || !/[a-zA-Z_$]/.test(code[i - 1]))) {
-                    var j = i;
-                    if (ch === '0' && /[xXbBoO]/.test(code[j + 1] || '')) j += 2;
-                    while (j < n && /[\da-fA-F._eEuUlLfFdDmMnN]/.test(code[j])) j++;
-                    out += sp('number', code.slice(i, j));
-                    i = j; continue;
-                }
-                // Identifier / keyword
-                if (/[a-zA-Z_$]/.test(ch)) {
-                    goto_ident(); continue;
-                }
-                // Default
-                out += esc(ch);
-                i++;
-            }
-
-            function goto_ident() {
-                var j = i;
-                while (j < n && /[a-zA-Z0-9_$]/.test(code[j])) j++;
-                if (j === i) { out += esc(code[i]); i++; return; }
-                var word = code.slice(i, j);
-                if (kw && kw.test(word)) {
-                    out += sp('keyword', word);
-                } else if (/^[A-Z][a-zA-Z0-9]*$/.test(word) && word.length > 1 &&
-                           !/^(False|True|None)$/.test(word)) {
-                    out += sp('type', word);
-                } else {
-                    var k = j;
-                    while (k < n && code[k] === ' ') k++;
-                    if (code[k] === '(') {
-                        out += sp('function', word);
-                    } else {
-                        out += esc(word);
-                    }
-                }
-                i = j;
-            }
-
-            return out;
-        }
-
-        function highlightJSON(code) {
-            var out = '', i = 0, n = code.length;
-            while (i < n) {
-                if (code[i] === '"') {
-                    var j = i + 1;
-                    while (j < n && code[j] !== '"') {
-                        if (code[j] === '\\') j++;
-                        j++;
-                    }
-                    if (j < n) j++;
-                    var str = code.slice(i, j);
-                    var k = j;
-                    while (k < n && /\s/.test(code[k])) k++;
-                    if (code[k] === ':') {
-                        out += sp('attr', str);
-                    } else {
-                        out += sp('string', str);
-                    }
-                    i = j; continue;
-                }
-                if (/\d/.test(code[i]) || (code[i] === '-' && /\d/.test(code[i + 1] || ''))) {
-                    var j = i;
-                    if (code[j] === '-') j++;
-                    while (j < n && /[\d.eE+\-]/.test(code[j])) j++;
-                    out += sp('number', code.slice(i, j));
-                    i = j; continue;
-                }
-                if (/[a-zA-Z]/.test(code[i])) {
-                    var j = i;
-                    while (j < n && /[a-zA-Z]/.test(code[j])) j++;
-                    var word = code.slice(i, j);
-                    if (/^(true|false|null)$/.test(word)) {
-                        out += sp('literal', word);
-                    } else {
-                        out += esc(word);
-                    }
-                    i = j; continue;
-                }
-                out += esc(code[i]);
-                i++;
-            }
-            return out;
-        }
-
-        function highlightYAML(code) {
-            var lines = code.split('\n');
-            return lines.map(function (line) {
-                if (/^\s*#/.test(line)) return sp('comment', line);
-                var m = line.match(/^(\s*)([\w][\w.-]*\s*)(:)(.*)/);
-                if (m) {
-                    return esc(m[1]) + sp('attr', m[2]) + esc(m[3]) + highlightYAMLValue(m[4]);
-                }
-                return esc(line);
-            }).join('\n');
-        }
-
-        function highlightYAMLValue(val) {
-            val = val.trim();
-            if (!val || val === '') return '';
-            if (/^(true|false|yes|no|on|off|null|~)$/i.test(val)) return ' ' + sp('literal', val);
-            if (/^-?\d/.test(val)) return ' ' + sp('number', val);
-            if (/^["']/.test(val)) return ' ' + sp('string', val);
-            return ' ' + esc(val);
-        }
-
-        // Single-pass HTML/XML tokenizer.
-        // IMPORTANT: we never run a second regex replacement over already-
-        // highlighted output — doing so re-tokenises the span markup itself
-        // (e.g. matches `class="hl-attr"` inside an inserted <span>), which
-        // is exactly the defect this function is designed to avoid. Everything
-        // is produced in one linear pass through the input.
-        function highlightHTML(code) {
-            var out = '', i = 0, n = code.length;
-
-            while (i < n) {
-                var ch = code[i];
-
-                // Comment: <!-- ... -->
-                if (ch === '<' && code.slice(i, i + 4) === '<!--') {
-                    var end = code.indexOf('-->', i + 4);
-                    end = end === -1 ? n : end + 3;
-                    out += sp('comment', code.slice(i, end));
-                    i = end;
-                    continue;
-                }
-
-                // CDATA: <![CDATA[ ... ]]>
-                if (ch === '<' && code.slice(i, i + 9) === '<![CDATA[') {
-                    var end = code.indexOf(']]>', i + 9);
-                    end = end === -1 ? n : end + 3;
-                    out += sp('comment', code.slice(i, end));
-                    i = end;
-                    continue;
-                }
-
-                // DOCTYPE / processing instruction: <!DOCTYPE ...>, <?xml ... ?>
-                // Styled as comments — no dedicated CSS class needed.
-                if (ch === '<' && (code[i + 1] === '!' || code[i + 1] === '?')) {
-                    var end = code.indexOf('>', i);
-                    end = end === -1 ? n : end + 1;
-                    out += sp('comment', code.slice(i, end));
-                    i = end;
-                    continue;
-                }
-
-                // Element tag: <name ...> or </name>
-                if (ch === '<' && i + 1 < n && /[a-zA-Z\/]/.test(code[i + 1])) {
-                    out += esc('<');
-                    i++;
-
-                    // Optional leading slash (closing tag)
-                    if (code[i] === '/') {
-                        out += esc('/');
-                        i++;
-                    }
-
-                    // Tag name
-                    var nameStart = i;
-                    while (i < n && /[\w:-]/.test(code[i])) i++;
-                    if (i > nameStart) {
-                        out += sp('tag', code.slice(nameStart, i));
-                    }
-
-                    // Attributes — walk until we hit the closing '>'.
-                    while (i < n && code[i] !== '>') {
-                        // Whitespace: passthrough (already safe — no <>& in whitespace)
-                        if (/\s/.test(code[i])) {
-                            out += code[i];
-                            i++;
-                            continue;
-                        }
-
-                        // Self-closing slash
-                        if (code[i] === '/') {
-                            out += esc('/');
-                            i++;
-                            continue;
-                        }
-
-                        // Attribute name
-                        if (/[\w:-]/.test(code[i])) {
-                            var attrStart = i;
-                            while (i < n && /[\w:.-]/.test(code[i])) i++;
-                            out += sp('attr', code.slice(attrStart, i));
-
-                            // Optional '=' with optional whitespace on either side
-                            var look = i;
-                            while (look < n && /\s/.test(code[look])) look++;
-                            if (code[look] === '=') {
-                                if (look > i) out += code.slice(i, look);
-                                out += esc('=');
-                                i = look + 1;
-                                // Skip whitespace after '='
-                                while (i < n && /\s/.test(code[i])) {
-                                    out += code[i];
-                                    i++;
-                                }
-                                // Quoted value
-                                if (code[i] === '"' || code[i] === "'") {
-                                    var q = code[i];
-                                    var valStart = i;
-                                    i++;
-                                    while (i < n && code[i] !== q) i++;
-                                    if (i < n) i++; // include closing quote
-                                    out += sp('string', code.slice(valStart, i));
-                                } else {
-                                    // Unquoted value: up to whitespace, '/', or '>'
-                                    var valStart = i;
-                                    while (i < n &&
-                                           !/\s/.test(code[i]) &&
-                                           code[i] !== '>' &&
-                                           code[i] !== '/') {
-                                        i++;
-                                    }
-                                    if (i > valStart) {
-                                        out += sp('string', code.slice(valStart, i));
-                                    }
-                                }
-                            }
-                            continue;
-                        }
-
-                        // Anything else inside the tag — emit escaped
-                        out += esc(code[i]);
-                        i++;
-                    }
-
-                    // Closing '>'
-                    if (i < n && code[i] === '>') {
-                        out += esc('>');
-                        i++;
-                    }
-                    continue;
-                }
-
-                // Plain text outside tags
-                out += esc(ch);
-                i++;
-            }
-
-            return out;
-        }
-
-        function highlightCSS(code) {
-            var out = '', i = 0, n = code.length;
-            while (i < n) {
-                if (code[i] === '/' && code[i + 1] === '*') {
-                    var end = code.indexOf('*/', i + 2);
-                    end = end === -1 ? n : end + 2;
-                    out += sp('comment', code.slice(i, end));
-                    i = end; continue;
-                }
-                if (code[i] === '"' || code[i] === "'") {
-                    var q = code[i], j = i + 1;
-                    while (j < n && code[j] !== q) {
-                        if (code[j] === '\\') j++;
-                        j++;
-                    }
-                    if (j < n) j++;
-                    out += sp('string', code.slice(i, j));
-                    i = j; continue;
-                }
-                if (/\d/.test(code[i]) && (i === 0 || !/[a-zA-Z_-]/.test(code[i - 1]))) {
-                    var j = i;
-                    while (j < n && /[\d.%a-zA-Z]/.test(code[j])) j++;
-                    out += sp('number', code.slice(i, j));
-                    i = j; continue;
-                }
-                if (code[i] === '#' && /[0-9a-fA-F]/.test(code[i + 1] || '')) {
-                    var j = i + 1;
-                    while (j < n && /[0-9a-fA-F]/.test(code[j])) j++;
-                    out += sp('number', code.slice(i, j));
-                    i = j; continue;
-                }
-                // Selectors (at start of line or after })
-                if (/[.#@:[]/.test(code[i]) || (/[a-zA-Z]/.test(code[i]) && (i === 0 || code[i - 1] === '\n' || code[i - 1] === '}'))) {
-                    var j = i;
-                    while (j < n && code[j] !== '{' && code[j] !== ';' && code[j] !== '\n') j++;
-                    if (code[j] === '{') {
-                        out += sp('selector', code.slice(i, j));
-                        i = j; continue;
-                    }
-                }
-                // Properties (word followed by :)
-                if (/[a-zA-Z-]/.test(code[i])) {
-                    var j = i;
-                    while (j < n && /[a-zA-Z0-9-]/.test(code[j])) j++;
-                    var word = code.slice(i, j);
-                    var k = j;
-                    while (k < n && code[k] === ' ') k++;
-                    if (code[k] === ':' && code[k + 1] !== ':') {
-                        out += sp('property', word);
-                    } else {
-                        out += esc(word);
-                    }
-                    i = j; continue;
-                }
-                out += esc(code[i]);
-                i++;
-            }
-            return out;
-        }
-
-        function highlight(code, lang) {
-            lang = (lang || '').toLowerCase().replace(/^language-/, '');
-            var aliases = { cs: 'csharp', ts: 'typescript', js: 'javascript', sh: 'bash', shell: 'bash', zsh: 'bash', yml: 'yaml', xml: 'html' };
-            if (aliases[lang]) lang = aliases[lang];
-
-            if (lang === 'json') return highlightJSON(code);
-            if (lang === 'yaml') return highlightYAML(code);
-            if (lang === 'html' || lang === 'xml') return highlightHTML(code);
-            if (lang === 'css') return highlightCSS(code);
-            if (KW[lang]) return highlightGeneral(code, lang);
-
-            // Unknown language — try general with no keywords
-            return highlightGeneral(code, '');
-        }
-
-        window.observerHighlight = {
-            highlightAll: function () {
-                document.querySelectorAll('.blog-content pre code').forEach(function (el) {
-                    if (el.dataset.highlighted) return;
-                    var langClass = el.className || '';
-                    var lang = (langClass.match(/language-(\S+)/) || ['', ''])[1];
-                    var code = el.textContent;
-                    el.innerHTML = highlight(code, lang);
-                    el.dataset.highlighted = 'true';
-                });
-            }
-        };
-    }());
-    </script>
-
-    <!-- Code-block scroll detection for fade gradient + hint label.
-         Called from BlogPost.razor's OnAfterRenderAsync via JS interop.
-         Adds/removes CSS classes; all visual work stays in CSS. -->
-    <script>
-    window.observerCodeScroll = {
-        init: function () {
-            document.querySelectorAll('.code-block-wrap').forEach(function (wrap) {
-                if (wrap.dataset.scrollInit) return;
-                wrap.dataset.scrollInit = 'true';
-
-                var pre = wrap.querySelector('pre');
-                if (!pre) return;
-
-                function update() {
-                    var overflows = pre.scrollWidth > pre.clientWidth + 2;
-                    var atEnd = pre.scrollLeft + pre.clientWidth >= pre.scrollWidth - 4;
-                    var scrolled = pre.scrollLeft > 8;
-
-                    wrap.classList.toggle('no-overflow', !overflows);
-                    wrap.classList.toggle('scrolled', scrolled);
-                    wrap.classList.toggle('scrolled-end', atEnd);
-                }
-
-                pre.addEventListener('scroll', update, { passive: true });
-                update();
-
-                // Re-check after web fonts load (can shift widths)
-                if (document.fonts && document.fonts.ready) {
-                    document.fonts.ready.then(update);
-                }
-            });
-        }
-    };
-    </script>
-
-    <!-- Audio helper for BlogTtsPlayer -->
-    <script>
-        window.observerAudio = {
-            checkAvailability: function (elementId) {
-                return new Promise(function (resolve) {
-                    var audio = document.getElementById(elementId);
-                    if (!audio) { resolve(false); return; }
-                    var timeout = setTimeout(function () { resolve(false); }, 5000);
-                    audio.addEventListener('loadedmetadata', function () {
-                        clearTimeout(timeout);
-                        resolve(true);
-                    }, { once: true });
-                    audio.addEventListener('error', function () {
-                        clearTimeout(timeout);
-                        resolve(false);
-                    }, { once: true });
-                    if (audio.readyState === 0) audio.load();
-                    else if (audio.readyState >= 1) { clearTimeout(timeout); resolve(true); }
-                });
-            },
-            checkControlsRendered: function (elementId) {
-                var audio = document.getElementById(elementId);
-                if (!audio) return false;
-                var rect = audio.getBoundingClientRect();
-                return rect.height >= 20;
-            },
-            getDuration: function (elementId) {
-                var audio = document.getElementById(elementId);
-                return audio && isFinite(audio.duration) ? audio.duration : 0;
-            },
-            getCurrentTime: function (elementId) {
-                var audio = document.getElementById(elementId);
-                return audio ? audio.currentTime : 0;
-            },
-            hasEnded: function (elementId) {
-                var audio = document.getElementById(elementId);
-                return audio ? audio.ended : true;
-            },
-            play: function (elementId) {
-                var audio = document.getElementById(elementId);
-                if (audio) return audio.play();
-            },
-            pause: function (elementId) {
-                var audio = document.getElementById(elementId);
-                if (audio) audio.pause();
-            },
-            setCurrentTime: function (elementId, time) {
-                var audio = document.getElementById(elementId);
-                if (audio) audio.currentTime = time;
-            },
-            setPlaybackRate: function (elementId, rate) {
-                var audio = document.getElementById(elementId);
-                if (audio) audio.playbackRate = rate;
-            },
-            getPlaybackRate: function (elementId) {
-                var audio = document.getElementById(elementId);
-                return audio ? audio.playbackRate : 1.0;
-            },
-            getSavedPlaybackRate: function () {
-                var stored = localStorage.getItem('observer-audio-speed');
-                if (stored) {
-                    var rate = parseFloat(stored);
-                    if (isFinite(rate) && rate >= 0.5 && rate <= 3.0) return rate;
-                }
-                return 1.0;
-            },
-            savePlaybackRate: function (rate) {
-                localStorage.setItem('observer-audio-speed', rate.toString());
-            }
-        };
-    </script>
-
-    <!-- SPA redirect for GitHub Pages -->
-    <script>
-        (function () {
-            var redirect = sessionStorage.redirect;
-            delete sessionStorage.redirect;
-            if (redirect && redirect !== location.href) {
-                history.replaceState(null, null, redirect);
-            }
-        })();
-    </script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 </body>
 </html>
 
@@ -83212,35 +82791,12 @@ FILE: src/ObserverMagazine.Web/wwwroot/js/book-progress.js
 const DB_NAME = 'terlingua-books';
 const DB_VERSION = 1;
 const STORE_NAME = 'progress';
-const OPEN_TIMEOUT_MS = 3000;
 
 let dbPromise = null;
 
 function openDatabase() {
-    if (dbPromise) {
-        return dbPromise;
-    }
-
-    dbPromise = new Promise((resolve, reject) => {
-        if (typeof indexedDB === 'undefined' || indexedDB === null) {
-            reject(new Error('IndexedDB is not available'));
-            return;
-        }
-
-        let settled = false;
-        const timer = setTimeout(() => {
-            settled = true;
-            reject(new Error('Timed out opening IndexedDB'));
-        }, OPEN_TIMEOUT_MS);
-
-        let request;
-        try {
-            request = indexedDB.open(DB_NAME, DB_VERSION);
-        } catch (error) {
-            clearTimeout(timer);
-            reject(error);
-            return;
-        }
+    dbPromise ??= new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
 
         request.onupgradeneeded = () => {
             const db = request.result;
@@ -83251,30 +82807,15 @@ function openDatabase() {
 
         request.onsuccess = () => {
             const db = request.result;
-            clearTimeout(timer);
-            if (settled) {
+            db.onversionchange = db.onclose = () => {
                 db.close();
-                return;
-            }
-            settled = true;
-            db.onversionchange = () => {
-                db.close();
-                dbPromise = null;
-            };
-            db.onclose = () => {
                 dbPromise = null;
             };
             resolve(db);
         };
 
-        request.onerror = () => {
-            clearTimeout(timer);
-            if (settled) {
-                return;
-            }
-            settled = true;
-            reject(request.error || new Error('Failed to open IndexedDB'));
-        };
+        request.onerror = () => reject(request.error);
+        request.onblocked = () => reject(new Error('IndexedDB upgrade is blocked by another tab'));
     });
 
     dbPromise.catch(() => {
@@ -83284,36 +82825,46 @@ function openDatabase() {
     return dbPromise;
 }
 
-function withStore(mode, operation) {
-    return openDatabase().then((db) => new Promise((resolve, reject) => {
+async function withStore(mode, operation) {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
         const transaction = db.transaction(STORE_NAME, mode);
         const request = operation(transaction.objectStore(STORE_NAME));
-        let result;
-
-        request.onsuccess = () => {
-            result = request.result;
-        };
-        transaction.oncomplete = () => resolve(result);
-        transaction.onerror = () => reject(transaction.error || new Error('IndexedDB transaction failed'));
-        transaction.onabort = () => reject(transaction.error || new Error('IndexedDB transaction aborted'));
-    }));
+        transaction.oncomplete = () => resolve(request.result);
+        transaction.onerror = () => reject(transaction.error);
+        transaction.onabort = () => reject(transaction.error ?? new Error('IndexedDB transaction aborted'));
+    });
 }
 
-export function get(key) {
-    return withStore('readonly', (store) => store.get(key))
-        .then((value) => (typeof value === 'string' ? value : null));
+export async function get(key) {
+    const value = await withStore('readonly', store => store.get(key));
+    return typeof value === 'string' ? value : null;
 }
 
-export function set(key, value) {
-    return withStore('readwrite', (store) => store.put(value, key)).then(() => undefined);
+export async function set(key, value) {
+    await withStore('readwrite', store => store.put(value, key));
 }
 
-export function remove(key) {
-    return withStore('readwrite', (store) => store.delete(key)).then(() => undefined);
+export async function remove(key) {
+    await withStore('readwrite', store => store.delete(key));
 }
 
-export function isPersistent() {
-    return openDatabase().then(() => true, () => false);
+export async function isPersistent() {
+    try {
+        await openDatabase();
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/wwwroot/js/theme.js
+-------------------------------------------------------------------------------
+try {
+    document.documentElement.dataset.theme = localStorage.getItem('observer-theme') ?? 'system';
+} catch {
 }
 
 
@@ -84149,7 +83700,6 @@ FILE: tests/ObserverMagazine.Integration.Tests/ObserverMagazine.Integration.Test
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <OutputType>Exe</OutputType>
-    <!-- See ObserverMagazine.Web.Tests.csproj for why this is here. -->
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
@@ -85450,13 +85000,6 @@ FILE: tests/ObserverMagazine.Web.Tests/ObserverMagazine.Web.Tests.csproj
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <OutputType>Exe</OutputType>
-    <!--
-      Microsoft.Testing.Platform. xunit.v3 4.0 already sets
-      IsTestingPlatformApplication=true on its own; setting this makes the intent
-      explicit and gives `dotnet run` the same MTP command line that `dotnet test`
-      uses, so local and CI output match. Remove it if you prefer xUnit's native
-      console UX when running the test project directly.
-    -->
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
@@ -86975,7 +86518,7 @@ public sealed class BookCompiler(
     private List<ChapterToc> CompileChapters(string bookDir, string bookSlug, List<SubchapterDocument> documents)
     {
         var chapters = new List<ChapterToc>();
-        var seenSlugs = new HashSet<string>(StringComparer.Ordinal);
+        HashSet<string> seenSlugs = [with(StringComparer.Ordinal)];
 
         foreach (var entry in ReadNumberedEntries(Directory.GetDirectories(bookDir), p => Path.GetFileName(p)))
         {
@@ -87035,7 +86578,7 @@ public sealed class BookCompiler(
         List<SubchapterDocument> documents)
     {
         var subchapters = new List<SubchapterToc>();
-        var seenSlugs = new HashSet<string>(StringComparer.Ordinal);
+        HashSet<string> seenSlugs = [with(StringComparer.Ordinal)];
 
         foreach (var entry in ReadNumberedEntries(Directory.GetFiles(chapterDir, "*.md"), p => Path.GetFileNameWithoutExtension(p)))
         {
@@ -87443,8 +86986,8 @@ public static class QuestionCompiler
             return [];
         }
 
-        var questions = new List<QuestionDocument>(definitions.Count);
-        var seenIds = new HashSet<string>(StringComparer.Ordinal);
+        List<QuestionDocument> questions = [with(capacity: definitions.Count)];
+        HashSet<string> seenIds = [with(StringComparer.Ordinal)];
 
         for (var i = 0; i < definitions.Count; i++)
         {
@@ -87524,8 +87067,8 @@ public static class QuestionCompiler
         string location,
         BuildDiagnostics diagnostics)
     {
-        var options = new List<OptionDocument>(definitions.Count);
-        var seenIds = new HashSet<string>(StringComparer.Ordinal);
+        List<OptionDocument> options = [with(capacity: definitions.Count)];
+        HashSet<string> seenIds = [with(StringComparer.Ordinal)];
 
         for (var i = 0; i < definitions.Count; i++)
         {
@@ -87783,7 +87326,7 @@ Console.WriteLine($"Authors directory: {authorsDir}");
 Console.WriteLine($"Books directory:   {booksDir}");
 Console.WriteLine($"Publish before:    {publishBefore:yyyy-MM-dd HH:mm:ss} UTC");
 
-var authorProfiles = new Dictionary<string, AuthorProfile>(StringComparer.OrdinalIgnoreCase);
+Dictionary<string, AuthorProfile> authorProfiles = [with(StringComparer.OrdinalIgnoreCase)];
 
 if (Directory.Exists(authorsDir))
 {
@@ -87835,8 +87378,8 @@ if (!Directory.Exists(contentDir))
 var markdownFiles = Directory.GetFiles(contentDir, "*.md", SearchOption.TopDirectoryOnly);
 Console.WriteLine($"Found {markdownFiles.Length} markdown files");
 
-var allPostMetadata = new List<PostIndexEntry>();
-var postHtmlMap = new Dictionary<string, string>();
+List<PostIndexEntry> allPostMetadata = [];
+Dictionary<string, string> postHtmlMap = [];
 int skippedDrafts = 0;
 int skippedFuture = 0;
 
@@ -87920,7 +87463,7 @@ Console.WriteLine($"Wrote posts index: {indexPath} ({allPostMetadata.Count} post
 var feedPath = Path.Combine(outputDir, "feed.xml");
 var rssXml = RssGenerator.Generate(
     title: "Terlingua Magazine",
-    description: "A free, open-source Blazor WebAssembly showcase on .NET 10",
+    description: "A free, open-source Blazor WebAssembly showcase on .NET 11",
     siteUrl: "https://terlingua.github.io",
     posts: allPostMetadata,
     getPostHtml: slug => postHtmlMap.GetValueOrDefault(slug)
@@ -87943,13 +87486,14 @@ if (bookDiagnostics.HasErrors)
         Console.Error.WriteLine($"  ERROR: {error}");
     }
     Console.Error.WriteLine($"Book processing failed with {bookDiagnostics.Errors.Count} error(s).");
-    Environment.Exit(1);
+    return 1;
 }
 
 var bookDataDir = BookOutputWriter.Write(books, outputDir, jsonOptions);
 Console.WriteLine($"Wrote book data: {bookDataDir} ({books.Count} books)");
 
 Console.WriteLine("Content processing complete.");
+return 0;
 
 public sealed class PostIndexEntry
 {
@@ -87987,27 +87531,20 @@ public static class RssGenerator
     {
         var items = posts.Select(p =>
         {
-            var itemElements = new List<object>
-            {
+            List<object> itemElements =
+            [
                 new XElement("title", p.Title),
                 new XElement("link", $"{siteUrl}/blog/{p.Slug}"),
                 new XElement("description", p.Summary),
                 new XElement("pubDate", p.Date.ToString("R")),
                 new XElement("guid", $"{siteUrl}/blog/{p.Slug}")
-            };
+            ];
 
-            // Include author email if available (RSS spec: email (name))
             if (!string.IsNullOrEmpty(p.AuthorEmail))
             {
                 itemElements.Add(new XElement("author", $"{p.AuthorEmail} ({p.AuthorName})"));
             }
-            else if (!string.IsNullOrEmpty(p.AuthorName))
-            {
-                // dc:creator could be used here, but for simplicity just skip <author>
-                // when no email is available (RSS spec requires email in <author>)
-            }
 
-            // Include full HTML content if available
             var html = getPostHtml?.Invoke(p.Slug);
             if (!string.IsNullOrEmpty(html))
             {
@@ -88059,9 +87596,9 @@ num2words>=0.5.14
 
 ===============================================================================
 EXPORT COMPLETED
-Total Files Exported: 895
+Total Files Exported: 896
   Blog posts (front matter only): 5
-  Full content files: 888
+  Full content files: 889
   Binary files skipped: 2
 Output File: docs/llm/dump.txt
 ===============================================================================
