@@ -1,6 +1,6 @@
 ===============================================================================
 PROJECT EXPORT: terlingua.github.io
-DATE: 2026-11-12 04:23:18 UTC
+DATE: 2026-11-12 05:24:15 UTC
 ===============================================================================
 
 ===============================================================================
@@ -972,6 +972,7 @@ DIRECTORY TREE (all git-tracked files)
 │           │   │   ├── terlingua-books-library.tar.gz
 │           │   │   ├── terlingua-books.tar.gz
 │           │   │   ├── terlingua-ddia-companion.tar.gz
+│           │   │   ├── terlingua-dotnet11-no-js.tar.gz
 │           │   │   ├── terlingua-dotnet11.tar.gz
 │           │   │   ├── terlingua-legacy-code-companion.tar.gz
 │           │   │   ├── terlingua-nutrition-science.tar.gz
@@ -1004,7 +1005,6 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── AuthorCard.razor.css
 │       │   ├── BlogTtsPlayer.razor
 │       │   ├── BlogTtsPlayer.razor.css
-│       │   ├── BlogTtsPlayer.razor.js
 │       │   ├── MasterDetail.razor
 │       │   ├── MasterDetail.razor.css
 │       │   ├── ProgressMeter.razor
@@ -1017,7 +1017,6 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── ResponsiveTable.razor.css
 │       │   ├── RichContent.razor
 │       │   ├── RichContent.razor.css
-│       │   ├── RichContent.razor.js
 │       │   ├── SubchapterQuiz.razor
 │       │   └── SubchapterQuiz.razor.css
 │       ├── _Imports.razor
@@ -1025,8 +1024,7 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── MainLayout.razor
 │       │   ├── MainLayout.razor.css
 │       │   ├── NavMenu.razor
-│       │   ├── NavMenu.razor.css
-│       │   └── NavMenu.razor.js
+│       │   └── NavMenu.razor.css
 │       ├── Models
 │       │   ├── AuthorProfile.cs
 │       │   ├── BlogPostMetadata.cs
@@ -1035,7 +1033,8 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── BookToc.cs
 │       │   ├── CatalogProduct.cs
 │       │   ├── Product.cs
-│       │   └── SubchapterContent.cs
+│       │   ├── SubchapterContent.cs
+│       │   └── Theme.cs
 │       ├── ObserverMagazine.Web.csproj
 │       ├── Pages
 │       │   ├── About.razor
@@ -1065,6 +1064,7 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── BookNavigator.cs
 │       │   ├── BookProgressCalculator.cs
 │       │   ├── BookService.cs
+│       │   ├── BrowserStorageException.cs
 │       │   ├── ContentSlug.cs
 │       │   ├── FallbackProgressStore.cs
 │       │   ├── HtmlPostProcessor.cs
@@ -1072,10 +1072,12 @@ DIRECTORY TREE (all git-tracked files)
 │       │   ├── IBlogService.cs
 │       │   ├── IBookAnalytics.cs
 │       │   ├── IBookService.cs
-│       │   ├── IndexedDbProgressStore.cs
+│       │   ├── IBrowserStorage.cs
 │       │   ├── InMemoryProgressStore.cs
 │       │   ├── IProgressStore.cs
 │       │   ├── IReadingProgressService.cs
+│       │   ├── LocalBrowserStorage.cs
+│       │   ├── LocalStorageProgressStore.cs
 │       │   ├── ProductDataGenerator.cs
 │       │   ├── QuizEvaluator.cs
 │       │   ├── ReadingProgressService.cs
@@ -1089,9 +1091,6 @@ DIRECTORY TREE (all git-tracked files)
 │           │       ├── terlingua-team.png
 │           │       └── terlingua-team.txt
 │           ├── index.html
-│           ├── js
-│           │   ├── book-progress.js
-│           │   └── theme.js
 │           ├── plaintext
 │           │   └── 2026-04-26-zelensky.txt
 │           ├── sample-data
@@ -1104,7 +1103,8 @@ DIRECTORY TREE (all git-tracked files)
 │   │   ├── ContentProcessorTests.cs
 │   │   ├── ObserverMagazine.Integration.Tests.csproj
 │   │   ├── QuestionCompilerTests.cs
-│   │   └── RssGeneratorTests.cs
+│   │   ├── RssGeneratorTests.cs
+│   │   └── SyntaxHighlighterTests.cs
 │   └── ObserverMagazine.Web.Tests
 │       ├── Components
 │       │   ├── MasterDetailTests.cs
@@ -1137,10 +1137,12 @@ DIRECTORY TREE (all git-tracked files)
     │   ├── MarkdownProcessor.cs
     │   ├── ObserverMagazine.ContentProcessor.csproj
     │   ├── Program.cs
-    │   └── RssGenerator.cs
+    │   ├── RssGenerator.cs
+    │   ├── SyntaxHighlighter.cs
+    │   └── SyntaxHighlightingExtension.cs
     └── requirements-audio.txt
 
-218 directories, 914 files
+217 directories, 917 files
 
 
 -------------------------------------------------------------------------------
@@ -74806,7 +74808,7 @@ Built with **.NET 11** and **C# 15**. Targets the current stable releases of eve
 
 - **Blog** — Write posts in Markdown with YAML front matter; compiled to static JSON at build time
 - **RSS Feed** — Auto-generated `feed.xml`
-- **Books & Quizzes** — Multi-chapter books with single- and multiple-answer quizzes; reading progress stored in the browser (IndexedDB)
+- **Books & Quizzes** — Multi-chapter books with single- and multiple-answer quizzes; reading progress stored in the browser (localStorage)
 - **Responsive Tables** — Sortable, filterable data tables that work on mobile
 - **Master-Detail Flow** — Click a list item to view full details
 - **OpenTelemetry-ready Logging** — Structured logging via `ILogger`
@@ -74914,9 +74916,9 @@ Content guidelines for new sections:
 
 - A section is complete when every question has been answered correctly, or, if it has
   no questions, once it has been opened.
-- Progress is saved per book in IndexedDB (`terlingua-books` database). If IndexedDB is
-  unavailable (private browsing, blocked storage) the app falls back to in-memory
-  storage and tells the reader that progress will not persist.
+- Progress is saved per book in `localStorage` under `book:<slug>`. If storage is
+  unavailable (blocked storage, quota) the app falls back to in-memory storage and tells
+  the reader that progress will not persist.
 - When the analytics backend is reachable, the reader count of a book and of each
   section is shown. A reader is counted once per book and once per section, using the
   local progress record to avoid counting repeat visits. Quiz answers are sent as
@@ -74924,16 +74926,22 @@ Content guidelines for new sections:
 
 ## Front end
 
-- `wwwroot/index.html` contains no inline script. `js/theme.js` applies the saved theme before
-  first paint; everything else is an ES module loaded through `IJSRuntime` `import`.
-- JavaScript lives next to the component that uses it (`Components/RichContent.razor.js`,
-  `Components/BlogTtsPlayer.razor.js`, `Layout/NavMenu.razor.js`). `wwwroot/js/book-progress.js`
-  backs `IndexedDbProgressStore`.
-- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js` and fills the import map, so
-  JS modules are cache-busted on every deploy.
-- Themes are CSS custom properties. The default `system` theme uses `light-dark()` and
-  `color-scheme`, so it follows the OS setting live without script. Other themes set
-  `data-theme` on `<html>` and their own `color-scheme`.
+- The site ships no JavaScript of its own. The only interop is `localStorage` through
+  `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in `try`/`catch` as
+  analyzer BL0016 requires.
+- Code blocks are highlighted at build time by `SyntaxHighlighter` in the content processor,
+  plugged into Markdig as `SyntaxHighlightingExtension`. The `hl-*` colour classes live in
+  `app.css`.
+- Horizontally scrolling code blocks show edge shadows with pure CSS
+  (`background-attachment: local`).
+- Themes are CSS custom properties. `MainLayout` renders `data-theme` on `.page` and saves the
+  choice in `localStorage` (`observer-theme`). The default `system` theme uses `light-dark()`
+  and `color-scheme`, so it follows the OS setting live. The loading screen always uses the
+  system theme.
+- The audio player uses the browser's native controls, including playback speed, and stays
+  hidden until the MP3's metadata loads.
+- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js`, so it is cache-busted on
+  every deploy.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
 
 ## Testing
@@ -75229,37 +75237,20 @@ FILE: src/ObserverMagazine.Web/Components/AuthorCard.razor.css
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
 -------------------------------------------------------------------------------
-@using System.Globalization
-@implements IAsyncDisposable
 @inject IAnalyticsService Analytics
 @inject ILogger<BlogTtsPlayer> Logger
-@inject IJSRuntime Js
 
 <div class="tts-player" hidden="@(!_available)">
     <span class="tts-icon" aria-hidden="true">🔊</span>
     <span class="tts-label">Listen to this post</span>
 
-    <audio @ref="_audio"
-           controls
+    <audio controls
            preload="metadata"
            src="@AudioUrl"
            @onloadedmetadata="OnLoadedMetadata"
            @onplay="OnPlay"
            @onpause="OnPause"
            @onended="OnEnded"></audio>
-
-    <div class="tts-speed">
-        <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
-        <select id="tts-speed-@Slug"
-                class="tts-speed-select"
-                value="@FormatRate(_currentRate)"
-                @onchange="OnSpeedChange">
-            @foreach (var rate in PlaybackRates)
-            {
-                <option value="@FormatRate(rate)">@(FormatRate(rate))x</option>
-            }
-        </select>
-    </div>
 
     <a class="tts-direct-link" href="@AudioUrl" target="_blank" rel="noopener noreferrer"
        title="Open audio file directly in a new tab">
@@ -75268,21 +75259,13 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
 </div>
 
 @code {
-    private static readonly double[] PlaybackRates = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-
     [Parameter, EditorRequired]
     public string Slug { get; set; } = "";
 
-    private ElementReference _audio;
-    private Task<IJSObjectReference>? _module;
     private string? _currentSlug;
     private bool _available;
-    private double _currentRate = 1.0;
 
     private string AudioUrl => $"blog-data/{Slug}.mp3";
-
-    private Task<IJSObjectReference> Module =>
-        _module ??= Js.InvokeAsync<IJSObjectReference>("import", "./Components/BlogTtsPlayer.razor.js").AsTask();
 
     protected override void OnParametersSet()
     {
@@ -75295,44 +75278,7 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
         _available = false;
     }
 
-    private async Task OnLoadedMetadata()
-    {
-        _available = true;
-        try
-        {
-            var module = await Module;
-            var saved = await module.InvokeAsync<double>("getSavedRate");
-            _currentRate = PlaybackRates.Contains(saved) ? saved : 1.0;
-            await module.InvokeVoidAsync("applyRate", _audio, _currentRate);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogDebug(ex, "Failed to restore playback rate for {Slug}", Slug);
-        }
-    }
-
-    private async Task OnSpeedChange(ChangeEventArgs e)
-    {
-        if (!double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var rate) ||
-            !PlaybackRates.Contains(rate))
-        {
-            return;
-        }
-
-        _currentRate = rate;
-        try
-        {
-            var module = await Module;
-            await module.InvokeVoidAsync("applyRate", _audio, rate);
-            await module.InvokeVoidAsync("saveRate", rate);
-            Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
-            await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{FormatRate(rate)}x");
-        }
-        catch (Exception ex)
-        {
-            Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
-        }
-    }
+    private void OnLoadedMetadata() => _available = true;
 
     private async Task OnPlay()
     {
@@ -75350,24 +75296,6 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor
     {
         Logger.LogInformation("TTS finished: {Slug}", Slug);
         await Analytics.TrackInteractionAsync("TTS.Finished", Slug);
-    }
-
-    private static string FormatRate(double rate) => rate.ToString("0.##", CultureInfo.InvariantCulture);
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_module is not { IsCompletedSuccessfully: true })
-        {
-            return;
-        }
-
-        try
-        {
-            await _module.Result.DisposeAsync();
-        }
-        catch (JSDisconnectedException)
-        {
-        }
     }
 }
 
@@ -75409,30 +75337,6 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.css
     flex-shrink: 0;
 }
 
-.tts-speed {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    flex-shrink: 0;
-}
-
-.tts-speed-select {
-    font-size: 0.8rem;
-    padding: 0.15rem 0.3rem;
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    background: var(--color-bg);
-    color: var(--color-text);
-    cursor: pointer;
-}
-
-.tts-speed-select:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: -1px;
-}
-
 .tts-direct-link {
     font-size: 0.8rem;
     color: var(--color-muted);
@@ -75448,35 +75352,7 @@ FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.css
         padding: 0.5rem 0.75rem;
     }
     .tts-player audio { width: 100%; }
-    .tts-speed,
     .tts-direct-link { align-self: flex-start; }
-}
-
-
--------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor.js
--------------------------------------------------------------------------------
-const STORAGE_KEY = 'observer-audio-speed';
-
-export function getSavedRate() {
-    try {
-        const rate = Number.parseFloat(localStorage.getItem(STORAGE_KEY));
-        return Number.isFinite(rate) && rate >= 0.5 && rate <= 3 ? rate : 1;
-    } catch {
-        return 1;
-    }
-}
-
-export function applyRate(audio, rate) {
-    audio.defaultPlaybackRate = rate;
-    audio.playbackRate = rate;
-}
-
-export function saveRate(rate) {
-    try {
-        localStorage.setItem(STORAGE_KEY, String(rate));
-    } catch {
-    }
 }
 
 
@@ -76682,22 +76558,15 @@ FILE: src/ObserverMagazine.Web/Components/ResponsiveTable.razor.css
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Components/RichContent.razor
 -------------------------------------------------------------------------------
-@implements IAsyncDisposable
-@inject IJSRuntime Js
-@inject ILogger<RichContent> Logger
-
-<div class="blog-content" @ref="_container">
+<div class="blog-content">
     @((MarkupString)_processedHtml)
 </div>
 
 @code {
     [Parameter, EditorRequired] public string Html { get; set; } = "";
 
-    private ElementReference _container;
-    private IJSObjectReference? _module;
     private string _processedHtml = "";
     private string? _sourceHtml;
-    private bool _enhancementPending;
 
     protected override void OnParametersSet()
     {
@@ -76708,40 +76577,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor
 
         _sourceHtml = Html;
         _processedHtml = HtmlPostProcessor.Process(Html);
-        _enhancementPending = true;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!_enhancementPending)
-        {
-            return;
-        }
-
-        _enhancementPending = false;
-        try
-        {
-            _module ??= await Js.InvokeAsync<IJSObjectReference>("import", "./Components/RichContent.razor.js");
-            await _module.InvokeVoidAsync("enhance", _container);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogDebug(ex, "Post-render content enhancement failed");
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        try
-        {
-            if (_module is not null)
-            {
-                await _module.DisposeAsync();
-            }
-        }
-        catch (JSDisconnectedException)
-        {
-        }
     }
 }
 
@@ -76774,55 +76609,13 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     margin-bottom: 1rem;
 }
 
-.blog-content ::deep .code-block-wrap {
-    position: relative;
-    margin-bottom: 1.25rem;
-    min-width: 0;
-    width: 100%;
-}
-
-.blog-content ::deep .code-block-wrap::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    bottom: 1px;
-    width: 2.5rem;
-    background: linear-gradient(to right, transparent, var(--hl-bg));
-    border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-}
-
-.blog-content ::deep .code-block-wrap.no-overflow::after,
-.blog-content ::deep .code-block-wrap.scrolled-end::after {
-    opacity: 0;
-}
-
-.blog-content ::deep .code-scroll-hint {
-    position: absolute;
-    bottom: 0.75rem;
-    right: 0.75rem;
-    font-size: 0.7rem;
-    font-family: var(--font-sans);
-    color: var(--color-muted);
-    background: var(--hl-bg);
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 2;
-    transition: opacity 0.3s ease;
-}
-
-.blog-content ::deep .code-block-wrap.scrolled .code-scroll-hint,
-.blog-content ::deep .code-block-wrap.no-overflow .code-scroll-hint {
-    opacity: 0;
-}
-
 .blog-content ::deep pre {
-    background: var(--hl-bg);
+    background:
+        linear-gradient(to right, var(--hl-bg) 30%, transparent) left / 2.5rem 100% no-repeat local,
+        linear-gradient(to left, var(--hl-bg) 30%, transparent) right / 2.5rem 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--hl-fg) 30%, transparent), transparent) left / 1rem 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--hl-fg) 30%, transparent), transparent) right / 1rem 100% no-repeat scroll,
+        var(--hl-bg);
     color: var(--hl-fg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -76837,10 +76630,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     margin-bottom: 1.25rem;
     white-space: pre;
     box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.06);
-}
-
-.blog-content ::deep .code-block-wrap pre {
-    margin-bottom: 0;
 }
 
 .blog-content ::deep pre code {
@@ -76934,21 +76723,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
     margin-bottom: 0.5rem;
 }
 
-.blog-content ::deep .hl-keyword  { color: var(--hl-keyword); }
-.blog-content ::deep .hl-string   { color: var(--hl-string); }
-.blog-content ::deep .hl-comment  { color: var(--hl-comment); font-style: italic; }
-.blog-content ::deep .hl-number   { color: var(--hl-number); }
-.blog-content ::deep .hl-function { color: var(--hl-function); }
-.blog-content ::deep .hl-type     { color: var(--hl-type); }
-.blog-content ::deep .hl-literal  { color: var(--hl-literal); }
-.blog-content ::deep .hl-attr     { color: var(--hl-attr); }
-.blog-content ::deep .hl-built-in { color: var(--hl-built-in); }
-.blog-content ::deep .hl-title    { color: var(--hl-title); }
-.blog-content ::deep .hl-tag      { color: var(--hl-tag); }
-.blog-content ::deep .hl-selector { color: var(--hl-selector); }
-.blog-content ::deep .hl-property { color: var(--hl-property); }
-.blog-content ::deep .hl-punctuation { color: var(--hl-punctuation); }
-
 .blog-content ::deep .terminal-box {
     border-radius: var(--radius);
     overflow: hidden;
@@ -76994,412 +76768,6 @@ FILE: src/ObserverMagazine.Web/Components/RichContent.razor.css
 .blog-content ::deep .terminal-prompt { color: var(--terminal-prompt); font-weight: 700; }
 .blog-content ::deep .terminal-out    { color: var(--terminal-out); }
 .blog-content ::deep .terminal-ok     { color: var(--terminal-ok); }
-
-
--------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/Components/RichContent.razor.js
--------------------------------------------------------------------------------
-const KEYWORDS = {
-    csharp: /^(abstract|as|async|await|base|bool|break|byte|case|catch|char|checked|class|closed|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extension|extern|false|field|finally|fixed|float|for|foreach|goto|if|implicit|in|init|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|record|ref|required|return|sbyte|scoped|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|union|unsafe|ushort|using|var|virtual|void|volatile|when|where|while|with|yield|and|or|not|global|file|nint|nuint|nameof|value)$/,
-    javascript: /^(async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|static|super|switch|this|throw|true|try|typeof|undefined|var|void|while|with|yield)$/,
-    typescript: /^(abstract|as|async|await|break|case|catch|class|const|continue|debugger|declare|default|delete|do|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|instanceof|interface|keyof|let|module|namespace|new|null|of|override|readonly|return|satisfies|static|super|switch|this|throw|true|try|type|typeof|undefined|var|void|while|with|yield|infer|never|unknown|any|string|number|boolean|symbol|bigint)$/,
-    python: /^(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|self|print)$/,
-    sql: /^(SELECT|FROM|WHERE|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|JOIN|INNER|LEFT|RIGHT|OUTER|CROSS|ON|AND|OR|NOT|NULL|IS|IN|LIKE|BETWEEN|EXISTS|HAVING|GROUP|BY|ORDER|ASC|DESC|LIMIT|OFFSET|UNION|ALL|AS|SET|INTO|VALUES|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|BEGIN|COMMIT|ROLLBACK|TRANSACTION|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|DEFAULT|CHECK|UNIQUE|TOP|GO|USE|EXEC|DECLARE|NVARCHAR|VARCHAR|INT|BIT|DATETIME|IDENTITY|NOLOCK|WITH)$/i,
-    bash: /^(if|then|else|elif|fi|for|while|do|done|case|esac|function|return|in|select|until|echo|exit|export|source|alias|set|unset|readonly|local|declare|eval|exec|trap|cd|ls|grep|awk|sed|cat|mkdir|rm|cp|mv|chmod|chown|sudo|apt|dnf|pip|npm|dotnet|git|docker|podman)$/
-};
-
-const ALIASES = { cs: 'csharp', ts: 'typescript', js: 'javascript', sh: 'bash', shell: 'bash', zsh: 'bash', yml: 'yaml', xml: 'html' };
-
-const esc = s => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-const span = (cls, text) => `<span class="hl-${cls}">${esc(text)}</span>`;
-
-function highlightGeneral(code, lang) {
-    const kw = KEYWORDS[lang];
-    const hashComments = lang === 'python' || lang === 'bash';
-    const dashComments = lang === 'sql';
-    const n = code.length;
-    let out = '';
-    let i = 0;
-
-    const identifier = () => {
-        let j = i;
-        while (j < n && /[a-zA-Z0-9_$]/.test(code[j])) j++;
-        if (j === i) {
-            out += esc(code[i]);
-            i++;
-            return;
-        }
-        const word = code.slice(i, j);
-        if (kw?.test(word)) {
-            out += span('keyword', word);
-        } else if (/^[A-Z][a-zA-Z0-9]*$/.test(word) && word.length > 1 && !/^(False|True|None)$/.test(word)) {
-            out += span('type', word);
-        } else {
-            let k = j;
-            while (k < n && code[k] === ' ') k++;
-            out += code[k] === '(' ? span('function', word) : esc(word);
-        }
-        i = j;
-    };
-
-    while (i < n) {
-        const ch = code[i];
-
-        if ((ch === '/' && code[i + 1] === '/') ||
-            (hashComments && ch === '#' && (i === 0 || /\s/.test(code[i - 1]))) ||
-            (dashComments && ch === '-' && code[i + 1] === '-')) {
-            let end = code.indexOf('\n', i);
-            if (end === -1) end = n;
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-
-        if (ch === '/' && code[i + 1] === '*') {
-            const close = code.indexOf('*/', i + 2);
-            const end = close === -1 ? n : close + 2;
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-
-        if (ch === '"' || ch === "'" || ch === '`') {
-            if (code[i + 1] === ch && code[i + 2] === ch) {
-                const close = code.indexOf(ch.repeat(3), i + 3);
-                const end = close === -1 ? n : close + 3;
-                out += span('string', code.slice(i, end));
-                i = end;
-                continue;
-            }
-            let j = i + 1;
-            while (j < n) {
-                if (code[j] === '\\') { j += 2; continue; }
-                if (code[j] === ch) { j++; break; }
-                if (ch !== '`' && code[j] === '\n') break;
-                j++;
-            }
-            out += span('string', code.slice(i, j));
-            i = j;
-            continue;
-        }
-
-        if (lang === 'csharp' && (ch === '@' || ch === '$')) {
-            const next = code[i + 1] ?? '';
-            const start = i;
-            if (next === '"') {
-                i += 2;
-            } else if ((next === '@' || next === '$') && code[i + 2] === '"') {
-                i += 3;
-            } else {
-                identifier();
-                continue;
-            }
-            let j = i;
-            while (j < n) {
-                if (code[j] === '"') {
-                    if (code[j + 1] === '"') { j += 2; continue; }
-                    j++;
-                    break;
-                }
-                j++;
-            }
-            out += span('string', code.slice(start, j));
-            i = j;
-            continue;
-        }
-
-        if (/\d/.test(ch) && (i === 0 || !/[a-zA-Z_$]/.test(code[i - 1]))) {
-            let j = i;
-            if (ch === '0' && /[xXbBoO]/.test(code[j + 1] ?? '')) j += 2;
-            while (j < n && /[\da-fA-F._eEuUlLfFdDmMnN]/.test(code[j])) j++;
-            out += span('number', code.slice(i, j));
-            i = j;
-            continue;
-        }
-
-        if (/[a-zA-Z_$]/.test(ch)) {
-            identifier();
-            continue;
-        }
-
-        out += esc(ch);
-        i++;
-    }
-
-    return out;
-}
-
-function highlightJson(code) {
-    const n = code.length;
-    let out = '';
-    let i = 0;
-
-    while (i < n) {
-        if (code[i] === '"') {
-            let j = i + 1;
-            while (j < n && code[j] !== '"') {
-                if (code[j] === '\\') j++;
-                j++;
-            }
-            if (j < n) j++;
-            const str = code.slice(i, j);
-            let k = j;
-            while (k < n && /\s/.test(code[k])) k++;
-            out += span(code[k] === ':' ? 'attr' : 'string', str);
-            i = j;
-            continue;
-        }
-        if (/\d/.test(code[i]) || (code[i] === '-' && /\d/.test(code[i + 1] ?? ''))) {
-            let j = i;
-            if (code[j] === '-') j++;
-            while (j < n && /[\d.eE+\-]/.test(code[j])) j++;
-            out += span('number', code.slice(i, j));
-            i = j;
-            continue;
-        }
-        if (/[a-zA-Z]/.test(code[i])) {
-            let j = i;
-            while (j < n && /[a-zA-Z]/.test(code[j])) j++;
-            const word = code.slice(i, j);
-            out += /^(true|false|null)$/.test(word) ? span('literal', word) : esc(word);
-            i = j;
-            continue;
-        }
-        out += esc(code[i]);
-        i++;
-    }
-
-    return out;
-}
-
-function highlightYamlValue(raw) {
-    const val = raw.trim();
-    if (!val) return '';
-    if (/^(true|false|yes|no|on|off|null|~)$/i.test(val)) return ' ' + span('literal', val);
-    if (/^-?\d/.test(val)) return ' ' + span('number', val);
-    if (/^["']/.test(val)) return ' ' + span('string', val);
-    return ' ' + esc(val);
-}
-
-function highlightYaml(code) {
-    return code.split('\n').map(line => {
-        if (/^\s*#/.test(line)) return span('comment', line);
-        const m = line.match(/^(\s*)([\w][\w.-]*\s*)(:)(.*)/);
-        return m
-            ? esc(m[1]) + span('attr', m[2]) + esc(m[3]) + highlightYamlValue(m[4])
-            : esc(line);
-    }).join('\n');
-}
-
-function highlightHtml(code) {
-    const n = code.length;
-    let out = '';
-    let i = 0;
-
-    const until = (marker, from, extra) => {
-        const found = code.indexOf(marker, from);
-        return found === -1 ? n : found + extra;
-    };
-
-    while (i < n) {
-        const ch = code[i];
-
-        if (ch === '<' && code.startsWith('<!--', i)) {
-            const end = until('-->', i + 4, 3);
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-
-        if (ch === '<' && code.startsWith('<![CDATA[', i)) {
-            const end = until(']]>', i + 9, 3);
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-
-        if (ch === '<' && (code[i + 1] === '!' || code[i + 1] === '?')) {
-            const end = until('>', i, 1);
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-
-        if (ch === '<' && i + 1 < n && /[a-zA-Z\/]/.test(code[i + 1])) {
-            out += '&lt;';
-            i++;
-
-            if (code[i] === '/') {
-                out += '/';
-                i++;
-            }
-
-            const nameStart = i;
-            while (i < n && /[\w:-]/.test(code[i])) i++;
-            if (i > nameStart) out += span('tag', code.slice(nameStart, i));
-
-            while (i < n && code[i] !== '>') {
-                if (/\s/.test(code[i]) || code[i] === '/') {
-                    out += code[i];
-                    i++;
-                    continue;
-                }
-
-                if (/[\w:-]/.test(code[i])) {
-                    const attrStart = i;
-                    while (i < n && /[\w:.-]/.test(code[i])) i++;
-                    out += span('attr', code.slice(attrStart, i));
-
-                    let look = i;
-                    while (look < n && /\s/.test(code[look])) look++;
-                    if (code[look] === '=') {
-                        out += code.slice(i, look) + '=';
-                        i = look + 1;
-                        while (i < n && /\s/.test(code[i])) {
-                            out += code[i];
-                            i++;
-                        }
-                        const valStart = i;
-                        if (code[i] === '"' || code[i] === "'") {
-                            const q = code[i];
-                            i++;
-                            while (i < n && code[i] !== q) i++;
-                            if (i < n) i++;
-                        } else {
-                            while (i < n && !/\s/.test(code[i]) && code[i] !== '>' && code[i] !== '/') i++;
-                        }
-                        if (i > valStart) out += span('string', code.slice(valStart, i));
-                    }
-                    continue;
-                }
-
-                out += esc(code[i]);
-                i++;
-            }
-
-            if (i < n) {
-                out += '&gt;';
-                i++;
-            }
-            continue;
-        }
-
-        out += esc(ch);
-        i++;
-    }
-
-    return out;
-}
-
-function highlightCss(code) {
-    const n = code.length;
-    let out = '';
-    let i = 0;
-
-    while (i < n) {
-        if (code[i] === '/' && code[i + 1] === '*') {
-            const close = code.indexOf('*/', i + 2);
-            const end = close === -1 ? n : close + 2;
-            out += span('comment', code.slice(i, end));
-            i = end;
-            continue;
-        }
-        if (code[i] === '"' || code[i] === "'") {
-            const q = code[i];
-            let j = i + 1;
-            while (j < n && code[j] !== q) {
-                if (code[j] === '\\') j++;
-                j++;
-            }
-            if (j < n) j++;
-            out += span('string', code.slice(i, j));
-            i = j;
-            continue;
-        }
-        if (/\d/.test(code[i]) && (i === 0 || !/[a-zA-Z_-]/.test(code[i - 1]))) {
-            let j = i;
-            while (j < n && /[\d.%a-zA-Z]/.test(code[j])) j++;
-            out += span('number', code.slice(i, j));
-            i = j;
-            continue;
-        }
-        if (code[i] === '#' && /[0-9a-fA-F]/.test(code[i + 1] ?? '')) {
-            let j = i + 1;
-            while (j < n && /[0-9a-fA-F]/.test(code[j])) j++;
-            out += span('number', code.slice(i, j));
-            i = j;
-            continue;
-        }
-        if (/[.#@:[]/.test(code[i]) || (/[a-zA-Z]/.test(code[i]) && (i === 0 || code[i - 1] === '\n' || code[i - 1] === '}'))) {
-            let j = i;
-            while (j < n && code[j] !== '{' && code[j] !== ';' && code[j] !== '\n') j++;
-            if (code[j] === '{') {
-                out += span('selector', code.slice(i, j));
-                i = j;
-                continue;
-            }
-        }
-        if (/[a-zA-Z-]/.test(code[i])) {
-            let j = i;
-            while (j < n && /[a-zA-Z0-9-]/.test(code[j])) j++;
-            const word = code.slice(i, j);
-            let k = j;
-            while (k < n && code[k] === ' ') k++;
-            out += code[k] === ':' && code[k + 1] !== ':' ? span('property', word) : esc(word);
-            i = j;
-            continue;
-        }
-        out += esc(code[i]);
-        i++;
-    }
-
-    return out;
-}
-
-export function highlight(code, language) {
-    let lang = (language ?? '').toLowerCase().replace(/^language-/, '');
-    lang = ALIASES[lang] ?? lang;
-
-    switch (lang) {
-        case 'json': return highlightJson(code);
-        case 'yaml': return highlightYaml(code);
-        case 'html': return highlightHtml(code);
-        case 'css': return highlightCss(code);
-        default: return highlightGeneral(code, KEYWORDS[lang] ? lang : '');
-    }
-}
-
-function highlightAll(root) {
-    for (const el of root.querySelectorAll('pre code:not([data-highlighted])')) {
-        const lang = el.className.match(/language-(\S+)/)?.[1] ?? '';
-        el.innerHTML = highlight(el.textContent, lang);
-        el.dataset.highlighted = '';
-    }
-}
-
-function trackScroll(root) {
-    for (const wrap of root.querySelectorAll('.code-block-wrap:not([data-scroll-tracked])')) {
-        const pre = wrap.querySelector('pre');
-        if (!pre) continue;
-        wrap.dataset.scrollTracked = '';
-
-        const update = () => {
-            const overflows = pre.scrollWidth > pre.clientWidth + 2;
-            wrap.classList.toggle('no-overflow', !overflows);
-            wrap.classList.toggle('scrolled', pre.scrollLeft > 8);
-            wrap.classList.toggle('scrolled-end', pre.scrollLeft + pre.clientWidth >= pre.scrollWidth - 4);
-        };
-
-        pre.addEventListener('scroll', update, { passive: true });
-        new ResizeObserver(update).observe(pre);
-    }
-}
-
-export function enhance(root) {
-    if (!root) return;
-    highlightAll(root);
-    trackScroll(root);
-}
 
 
 -------------------------------------------------------------------------------
@@ -77523,14 +76891,16 @@ FILE: src/ObserverMagazine.Web/_Imports.razor
 FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor
 -------------------------------------------------------------------------------
 @inherits LayoutComponentBase
+@inject IBrowserStorage Storage
+@inject ILogger<MainLayout> Logger
 
-<div class="page">
+<div class="page" data-theme="@_theme.Id">
     <header class="top-bar">
         <div class="container top-bar-inner">
             <a class="brand" href="/">
                 <strong>Terlingua</strong> Magazine
             </a>
-            <NavMenu />
+            <NavMenu CurrentTheme="_theme" ThemeChanged="SetThemeAsync" />
         </div>
     </header>
 
@@ -77556,6 +76926,35 @@ FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor
     </footer>
 </div>
 
+@code {
+    private Theme _theme = Theme.Default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _theme = Theme.FromId(await Storage.GetAsync(Theme.StorageKey));
+        }
+        catch (BrowserStorageException ex)
+        {
+            Logger.LogDebug(ex, "Could not read the saved theme");
+        }
+    }
+
+    private async Task SetThemeAsync(Theme theme)
+    {
+        _theme = theme;
+        try
+        {
+            await Storage.SetAsync(Theme.StorageKey, theme.Id);
+        }
+        catch (BrowserStorageException ex)
+        {
+            Logger.LogDebug(ex, "Could not save the theme");
+        }
+    }
+}
+
 
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor.css
@@ -77568,7 +76967,9 @@ FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor.css
     min-height: 100dvh;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden; /* Safely prevents page-level scrolling without iOS bugs */
+    overflow-x: hidden;
+    background: var(--color-bg);
+    color: var(--color-text);
 }
 
 /* ========== HEADER ========== */
@@ -77617,9 +77018,8 @@ FILE: src/ObserverMagazine.Web/Layout/MainLayout.razor.css
 -------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
 -------------------------------------------------------------------------------
-@inject IJSRuntime Js
 @inject NavigationManager Nav
-@implements IAsyncDisposable
+@implements IDisposable
 
 <nav class="nav-menu">
     <button class="nav-toggle" @onclick="ToggleMenu" @onclick:stopPropagation="true" aria-label="Toggle navigation">
@@ -77658,25 +77058,23 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
         </li>
         <li>
             <select class="theme-select"
-                    value="@_currentTheme"
+                    value="@CurrentTheme.Id"
                     @onchange="OnThemeChanged"
                     aria-label="Choose theme">
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="sepia">Sepia</option>
-                <option value="solarized-light">Solarized Light</option>
-                <option value="solarized-dark">Solarized Dark</option>
-                <option value="high-contrast">High Contrast</option>
+                @foreach (var theme in Theme.All)
+                {
+                    <option value="@theme.Id">@theme.Label</option>
+                }
             </select>
         </li>
     </ul>
 </nav>
 
 @code {
-    private IJSObjectReference? _module;
+    [Parameter, EditorRequired] public Theme CurrentTheme { get; set; } = Theme.Default;
+    [Parameter] public EventCallback<Theme> ThemeChanged { get; set; }
+
     private bool _isOpen;
-    private string _currentTheme = "system";
 
     protected override void OnInitialized()
     {
@@ -77696,38 +77094,12 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Layout/NavMenu.razor.js");
-            _currentTheme = await _module.InvokeAsync<string>("getTheme");
-            StateHasChanged();
-        }
-    }
+    private Task OnThemeChanged(ChangeEventArgs e) =>
+        ThemeChanged.InvokeAsync(Theme.FromId(e.Value?.ToString()));
 
-    private async Task OnThemeChanged(ChangeEventArgs e)
-    {
-        _currentTheme = e.Value?.ToString() ?? "system";
-        if (_module is not null)
-        {
-            await _module.InvokeVoidAsync("setTheme", _currentTheme);
-        }
-    }
-
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
         Nav.LocationChanged -= OnLocationChanged;
-        try
-        {
-            if (_module is not null)
-            {
-                await _module.DisposeAsync();
-            }
-        }
-        catch (JSDisconnectedException)
-        {
-        }
     }
 }
 
@@ -77825,24 +77197,6 @@ FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor.css
         inset: 0;
         z-index: 98;
         background: transparent;
-    }
-}
-
-
--------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/Layout/NavMenu.razor.js
--------------------------------------------------------------------------------
-const STORAGE_KEY = 'observer-theme';
-
-export function getTheme() {
-    return document.documentElement.dataset.theme ?? 'system';
-}
-
-export function setTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-    try {
-        localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
     }
 }
 
@@ -78109,6 +77463,33 @@ public sealed record QuizResult(bool IsCorrect, IReadOnlySet<string> Selected, I
 }
 
 public sealed record QuizAnswer(QuizQuestion Question, IReadOnlyCollection<string> SelectedOptionIds, QuizResult Result);
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Models/Theme.cs
+-------------------------------------------------------------------------------
+namespace ObserverMagazine.Web.Models;
+
+public sealed record Theme(string Id, string Label)
+{
+    public const string StorageKey = "observer-theme";
+
+    public static readonly Theme Default = new("system", "System");
+
+    public static readonly IReadOnlyList<Theme> All =
+    [
+        Default,
+        new("light", "Light"),
+        new("dark", "Dark"),
+        new("sepia", "Sepia"),
+        new("solarized-light", "Solarized Light"),
+        new("solarized-dark", "Solarized Dark"),
+        new("high-contrast", "High Contrast")
+    ];
+
+    public static Theme FromId(string? id) =>
+        All.FirstOrDefault(t => string.Equals(t.Id, id, StringComparison.Ordinal)) ?? Default;
+}
 
 
 -------------------------------------------------------------------------------
@@ -80962,9 +80343,10 @@ builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBookAnalytics, BookAnalytics>();
-builder.Services.AddScoped<IndexedDbProgressStore>();
+builder.Services.AddScoped<IBrowserStorage, LocalBrowserStorage>();
+builder.Services.AddScoped<LocalStorageProgressStore>();
 builder.Services.AddScoped<IProgressStore>(sp => new FallbackProgressStore(
-    sp.GetRequiredService<IndexedDbProgressStore>(),
+    sp.GetRequiredService<LocalStorageProgressStore>(),
     new InMemoryProgressStore(),
     sp.GetRequiredService<ILogger<FallbackProgressStore>>()));
 builder.Services.AddScoped<IReadingProgressService, ReadingProgressService>();
@@ -81545,6 +80927,15 @@ public sealed class BookService(HttpClient http, ILogger<BookService> logger) : 
 
 
 -------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Services/BrowserStorageException.cs
+-------------------------------------------------------------------------------
+namespace ObserverMagazine.Web.Services;
+
+public sealed class BrowserStorageException(string message, Exception innerException)
+    : Exception(message, innerException);
+
+
+-------------------------------------------------------------------------------
 FILE: src/ObserverMagazine.Web/Services/ContentSlug.cs
 -------------------------------------------------------------------------------
 using System.Diagnostics.CodeAnalysis;
@@ -81640,9 +81031,6 @@ namespace ObserverMagazine.Web.Services;
 
 public static class HtmlPostProcessor
 {
-    private const string CodeWrapOpen =
-        "<div class=\"code-block-wrap\"><span class=\"code-scroll-hint\" aria-hidden=\"true\">scroll →</span><pre";
-
     private const string TableWrapOpen = "<div class=\"table-scroll-wrap\"><table";
 
     public static string Process(string? html)
@@ -81653,8 +81041,6 @@ public static class HtmlPostProcessor
         }
 
         return html
-            .Replace("<pre", CodeWrapOpen, StringComparison.Ordinal)
-            .Replace("</pre>", "</pre></div>", StringComparison.Ordinal)
             .Replace("<table", TableWrapOpen, StringComparison.Ordinal)
             .Replace("</table>", "</table></div>", StringComparison.Ordinal);
     }
@@ -81736,61 +81122,15 @@ public interface IBookService
 
 
 -------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs
+FILE: src/ObserverMagazine.Web/Services/IBrowserStorage.cs
 -------------------------------------------------------------------------------
-using Microsoft.JSInterop;
-
 namespace ObserverMagazine.Web.Services;
 
-public sealed class IndexedDbProgressStore(IJSRuntime js) : IProgressStore, IAsyncDisposable
+public interface IBrowserStorage
 {
-    private const string ModulePath = "./js/book-progress.js";
-    private static readonly TimeSpan CallTimeout = TimeSpan.FromSeconds(5);
-
-    private Task<IJSObjectReference>? _module;
-
-    public async ValueTask<string?> GetAsync(string key)
-    {
-        var module = await GetModuleAsync();
-        return await module.InvokeAsync<string?>("get", CallTimeout, key);
-    }
-
-    public async ValueTask SetAsync(string key, string value)
-    {
-        var module = await GetModuleAsync();
-        await module.InvokeVoidAsync("set", CallTimeout, key, value);
-    }
-
-    public async ValueTask RemoveAsync(string key)
-    {
-        var module = await GetModuleAsync();
-        await module.InvokeVoidAsync("remove", CallTimeout, key);
-    }
-
-    public async ValueTask<bool> IsPersistentAsync()
-    {
-        var module = await GetModuleAsync();
-        return await module.InvokeAsync<bool>("isPersistent", CallTimeout);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_module is not { IsCompletedSuccessfully: true })
-        {
-            return;
-        }
-
-        try
-        {
-            await _module.Result.DisposeAsync();
-        }
-        catch (JSDisconnectedException)
-        {
-        }
-    }
-
-    private Task<IJSObjectReference> GetModuleAsync() =>
-        _module ??= js.InvokeAsync<IJSObjectReference>("import", CallTimeout, ModulePath).AsTask();
+    ValueTask<string?> GetAsync(string key);
+    ValueTask SetAsync(string key, string value);
+    ValueTask RemoveAsync(string key);
 }
 
 
@@ -81860,6 +81200,87 @@ public interface IReadingProgressService
     Task<BookProgress> ResetAsync(string bookSlug);
 
     Task<bool> IsPersistentAsync();
+}
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Services/LocalBrowserStorage.cs
+-------------------------------------------------------------------------------
+using Microsoft.JSInterop;
+
+namespace ObserverMagazine.Web.Services;
+
+public sealed class LocalBrowserStorage(IJSRuntime js) : IBrowserStorage
+{
+    public async ValueTask<string?> GetAsync(string key)
+    {
+        try
+        {
+            return await js.InvokeAsync<string?>("localStorage.getItem", key);
+        }
+        catch (JSException ex)
+        {
+            throw Unavailable(ex);
+        }
+    }
+
+    public async ValueTask SetAsync(string key, string value)
+    {
+        try
+        {
+            await js.InvokeVoidAsync("localStorage.setItem", key, value);
+        }
+        catch (JSException ex)
+        {
+            throw Unavailable(ex);
+        }
+    }
+
+    public async ValueTask RemoveAsync(string key)
+    {
+        try
+        {
+            await js.InvokeVoidAsync("localStorage.removeItem", key);
+        }
+        catch (JSException ex)
+        {
+            throw Unavailable(ex);
+        }
+    }
+
+    private static BrowserStorageException Unavailable(JSException ex) =>
+        new("localStorage is not available", ex);
+}
+
+
+-------------------------------------------------------------------------------
+FILE: src/ObserverMagazine.Web/Services/LocalStorageProgressStore.cs
+-------------------------------------------------------------------------------
+namespace ObserverMagazine.Web.Services;
+
+public sealed class LocalStorageProgressStore(IBrowserStorage storage) : IProgressStore
+{
+    private const string ProbeKey = "book:__probe";
+
+    public ValueTask<string?> GetAsync(string key) => storage.GetAsync(key);
+
+    public ValueTask SetAsync(string key, string value) => storage.SetAsync(key, value);
+
+    public ValueTask RemoveAsync(string key) => storage.RemoveAsync(key);
+
+    public async ValueTask<bool> IsPersistentAsync()
+    {
+        try
+        {
+            await storage.SetAsync(ProbeKey, "1");
+            await storage.RemoveAsync(ProbeKey);
+            return true;
+        }
+        catch (BrowserStorageException)
+        {
+            return false;
+        }
+    }
 }
 
 
@@ -82618,6 +82039,22 @@ pre { min-width: 0; }
     padding: 0 1rem;
 }
 
+/* ========== SYNTAX HIGHLIGHTING (generated at build time) ========== */
+.hl-keyword     { color: var(--hl-keyword); }
+.hl-string      { color: var(--hl-string); }
+.hl-comment     { color: var(--hl-comment); font-style: italic; }
+.hl-number      { color: var(--hl-number); }
+.hl-function    { color: var(--hl-function); }
+.hl-type        { color: var(--hl-type); }
+.hl-literal     { color: var(--hl-literal); }
+.hl-attr        { color: var(--hl-attr); }
+.hl-built-in    { color: var(--hl-built-in); }
+.hl-title       { color: var(--hl-title); }
+.hl-tag         { color: var(--hl-tag); }
+.hl-selector    { color: var(--hl-selector); }
+.hl-property    { color: var(--hl-property); }
+.hl-punctuation { color: var(--hl-punctuation); }
+
 /* ========== BUTTONS (shared utility) ========== */
 .btn {
     display: inline-block;
@@ -82756,7 +82193,7 @@ can you please generate a 200px by 200px png image for src/ObserverMagazine.Web
 FILE: src/ObserverMagazine.Web/wwwroot/index.html
 -------------------------------------------------------------------------------
 <!DOCTYPE html>
-<html lang="en" data-theme="system">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82766,8 +82203,6 @@ FILE: src/ObserverMagazine.Web/wwwroot/index.html
     <link rel="alternate" type="application/rss+xml" title="Terlingua Magazine RSS" href="/feed.xml" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="ObserverMagazine.Web.styles.css" />
-    <script src="js/theme.js"></script>
-    <script type="importmap"></script>
 </head>
 <body>
     <div id="app">
@@ -82783,89 +82218,6 @@ FILE: src/ObserverMagazine.Web/wwwroot/index.html
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 </body>
 </html>
-
-
--------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/wwwroot/js/book-progress.js
--------------------------------------------------------------------------------
-const DB_NAME = 'terlingua-books';
-const DB_VERSION = 1;
-const STORE_NAME = 'progress';
-
-let dbPromise = null;
-
-function openDatabase() {
-    dbPromise ??= new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-        request.onupgradeneeded = () => {
-            const db = request.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-                db.createObjectStore(STORE_NAME);
-            }
-        };
-
-        request.onsuccess = () => {
-            const db = request.result;
-            db.onversionchange = db.onclose = () => {
-                db.close();
-                dbPromise = null;
-            };
-            resolve(db);
-        };
-
-        request.onerror = () => reject(request.error);
-        request.onblocked = () => reject(new Error('IndexedDB upgrade is blocked by another tab'));
-    });
-
-    dbPromise.catch(() => {
-        dbPromise = null;
-    });
-
-    return dbPromise;
-}
-
-async function withStore(mode, operation) {
-    const db = await openDatabase();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, mode);
-        const request = operation(transaction.objectStore(STORE_NAME));
-        transaction.oncomplete = () => resolve(request.result);
-        transaction.onerror = () => reject(transaction.error);
-        transaction.onabort = () => reject(transaction.error ?? new Error('IndexedDB transaction aborted'));
-    });
-}
-
-export async function get(key) {
-    const value = await withStore('readonly', store => store.get(key));
-    return typeof value === 'string' ? value : null;
-}
-
-export async function set(key, value) {
-    await withStore('readwrite', store => store.put(value, key));
-}
-
-export async function remove(key) {
-    await withStore('readwrite', store => store.delete(key));
-}
-
-export async function isPersistent() {
-    try {
-        await openDatabase();
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-
--------------------------------------------------------------------------------
-FILE: src/ObserverMagazine.Web/wwwroot/js/theme.js
--------------------------------------------------------------------------------
-try {
-    document.documentElement.dataset.theme = localStorage.getItem('observer-theme') ?? 'system';
-} catch {
-}
 
 
 -------------------------------------------------------------------------------
@@ -84031,6 +83383,57 @@ public sealed class RssPostEntry
     public string? AuthorEmail { get; init; }
 }
 
+
+
+-------------------------------------------------------------------------------
+FILE: tests/ObserverMagazine.Integration.Tests/SyntaxHighlighterTests.cs
+-------------------------------------------------------------------------------
+using ObserverMagazine.ContentProcessor;
+using Xunit;
+
+namespace ObserverMagazine.Integration.Tests;
+
+public class SyntaxHighlighterTests
+{
+    [Theory]
+    [InlineData("csharp", "var name = $\"Hi {x}\"; // greet\nList<int> items = [1, 2];",
+        "<span class=\"hl-keyword\">var</span> name = <span class=\"hl-string\">$\"Hi {x}\"</span>; <span class=\"hl-comment\">// greet</span>\n<span class=\"hl-type\">List</span>&lt;<span class=\"hl-keyword\">int</span>&gt; items = [<span class=\"hl-number\">1</span>, <span class=\"hl-number\">2</span>];")]
+    [InlineData("json", "{\"id\": 1, \"ok\": true}",
+        "{<span class=\"hl-attr\">\"id\"</span>: <span class=\"hl-number\">1</span>, <span class=\"hl-attr\">\"ok\"</span>: <span class=\"hl-literal\">true</span>}")]
+    [InlineData("yml", "title: Hello\ndraft: false",
+        "<span class=\"hl-attr\">title</span>: Hello\n<span class=\"hl-attr\">draft</span>: <span class=\"hl-literal\">false</span>")]
+    [InlineData("html", "<a href=\"/x\">Go</a>",
+        "&lt;<span class=\"hl-tag\">a</span> <span class=\"hl-attr\">href</span>=<span class=\"hl-string\">\"/x\"</span>&gt;Go&lt;/<span class=\"hl-tag\">a</span>&gt;")]
+    [InlineData("css", ".a { color: #fff; }",
+        "<span class=\"hl-selector\">.a </span>{ <span class=\"hl-property\">color</span>: <span class=\"hl-number\">#fff</span>; }")]
+    [InlineData("sql", "select * from Users -- all",
+        "<span class=\"hl-keyword\">select</span> * <span class=\"hl-keyword\">from</span> <span class=\"hl-type\">Users</span> <span class=\"hl-comment\">-- all</span>")]
+    [InlineData("", "if (a < b && c > d) {}",
+        "<span class=\"hl-function\">if</span> (a &lt; b &amp;&amp; c &gt; d) {}")]
+    public void Highlights(string language, string code, string expected)
+    {
+        Assert.Equal(expected, SyntaxHighlighter.Highlight(code, language));
+    }
+
+    [Fact]
+    public void FencedCodeIsHighlightedAtBuildTime()
+    {
+        var html = MarkdownProcessor.ToHtml("```csharp\nvar x = 1;\n```");
+
+        Assert.Contains("<pre><code class=\"language-csharp\">", html);
+        Assert.Contains("<span class=\"hl-keyword\">var</span>", html);
+        Assert.Contains("</code></pre>", html);
+    }
+
+    [Fact]
+    public void MarkupInCodeIsEscaped()
+    {
+        var html = MarkdownProcessor.ToHtml("```html\n<script>alert(1)</script>\n```");
+
+        Assert.DoesNotContain("<script>", html);
+        Assert.Contains("&lt;<span class=\"hl-tag\">script</span>&gt;", html);
+    }
+}
 
 
 -------------------------------------------------------------------------------
@@ -85651,14 +85054,19 @@ namespace ObserverMagazine.Web.Tests.Services;
 public class HtmlPostProcessorTests
 {
     [Fact]
-    public void WrapsCodeBlocksAndTables()
+    public void WrapsTables()
     {
-        var html = HtmlPostProcessor.Process("<pre><code>x</code></pre><table><tr><td>1</td></tr></table>");
+        var html = HtmlPostProcessor.Process("<table><tr><td>1</td></tr></table>");
 
-        Assert.Contains("<div class=\"code-block-wrap\">", html);
-        Assert.Contains("</pre></div>", html);
-        Assert.Contains("<div class=\"table-scroll-wrap\"><table", html);
-        Assert.Contains("</table></div>", html);
+        Assert.Equal("<div class=\"table-scroll-wrap\"><table><tr><td>1</td></tr></table></div>", html);
+    }
+
+    [Fact]
+    public void LeavesCodeBlocksUntouched()
+    {
+        const string code = "<pre><code class=\"language-csharp\"><span class=\"hl-keyword\">var</span></code></pre>";
+
+        Assert.Equal(code, HtmlPostProcessor.Process(code));
     }
 
     [Theory]
@@ -87252,12 +86660,10 @@ public static class MarkdownProcessor
 
     private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
+        .Use<SyntaxHighlightingExtension>()
         .Build();
 
-    public static string ToHtml(string markdown)
-    {
-        return Markdown.ToHtml(markdown, Pipeline);
-    }
+    public static string ToHtml(string markdown) => Markdown.ToHtml(markdown, Pipeline);
 
     public static string ToInlineHtml(string markdown)
     {
@@ -87581,6 +86987,631 @@ public static class RssGenerator
 
 
 -------------------------------------------------------------------------------
+FILE: tools/ObserverMagazine.ContentProcessor/SyntaxHighlighter.cs
+-------------------------------------------------------------------------------
+using System.Collections.Frozen;
+using System.Text;
+
+namespace ObserverMagazine.ContentProcessor;
+
+public static class SyntaxHighlighter
+{
+    private static readonly FrozenDictionary<string, string> Aliases = new Dictionary<string, string>
+    {
+        ["cs"] = "csharp",
+        ["ts"] = "typescript",
+        ["js"] = "javascript",
+        ["sh"] = "bash",
+        ["shell"] = "bash",
+        ["zsh"] = "bash",
+        ["yml"] = "yaml",
+        ["xml"] = "html"
+    }.ToFrozenDictionary();
+
+    private static readonly FrozenDictionary<string, FrozenSet<string>> Keywords = new Dictionary<string, FrozenSet<string>>
+    {
+        ["csharp"] = Set("abstract as async await base bool break byte case catch char checked class closed const continue decimal default delegate do double else enum event explicit extension extern false field finally fixed float for foreach goto if implicit in init int interface internal is lock long namespace new null object operator out override params partial private protected public readonly record ref required return sbyte scoped sealed short sizeof stackalloc static string struct switch this throw true try typeof uint ulong unchecked union unsafe ushort using var virtual void volatile when where while with yield and or not global file nint nuint nameof value"),
+        ["javascript"] = Set("async await break case catch class const continue debugger default delete do else export extends false finally for from function if import in instanceof let new null of return static super switch this throw true try typeof undefined var void while with yield"),
+        ["typescript"] = Set("abstract as async await break case catch class const continue debugger declare default delete do else enum export extends false finally for from function if implements import in instanceof interface keyof let module namespace new null of override readonly return satisfies static super switch this throw true try type typeof undefined var void while with yield infer never unknown any string number boolean symbol bigint"),
+        ["python"] = Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield self print"),
+        ["sql"] = Set("SELECT FROM WHERE INSERT UPDATE DELETE CREATE ALTER DROP TABLE INDEX VIEW JOIN INNER LEFT RIGHT OUTER CROSS ON AND OR NOT NULL IS IN LIKE BETWEEN EXISTS HAVING GROUP BY ORDER ASC DESC LIMIT OFFSET UNION ALL AS SET INTO VALUES DISTINCT COUNT SUM AVG MIN MAX CASE WHEN THEN ELSE END BEGIN COMMIT ROLLBACK TRANSACTION PRIMARY KEY FOREIGN REFERENCES CONSTRAINT DEFAULT CHECK UNIQUE TOP GO USE EXEC DECLARE NVARCHAR VARCHAR INT BIT DATETIME IDENTITY NOLOCK WITH", StringComparer.OrdinalIgnoreCase),
+        ["bash"] = Set("if then else elif fi for while do done case esac function return in select until echo exit export source alias set unset readonly local declare eval exec trap cd ls grep awk sed cat mkdir rm cp mv chmod chown sudo apt dnf pip npm dotnet git docker podman")
+    }.ToFrozenDictionary();
+
+    private static readonly FrozenSet<string> YamlLiterals = Set("true false yes no on off null ~", StringComparer.OrdinalIgnoreCase);
+
+    public static string Highlight(string code, string? language)
+    {
+        var lang = (language ?? "").Trim().ToLowerInvariant();
+        if (lang.StartsWith("language-", StringComparison.Ordinal))
+        {
+            lang = lang["language-".Length..];
+        }
+        lang = Aliases.GetValueOrDefault(lang, lang);
+
+        return lang switch
+        {
+            "json" => HighlightJson(code),
+            "yaml" => HighlightYaml(code),
+            "html" => HighlightHtml(code),
+            "css" => HighlightCss(code),
+            _ => HighlightGeneral(code, Keywords.ContainsKey(lang) ? lang : "")
+        };
+    }
+
+    private static FrozenSet<string> Set(string words, StringComparer? comparer = null) =>
+        words.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToFrozenSet(comparer ?? StringComparer.Ordinal);
+
+    private static bool IsAsciiLetter(char c) => char.IsAsciiLetter(c);
+    private static bool IsIdentStart(char c) => char.IsAsciiLetter(c) || c is '_' or '$';
+    private static bool IsIdentPart(char c) => char.IsAsciiLetterOrDigit(c) || c is '_' or '$';
+    private static bool IsWordChar(char c) => char.IsAsciiLetterOrDigit(c) || c == '_';
+
+    private static char At(string s, int index) => index >= 0 && index < s.Length ? s[index] : '\0';
+
+    private static void Escape(StringBuilder sb, ReadOnlySpan<char> text)
+    {
+        foreach (var c in text)
+        {
+            switch (c)
+            {
+                case '&': sb.Append("&amp;"); break;
+                case '<': sb.Append("&lt;"); break;
+                case '>': sb.Append("&gt;"); break;
+                default: sb.Append(c); break;
+            }
+        }
+    }
+
+    private static void Wrap(StringBuilder sb, string cls, ReadOnlySpan<char> text)
+    {
+        sb.Append("<span class=\"hl-").Append(cls).Append("\">");
+        Escape(sb, text);
+        sb.Append("</span>");
+    }
+
+    private static int EndOf(string code, string marker, int from, int extra)
+    {
+        var found = code.IndexOf(marker, from, StringComparison.Ordinal);
+        return found < 0 ? code.Length : found + extra;
+    }
+
+    private static string HighlightGeneral(string code, string lang)
+    {
+        var keywords = Keywords.GetValueOrDefault(lang);
+        var hashComments = lang is "python" or "bash";
+        var dashComments = lang == "sql";
+        var n = code.Length;
+        var sb = new StringBuilder(code.Length * 2);
+        var i = 0;
+
+        while (i < n)
+        {
+            var ch = code[i];
+
+            if ((ch == '/' && At(code, i + 1) == '/') ||
+                (hashComments && ch == '#' && (i == 0 || char.IsWhiteSpace(code[i - 1]))) ||
+                (dashComments && ch == '-' && At(code, i + 1) == '-'))
+            {
+                var end = code.IndexOf('\n', i);
+                if (end < 0) end = n;
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch == '/' && At(code, i + 1) == '*')
+            {
+                var end = EndOf(code, "*/", i + 2, 2);
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch is '"' or '\'' or '`')
+            {
+                if (At(code, i + 1) == ch && At(code, i + 2) == ch)
+                {
+                    var end = EndOf(code, new string(ch, 3), i + 3, 3);
+                    Wrap(sb, "string", code.AsSpan(i, end - i));
+                    i = end;
+                    continue;
+                }
+
+                var j = i + 1;
+                while (j < n)
+                {
+                    if (code[j] == '\\') { j += 2; continue; }
+                    if (code[j] == ch) { j++; break; }
+                    if (ch != '`' && code[j] == '\n') break;
+                    j++;
+                }
+                j = Math.Min(j, n);
+                Wrap(sb, "string", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (lang == "csharp" && ch is '@' or '$')
+            {
+                var next = At(code, i + 1);
+                var start = i;
+                var prefix = next == '"' ? 2 : (next is '@' or '$') && At(code, i + 2) == '"' ? 3 : 0;
+                if (prefix == 0)
+                {
+                    i = Identifier(code, i, keywords, sb);
+                    continue;
+                }
+
+                var j = i + prefix;
+                while (j < n)
+                {
+                    if (code[j] == '"')
+                    {
+                        if (At(code, j + 1) == '"') { j += 2; continue; }
+                        j++;
+                        break;
+                    }
+                    j++;
+                }
+                j = Math.Min(j, n);
+                Wrap(sb, "string", code.AsSpan(start, j - start));
+                i = j;
+                continue;
+            }
+
+            if (char.IsAsciiDigit(ch) && (i == 0 || !IsIdentStart(code[i - 1])))
+            {
+                var j = i;
+                if (ch == '0' && At(code, j + 1) is 'x' or 'X' or 'b' or 'B' or 'o' or 'O') j += 2;
+                while (j < n && (char.IsAsciiHexDigit(code[j]) || code[j] is '.' or '_' or 'u' or 'U' or 'l' or 'L' or 'm' or 'M' or 'n' or 'N')) j++;
+                j = Math.Min(j, n);
+                Wrap(sb, "number", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (IsIdentStart(ch))
+            {
+                i = Identifier(code, i, keywords, sb);
+                continue;
+            }
+
+            Escape(sb, [ch]);
+            i++;
+        }
+
+        return sb.ToString();
+    }
+
+    private static int Identifier(string code, int i, FrozenSet<string>? keywords, StringBuilder sb)
+    {
+        var n = code.Length;
+        var j = i;
+        while (j < n && IsIdentPart(code[j])) j++;
+        if (j == i)
+        {
+            Escape(sb, [code[i]]);
+            return i + 1;
+        }
+
+        var word = code[i..j];
+        if (keywords?.Contains(word) == true)
+        {
+            Wrap(sb, "keyword", word);
+        }
+        else if (word.Length > 1 && char.IsAsciiLetterUpper(word[0]) && word.All(char.IsAsciiLetterOrDigit) && word is not ("False" or "True" or "None"))
+        {
+            Wrap(sb, "type", word);
+        }
+        else
+        {
+            var k = j;
+            while (k < n && code[k] == ' ') k++;
+            if (At(code, k) == '(')
+            {
+                Wrap(sb, "function", word);
+            }
+            else
+            {
+                Escape(sb, word);
+            }
+        }
+
+        return j;
+    }
+
+    private static string HighlightJson(string code)
+    {
+        var n = code.Length;
+        var sb = new StringBuilder(code.Length * 2);
+        var i = 0;
+
+        while (i < n)
+        {
+            var ch = code[i];
+            if (ch == '"')
+            {
+                var j = i + 1;
+                while (j < n && code[j] != '"')
+                {
+                    if (code[j] == '\\') j++;
+                    j++;
+                }
+                if (j < n) j++;
+                j = Math.Min(j, n);
+                var k = j;
+                while (k < n && char.IsWhiteSpace(code[k])) k++;
+                Wrap(sb, At(code, k) == ':' ? "attr" : "string", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (char.IsAsciiDigit(ch) || (ch == '-' && char.IsAsciiDigit(At(code, i + 1))))
+            {
+                var j = i;
+                if (code[j] == '-') j++;
+                while (j < n && (char.IsAsciiDigit(code[j]) || code[j] is '.' or 'e' or 'E' or '+' or '-')) j++;
+                Wrap(sb, "number", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (IsAsciiLetter(ch))
+            {
+                var j = i;
+                while (j < n && IsAsciiLetter(code[j])) j++;
+                var word = code.AsSpan(i, j - i);
+                if (word is "true" or "false" or "null")
+                {
+                    Wrap(sb, "literal", word);
+                }
+                else
+                {
+                    Escape(sb, word);
+                }
+                i = j;
+                continue;
+            }
+
+            Escape(sb, [ch]);
+            i++;
+        }
+
+        return sb.ToString();
+    }
+
+    private static string HighlightYaml(string code)
+    {
+        var sb = new StringBuilder(code.Length * 2);
+        var lines = code.Split('\n');
+
+        for (var index = 0; index < lines.Length; index++)
+        {
+            if (index > 0) sb.Append('\n');
+            var line = lines[index];
+
+            if (line.TrimStart().StartsWith('#'))
+            {
+                Wrap(sb, "comment", line);
+                continue;
+            }
+
+            var indent = 0;
+            while (indent < line.Length && char.IsWhiteSpace(line[indent])) indent++;
+
+            var keyEnd = indent;
+            if (keyEnd < line.Length && IsWordChar(line[keyEnd]))
+            {
+                keyEnd++;
+                while (keyEnd < line.Length && (IsWordChar(line[keyEnd]) || line[keyEnd] is '.' or '-')) keyEnd++;
+            }
+
+            var colon = keyEnd;
+            while (colon < line.Length && char.IsWhiteSpace(line[colon])) colon++;
+
+            if (keyEnd == indent || colon >= line.Length || line[colon] != ':')
+            {
+                Escape(sb, line);
+                continue;
+            }
+
+            Escape(sb, line.AsSpan(0, indent));
+            Wrap(sb, "attr", line.AsSpan(indent, colon - indent));
+            sb.Append(':');
+
+            var value = line[(colon + 1)..].Trim();
+            if (value.Length == 0) continue;
+
+            sb.Append(' ');
+            if (YamlLiterals.Contains(value))
+            {
+                Wrap(sb, "literal", value);
+            }
+            else if (char.IsAsciiDigit(value[0]) || (value[0] == '-' && value.Length > 1 && char.IsAsciiDigit(value[1])))
+            {
+                Wrap(sb, "number", value);
+            }
+            else if (value[0] is '"' or '\'')
+            {
+                Wrap(sb, "string", value);
+            }
+            else
+            {
+                Escape(sb, value);
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private static string HighlightHtml(string code)
+    {
+        var n = code.Length;
+        var sb = new StringBuilder(code.Length * 2);
+        var i = 0;
+
+        while (i < n)
+        {
+            var ch = code[i];
+
+            if (ch == '<' && code.AsSpan(i).StartsWith("<!--"))
+            {
+                var end = EndOf(code, "-->", i + 4, 3);
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch == '<' && code.AsSpan(i).StartsWith("<![CDATA["))
+            {
+                var end = EndOf(code, "]]>", i + 9, 3);
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch == '<' && At(code, i + 1) is '!' or '?')
+            {
+                var end = EndOf(code, ">", i, 1);
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch == '<' && i + 1 < n && (IsAsciiLetter(code[i + 1]) || code[i + 1] == '/'))
+            {
+                sb.Append("&lt;");
+                i++;
+
+                if (code[i] == '/')
+                {
+                    sb.Append('/');
+                    i++;
+                }
+
+                var nameStart = i;
+                while (i < n && (IsWordChar(code[i]) || code[i] is ':' or '-')) i++;
+                if (i > nameStart) Wrap(sb, "tag", code.AsSpan(nameStart, i - nameStart));
+
+                while (i < n && code[i] != '>')
+                {
+                    if (char.IsWhiteSpace(code[i]) || code[i] == '/')
+                    {
+                        sb.Append(code[i]);
+                        i++;
+                        continue;
+                    }
+
+                    if (IsWordChar(code[i]) || code[i] is ':' or '-')
+                    {
+                        var attrStart = i;
+                        while (i < n && (IsWordChar(code[i]) || code[i] is ':' or '.' or '-')) i++;
+                        Wrap(sb, "attr", code.AsSpan(attrStart, i - attrStart));
+
+                        var look = i;
+                        while (look < n && char.IsWhiteSpace(code[look])) look++;
+                        if (At(code, look) == '=')
+                        {
+                            sb.Append(code.AsSpan(i, look - i)).Append('=');
+                            i = look + 1;
+                            while (i < n && char.IsWhiteSpace(code[i]))
+                            {
+                                sb.Append(code[i]);
+                                i++;
+                            }
+
+                            var valueStart = i;
+                            if (At(code, i) is '"' or '\'')
+                            {
+                                var quote = code[i];
+                                i++;
+                                while (i < n && code[i] != quote) i++;
+                                if (i < n) i++;
+                            }
+                            else
+                            {
+                                while (i < n && !char.IsWhiteSpace(code[i]) && code[i] is not ('>' or '/')) i++;
+                            }
+
+                            if (i > valueStart) Wrap(sb, "string", code.AsSpan(valueStart, i - valueStart));
+                        }
+                        continue;
+                    }
+
+                    Escape(sb, [code[i]]);
+                    i++;
+                }
+
+                if (i < n)
+                {
+                    sb.Append("&gt;");
+                    i++;
+                }
+                continue;
+            }
+
+            Escape(sb, [ch]);
+            i++;
+        }
+
+        return sb.ToString();
+    }
+
+    private static string HighlightCss(string code)
+    {
+        var n = code.Length;
+        var sb = new StringBuilder(code.Length * 2);
+        var i = 0;
+
+        while (i < n)
+        {
+            var ch = code[i];
+
+            if (ch == '/' && At(code, i + 1) == '*')
+            {
+                var end = EndOf(code, "*/", i + 2, 2);
+                Wrap(sb, "comment", code.AsSpan(i, end - i));
+                i = end;
+                continue;
+            }
+
+            if (ch is '"' or '\'')
+            {
+                var j = i + 1;
+                while (j < n && code[j] != ch)
+                {
+                    if (code[j] == '\\') j++;
+                    j++;
+                }
+                if (j < n) j++;
+                j = Math.Min(j, n);
+                Wrap(sb, "string", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (char.IsAsciiDigit(ch) && (i == 0 || !(IsAsciiLetter(code[i - 1]) || code[i - 1] is '_' or '-')))
+            {
+                var j = i;
+                while (j < n && (char.IsAsciiLetterOrDigit(code[j]) || code[j] is '.' or '%')) j++;
+                Wrap(sb, "number", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (ch == '#' && char.IsAsciiHexDigit(At(code, i + 1)))
+            {
+                var j = i + 1;
+                while (j < n && char.IsAsciiHexDigit(code[j])) j++;
+                Wrap(sb, "number", code.AsSpan(i, j - i));
+                i = j;
+                continue;
+            }
+
+            if (ch is '.' or '#' or '@' or ':' or '[' || (IsAsciiLetter(ch) && (i == 0 || code[i - 1] is '\n' or '}')))
+            {
+                var j = i;
+                while (j < n && code[j] is not ('{' or ';' or '\n')) j++;
+                if (At(code, j) == '{')
+                {
+                    Wrap(sb, "selector", code.AsSpan(i, j - i));
+                    i = j;
+                    continue;
+                }
+            }
+
+            if (IsAsciiLetter(ch) || ch == '-')
+            {
+                var j = i;
+                while (j < n && (char.IsAsciiLetterOrDigit(code[j]) || code[j] == '-')) j++;
+                var k = j;
+                while (k < n && code[k] == ' ') k++;
+                if (At(code, k) == ':' && At(code, k + 1) != ':')
+                {
+                    Wrap(sb, "property", code.AsSpan(i, j - i));
+                }
+                else
+                {
+                    Escape(sb, code.AsSpan(i, j - i));
+                }
+                i = j;
+                continue;
+            }
+
+            Escape(sb, [ch]);
+            i++;
+        }
+
+        return sb.ToString();
+    }
+}
+
+
+-------------------------------------------------------------------------------
+FILE: tools/ObserverMagazine.ContentProcessor/SyntaxHighlightingExtension.cs
+-------------------------------------------------------------------------------
+using System.Text;
+using Markdig;
+using Markdig.Renderers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax;
+
+namespace ObserverMagazine.ContentProcessor;
+
+public sealed class SyntaxHighlightingExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+        if (renderer is not HtmlRenderer html)
+        {
+            return;
+        }
+
+        var original = html.ObjectRenderers.FindExact<CodeBlockRenderer>();
+        if (original is not null)
+        {
+            html.ObjectRenderers.Remove(original);
+        }
+
+        html.ObjectRenderers.Add(new HighlightingCodeBlockRenderer(original ?? new CodeBlockRenderer()));
+    }
+
+    private sealed class HighlightingCodeBlockRenderer(CodeBlockRenderer fallback) : HtmlObjectRenderer<CodeBlock>
+    {
+        protected override void Write(HtmlRenderer renderer, CodeBlock obj)
+        {
+            var language = (obj as FencedCodeBlock)?.Info ?? "";
+
+            if (!renderer.EnableHtmlForBlock || fallback.BlocksAsDiv.Contains(language))
+            {
+                fallback.Write(renderer, obj);
+                return;
+            }
+
+            var lines = obj.Lines;
+            var code = new StringBuilder();
+            for (var i = 0; i < lines.Count; i++)
+            {
+                code.Append(lines.Lines[i].Slice.ToString()).Append('\n');
+            }
+
+            renderer.EnsureLine();
+            renderer.Write("<pre><code");
+            renderer.WriteAttributes(obj);
+            renderer.Write(">");
+            renderer.Write(SyntaxHighlighter.Highlight(code.ToString(), language));
+            renderer.WriteLine("</code></pre>");
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------------
 FILE: tools/requirements-audio.txt
 -------------------------------------------------------------------------------
 # KittenTTS 0.8.1 — Apache 2.0 license
@@ -87596,9 +87627,9 @@ num2words>=0.5.14
 
 ===============================================================================
 EXPORT COMPLETED
-Total Files Exported: 896
+Total Files Exported: 898
   Blog posts (front matter only): 5
-  Full content files: 889
+  Full content files: 891
   Binary files skipped: 2
 Output File: docs/llm/dump.txt
 ===============================================================================

@@ -1,27 +1,25 @@
 kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-268M	.
+269M	.
 
-real	0m0.024s
-user	0m0.004s
+real	0m0.026s
+user	0m0.006s
 sys	0m0.016s
-Unable to fix BL0016. Code fix JSInteropCodeFixProvider didn't return a Fix All action.
-Unable to fix BL0016. Code fix JSInteropCodeFixProvider didn't return a Fix All action.
 
-real	0m5.726s
-user	0m12.178s
-sys	0m0.766s
-Restore complete (0.1s)
+real	0m6.588s
+user	0m11.607s
+sys	0m0.734s
+Restore complete (0.2s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 
-real	0m0.241s
-user	0m0.106s
-sys	0m0.030s
+real	0m0.374s
+user	0m0.108s
+sys	0m0.038s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-12 04:23:12 UTC
+Publish before:    2026-11-12 05:24:04 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -70,20 +68,24 @@ Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
 Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (14 books)
 Content processing complete.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Layout/NavMenu.razor(84,29): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Layout/NavMenu.razor(85,35): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Layout/NavMenu.razor(95,19): error BL0016: JS interop call 'InvokeVoidAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Components/BlogTtsPlayer.razor(54,21): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(15,22): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(21,15): error BL0016: JS interop call 'InvokeVoidAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(27,15): error BL0016: JS interop call 'InvokeVoidAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(33,22): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-/home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(53,21): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
-Build failed with exit code: 1.
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (729ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (977ms)
 
-real	0m1.263s
-user	0m0.198s
-sys	0m0.050s
+Test run summary: Passed!
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (729ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (977ms)
+
+  total: 169
+  failed: 0
+  succeeded: 169
+  skipped: 0
+  duration: 1s 161ms
+
+real	0m6.279s
+user	0m3.511s
+sys	0m0.519s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -116,9 +118,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.148s
-user	0m0.864s
-sys	0m0.202s
+real	0m1.105s
+user	0m0.834s
+sys	0m0.182s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -131,16 +133,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m1.314s
-user	0m1.005s
-sys	0m0.232s
+real	0m2.402s
+user	0m1.445s
+sys	0m0.259s
 Export complete: docs/llm/dump.txt
-  Total files: 896
+  Total files: 898
   Blog posts (front matter only): 5
-  Full content files: 889
+  Full content files: 891
   Binary files skipped: 2
 
-real	0m0.856s
-user	0m0.402s
-sys	0m0.443s
+real	0m0.888s
+user	0m0.409s
+sys	0m0.440s
 kushal@fedora:~/src/dotnet/terlingua$ 
