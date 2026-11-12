@@ -1,25 +1,25 @@
 kushal@fedora:~/src/dotnet/terlingua/src/ObserverMagazine.Web$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-382M	.
+384M	.
 
-real	0m0.056s
-user	0m0.005s
-sys	0m0.032s
+real	0m0.055s
+user	0m0.004s
+sys	0m0.026s
 
-real	0m5.777s
-user	0m11.675s
-sys	0m0.727s
+real	0m5.880s
+user	0m11.397s
+sys	0m0.725s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
 
-real	0m0.243s
-user	0m0.092s
-sys	0m0.038s
+real	0m0.237s
+user	0m0.103s
+sys	0m0.036s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-12 05:33:25 UTC
+Publish before:    2026-11-12 05:44:26 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -68,24 +68,24 @@ Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
 Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (14 books)
 Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (714ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (896ms)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (727ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (892ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (896ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (714ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (892ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (727ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 063ms
+  duration: 1s 068ms
 
-real	0m3.649s
-user	0m3.306s
-sys	0m0.408s
+real	0m3.206s
+user	0m3.212s
+sys	0m0.477s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -118,9 +118,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.117s
-user	0m0.843s
-sys	0m0.182s
+real	0m1.020s
+user	0m0.753s
+sys	0m0.197s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -133,16 +133,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m1.259s
-user	0m0.961s
-sys	0m0.232s
+real	0m1.238s
+user	0m0.941s
+sys	0m0.208s
 Export complete: docs/llm/dump.txt
   Total files: 898
   Blog posts (front matter only): 5
   Full content files: 891
   Binary files skipped: 2
 
-real	0m0.864s
-user	0m0.419s
-sys	0m0.435s
+real	0m0.892s
+user	0m0.401s
+sys	0m0.473s
 kushal@fedora:~/src/dotnet/terlingua$ 

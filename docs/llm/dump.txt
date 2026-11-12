@@ -1,6 +1,6 @@
 ===============================================================================
 PROJECT EXPORT: terlingua.github.io
-DATE: 2026-11-12 05:33:33 UTC
+DATE: 2026-11-12 05:44:33 UTC
 ===============================================================================
 
 ===============================================================================
@@ -74611,9 +74611,7 @@ jobs:
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
 
       - name: Prepare site
-        run: |
-          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
-          cp publish/wwwroot/index.html publish/wwwroot/404.html
+        run: cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
@@ -74674,9 +74672,7 @@ jobs:
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
 
       - name: Prepare preview
-        run: |
-          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
-          cp publish/wwwroot/index.html publish/wwwroot/404.html
+        run: cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Upload preview site
         uses: actions/upload-artifact@v7
@@ -74940,8 +74936,11 @@ Content guidelines for new sections:
   system theme.
 - The audio player uses the browser's native controls, including playback speed, and stays
   hidden until the MP3's metadata loads.
-- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js`, so it is cache-busted on
-  every deploy.
+- `OverrideHtmlAssetPlaceholders` fingerprints the framework files (`dotnet.js` is published as
+  `dotnet.<hash>.js`) and fills the `<script type="importmap">` placeholder in `index.html`,
+  which is how `blazor.webassembly.js` finds them. Keep that placeholder, and don't modify files
+  under `_framework` after publish, because the import map can carry integrity hashes for them.
+  A 404 for `/_framework/dotnet.js` on the live site is expected.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
 
 ## Testing
@@ -82203,6 +82202,7 @@ FILE: src/ObserverMagazine.Web/wwwroot/index.html
     <link rel="alternate" type="application/rss+xml" title="Terlingua Magazine RSS" href="/feed.xml" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="ObserverMagazine.Web.styles.css" />
+    <script type="importmap"></script>
 </head>
 <body>
     <div id="app">
