@@ -1,25 +1,25 @@
-kushal@fedora:~/src/dotnet/terlingua/src/ObserverMagazine.Web$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-384M	.
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+387M	.
 
-real	0m0.055s
+real	0m0.096s
 user	0m0.004s
-sys	0m0.026s
+sys	0m0.051s
 
-real	0m5.880s
-user	0m11.397s
-sys	0m0.725s
-Restore complete (0.1s)
+real	0m6.689s
+user	0m11.640s
+sys	0m0.820s
+Restore complete (0.2s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 
-real	0m0.237s
-user	0m0.103s
-sys	0m0.036s
+real	0m0.377s
+user	0m0.106s
+sys	0m0.032s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-12 05:44:26 UTC
+Publish before:    2026-11-12 11:22:42 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -38,6 +38,8 @@ Processing: 2026-10-21-good-night.md
   Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
 Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
 Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
+Processing book: ai-agent-fundamentals
+  10 chapter(s), 25 subchapter(s), 214 question(s)
 Processing book: amazon-web-services
   8 chapter(s), 19 subchapter(s), 60 question(s)
 Processing book: blazor-basics
@@ -46,10 +48,14 @@ Processing book: clean-code
   7 chapter(s), 14 subchapter(s), 44 question(s)
 Processing book: dapper
   5 chapter(s), 15 subchapter(s), 48 question(s)
+Processing book: databricks-fundamentals
+  10 chapter(s), 28 subchapter(s), 272 question(s)
 Processing book: databricks-platform
   8 chapter(s), 24 subchapter(s), 73 question(s)
 Processing book: designing-data-intensive-applications
   14 chapter(s), 72 subchapter(s), 1144 question(s)
+Processing book: generative-ai-fundamentals
+  12 chapter(s), 30 subchapter(s), 272 question(s)
 Processing book: microsoft-azure
   7 chapter(s), 18 subchapter(s), 55 question(s)
 Processing book: modern-blazor
@@ -66,26 +72,26 @@ Processing book: timeless-dotnet
   14 chapter(s), 39 subchapter(s), 284 question(s)
 Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
-Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (14 books)
+Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
 Content processing complete.
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (727ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (892ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (760ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (923ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (892ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (727ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (760ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (923ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 068ms
+  duration: 1s 111ms
 
-real	0m3.206s
-user	0m3.212s
-sys	0m0.477s
+real	0m6.062s
+user	0m3.490s
+sys	0m0.465s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -118,9 +124,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.020s
-user	0m0.753s
-sys	0m0.197s
+real	0m1.148s
+user	0m0.856s
+sys	0m0.199s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -133,16 +139,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m1.238s
-user	0m0.941s
-sys	0m0.208s
+real	0m2.497s
+user	0m1.459s
+sys	0m0.272s
 Export complete: docs/llm/dump.txt
-  Total files: 898
+  Total files: 1016
   Blog posts (front matter only): 5
-  Full content files: 891
+  Full content files: 1009
   Binary files skipped: 2
 
-real	0m0.892s
-user	0m0.401s
-sys	0m0.473s
+real	0m0.985s
+user	0m0.464s
+sys	0m0.510s
 kushal@fedora:~/src/dotnet/terlingua$ 
