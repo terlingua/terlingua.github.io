@@ -9,12 +9,10 @@ public static class MarkdownProcessor
 
     private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
+        .Use<SyntaxHighlightingExtension>()
         .Build();
 
-    public static string ToHtml(string markdown)
-    {
-        return Markdown.ToHtml(markdown, Pipeline);
-    }
+    public static string ToHtml(string markdown) => Markdown.ToHtml(markdown, Pipeline);
 
     public static string ToInlineHtml(string markdown)
     {

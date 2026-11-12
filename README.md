@@ -9,7 +9,7 @@ Built with **.NET 11** and **C# 15**. Targets the current stable releases of eve
 
 - **Blog** — Write posts in Markdown with YAML front matter; compiled to static JSON at build time
 - **RSS Feed** — Auto-generated `feed.xml`
-- **Books & Quizzes** — Multi-chapter books with single- and multiple-answer quizzes; reading progress stored in the browser (IndexedDB)
+- **Books & Quizzes** — Multi-chapter books with single- and multiple-answer quizzes; reading progress stored in the browser (localStorage)
 - **Responsive Tables** — Sortable, filterable data tables that work on mobile
 - **Master-Detail Flow** — Click a list item to view full details
 - **OpenTelemetry-ready Logging** — Structured logging via `ILogger`
@@ -117,9 +117,9 @@ Content guidelines for new sections:
 
 - A section is complete when every question has been answered correctly, or, if it has
   no questions, once it has been opened.
-- Progress is saved per book in IndexedDB (`terlingua-books` database). If IndexedDB is
-  unavailable (private browsing, blocked storage) the app falls back to in-memory
-  storage and tells the reader that progress will not persist.
+- Progress is saved per book in `localStorage` under `book:<slug>`. If storage is
+  unavailable (blocked storage, quota) the app falls back to in-memory storage and tells
+  the reader that progress will not persist.
 - When the analytics backend is reachable, the reader count of a book and of each
   section is shown. A reader is counted once per book and once per section, using the
   local progress record to avoid counting repeat visits. Quiz answers are sent as
@@ -127,16 +127,22 @@ Content guidelines for new sections:
 
 ## Front end
 
-- `wwwroot/index.html` contains no inline script. `js/theme.js` applies the saved theme before
-  first paint; everything else is an ES module loaded through `IJSRuntime` `import`.
-- JavaScript lives next to the component that uses it (`Components/RichContent.razor.js`,
-  `Components/BlogTtsPlayer.razor.js`, `Layout/NavMenu.razor.js`). `wwwroot/js/book-progress.js`
-  backs `IndexedDbProgressStore`.
-- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js` and fills the import map, so
-  JS modules are cache-busted on every deploy.
-- Themes are CSS custom properties. The default `system` theme uses `light-dark()` and
-  `color-scheme`, so it follows the OS setting live without script. Other themes set
-  `data-theme` on `<html>` and their own `color-scheme`.
+- The site ships no JavaScript of its own. The only interop is `localStorage` through
+  `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in `try`/`catch` as
+  analyzer BL0016 requires.
+- Code blocks are highlighted at build time by `SyntaxHighlighter` in the content processor,
+  plugged into Markdig as `SyntaxHighlightingExtension`. The `hl-*` colour classes live in
+  `app.css`.
+- Horizontally scrolling code blocks show edge shadows with pure CSS
+  (`background-attachment: local`).
+- Themes are CSS custom properties. `MainLayout` renders `data-theme` on `.page` and saves the
+  choice in `localStorage` (`observer-theme`). The default `system` theme uses `light-dark()`
+  and `color-scheme`, so it follows the OS setting live. The loading screen always uses the
+  system theme.
+- The audio player uses the browser's native controls, including playback speed, and stays
+  hidden until the MP3's metadata loads.
+- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js`, so it is cache-busted on
+  every deploy.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
 
 ## Testing

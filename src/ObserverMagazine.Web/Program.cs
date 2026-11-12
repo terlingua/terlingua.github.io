@@ -17,9 +17,10 @@ builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBookAnalytics, BookAnalytics>();
-builder.Services.AddScoped<IndexedDbProgressStore>();
+builder.Services.AddScoped<IBrowserStorage, LocalBrowserStorage>();
+builder.Services.AddScoped<LocalStorageProgressStore>();
 builder.Services.AddScoped<IProgressStore>(sp => new FallbackProgressStore(
-    sp.GetRequiredService<IndexedDbProgressStore>(),
+    sp.GetRequiredService<LocalStorageProgressStore>(),
     new InMemoryProgressStore(),
     sp.GetRequiredService<ILogger<FallbackProgressStore>>()));
 builder.Services.AddScoped<IReadingProgressService, ReadingProgressService>();

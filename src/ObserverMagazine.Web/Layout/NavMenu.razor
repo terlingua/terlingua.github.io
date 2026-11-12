@@ -1,6 +1,5 @@
-@inject IJSRuntime Js
 @inject NavigationManager Nav
-@implements IAsyncDisposable
+@implements IDisposable
 
 <nav class="nav-menu">
     <button class="nav-toggle" @onclick="ToggleMenu" @onclick:stopPropagation="true" aria-label="Toggle navigation">
@@ -39,25 +38,23 @@
         </li>
         <li>
             <select class="theme-select"
-                    value="@_currentTheme"
+                    value="@CurrentTheme.Id"
                     @onchange="OnThemeChanged"
                     aria-label="Choose theme">
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="sepia">Sepia</option>
-                <option value="solarized-light">Solarized Light</option>
-                <option value="solarized-dark">Solarized Dark</option>
-                <option value="high-contrast">High Contrast</option>
+                @foreach (var theme in Theme.All)
+                {
+                    <option value="@theme.Id">@theme.Label</option>
+                }
             </select>
         </li>
     </ul>
 </nav>
 
 @code {
-    private IJSObjectReference? _module;
+    [Parameter, EditorRequired] public Theme CurrentTheme { get; set; } = Theme.Default;
+    [Parameter] public EventCallback<Theme> ThemeChanged { get; set; }
+
     private bool _isOpen;
-    private string _currentTheme = "system";
 
     protected override void OnInitialized()
     {
@@ -77,37 +74,11 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Layout/NavMenu.razor.js");
-            _currentTheme = await _module.InvokeAsync<string>("getTheme");
-            StateHasChanged();
-        }
-    }
+    private Task OnThemeChanged(ChangeEventArgs e) =>
+        ThemeChanged.InvokeAsync(Theme.FromId(e.Value?.ToString()));
 
-    private async Task OnThemeChanged(ChangeEventArgs e)
-    {
-        _currentTheme = e.Value?.ToString() ?? "system";
-        if (_module is not null)
-        {
-            await _module.InvokeVoidAsync("setTheme", _currentTheme);
-        }
-    }
-
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
         Nav.LocationChanged -= OnLocationChanged;
-        try
-        {
-            if (_module is not null)
-            {
-                await _module.DisposeAsync();
-            }
-        }
-        catch (JSDisconnectedException)
-        {
-        }
     }
 }

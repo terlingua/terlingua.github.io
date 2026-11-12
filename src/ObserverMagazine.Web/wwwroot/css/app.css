@@ -288,6 +288,22 @@ pre { min-width: 0; }
     padding: 0 1rem;
 }
 
+/* ========== SYNTAX HIGHLIGHTING (generated at build time) ========== */
+.hl-keyword     { color: var(--hl-keyword); }
+.hl-string      { color: var(--hl-string); }
+.hl-comment     { color: var(--hl-comment); font-style: italic; }
+.hl-number      { color: var(--hl-number); }
+.hl-function    { color: var(--hl-function); }
+.hl-type        { color: var(--hl-type); }
+.hl-literal     { color: var(--hl-literal); }
+.hl-attr        { color: var(--hl-attr); }
+.hl-built-in    { color: var(--hl-built-in); }
+.hl-title       { color: var(--hl-title); }
+.hl-tag         { color: var(--hl-tag); }
+.hl-selector    { color: var(--hl-selector); }
+.hl-property    { color: var(--hl-property); }
+.hl-punctuation { color: var(--hl-punctuation); }
+
 /* ========== BUTTONS (shared utility) ========== */
 .btn {
     display: inline-block;

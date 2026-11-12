@@ -23,55 +23,13 @@
     margin-bottom: 1rem;
 }
 
-.blog-content ::deep .code-block-wrap {
-    position: relative;
-    margin-bottom: 1.25rem;
-    min-width: 0;
-    width: 100%;
-}
-
-.blog-content ::deep .code-block-wrap::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    bottom: 1px;
-    width: 2.5rem;
-    background: linear-gradient(to right, transparent, var(--hl-bg));
-    border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-}
-
-.blog-content ::deep .code-block-wrap.no-overflow::after,
-.blog-content ::deep .code-block-wrap.scrolled-end::after {
-    opacity: 0;
-}
-
-.blog-content ::deep .code-scroll-hint {
-    position: absolute;
-    bottom: 0.75rem;
-    right: 0.75rem;
-    font-size: 0.7rem;
-    font-family: var(--font-sans);
-    color: var(--color-muted);
-    background: var(--hl-bg);
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 2;
-    transition: opacity 0.3s ease;
-}
-
-.blog-content ::deep .code-block-wrap.scrolled .code-scroll-hint,
-.blog-content ::deep .code-block-wrap.no-overflow .code-scroll-hint {
-    opacity: 0;
-}
-
 .blog-content ::deep pre {
-    background: var(--hl-bg);
+    background:
+        linear-gradient(to right, var(--hl-bg) 30%, transparent) left / 2.5rem 100% no-repeat local,
+        linear-gradient(to left, var(--hl-bg) 30%, transparent) right / 2.5rem 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--hl-fg) 30%, transparent), transparent) left / 1rem 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--hl-fg) 30%, transparent), transparent) right / 1rem 100% no-repeat scroll,
+        var(--hl-bg);
     color: var(--hl-fg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
@@ -86,10 +44,6 @@
     margin-bottom: 1.25rem;
     white-space: pre;
     box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.06);
-}
-
-.blog-content ::deep .code-block-wrap pre {
-    margin-bottom: 0;
 }
 
 .blog-content ::deep pre code {
@@ -182,21 +136,6 @@
     margin-left: 1.5rem;
     margin-bottom: 0.5rem;
 }
-
-.blog-content ::deep .hl-keyword  { color: var(--hl-keyword); }
-.blog-content ::deep .hl-string   { color: var(--hl-string); }
-.blog-content ::deep .hl-comment  { color: var(--hl-comment); font-style: italic; }
-.blog-content ::deep .hl-number   { color: var(--hl-number); }
-.blog-content ::deep .hl-function { color: var(--hl-function); }
-.blog-content ::deep .hl-type     { color: var(--hl-type); }
-.blog-content ::deep .hl-literal  { color: var(--hl-literal); }
-.blog-content ::deep .hl-attr     { color: var(--hl-attr); }
-.blog-content ::deep .hl-built-in { color: var(--hl-built-in); }
-.blog-content ::deep .hl-title    { color: var(--hl-title); }
-.blog-content ::deep .hl-tag      { color: var(--hl-tag); }
-.blog-content ::deep .hl-selector { color: var(--hl-selector); }
-.blog-content ::deep .hl-property { color: var(--hl-property); }
-.blog-content ::deep .hl-punctuation { color: var(--hl-punctuation); }
 
 .blog-content ::deep .terminal-box {
     border-radius: var(--radius);

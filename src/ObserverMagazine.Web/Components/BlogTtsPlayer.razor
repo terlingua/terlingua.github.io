@@ -1,34 +1,17 @@
-@using System.Globalization
-@implements IAsyncDisposable
 @inject IAnalyticsService Analytics
 @inject ILogger<BlogTtsPlayer> Logger
-@inject IJSRuntime Js
 
 <div class="tts-player" hidden="@(!_available)">
     <span class="tts-icon" aria-hidden="true">🔊</span>
     <span class="tts-label">Listen to this post</span>
 
-    <audio @ref="_audio"
-           controls
+    <audio controls
            preload="metadata"
            src="@AudioUrl"
            @onloadedmetadata="OnLoadedMetadata"
            @onplay="OnPlay"
            @onpause="OnPause"
            @onended="OnEnded"></audio>
-
-    <div class="tts-speed">
-        <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
-        <select id="tts-speed-@Slug"
-                class="tts-speed-select"
-                value="@FormatRate(_currentRate)"
-                @onchange="OnSpeedChange">
-            @foreach (var rate in PlaybackRates)
-            {
-                <option value="@FormatRate(rate)">@(FormatRate(rate))x</option>
-            }
-        </select>
-    </div>
 
     <a class="tts-direct-link" href="@AudioUrl" target="_blank" rel="noopener noreferrer"
        title="Open audio file directly in a new tab">
@@ -37,21 +20,13 @@
 </div>
 
 @code {
-    private static readonly double[] PlaybackRates = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-
     [Parameter, EditorRequired]
     public string Slug { get; set; } = "";
 
-    private ElementReference _audio;
-    private Task<IJSObjectReference>? _module;
     private string? _currentSlug;
     private bool _available;
-    private double _currentRate = 1.0;
 
     private string AudioUrl => $"blog-data/{Slug}.mp3";
-
-    private Task<IJSObjectReference> Module =>
-        _module ??= Js.InvokeAsync<IJSObjectReference>("import", "./Components/BlogTtsPlayer.razor.js").AsTask();
 
     protected override void OnParametersSet()
     {
@@ -64,44 +39,7 @@
         _available = false;
     }
 
-    private async Task OnLoadedMetadata()
-    {
-        _available = true;
-        try
-        {
-            var module = await Module;
-            var saved = await module.InvokeAsync<double>("getSavedRate");
-            _currentRate = PlaybackRates.Contains(saved) ? saved : 1.0;
-            await module.InvokeVoidAsync("applyRate", _audio, _currentRate);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogDebug(ex, "Failed to restore playback rate for {Slug}", Slug);
-        }
-    }
-
-    private async Task OnSpeedChange(ChangeEventArgs e)
-    {
-        if (!double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var rate) ||
-            !PlaybackRates.Contains(rate))
-        {
-            return;
-        }
-
-        _currentRate = rate;
-        try
-        {
-            var module = await Module;
-            await module.InvokeVoidAsync("applyRate", _audio, rate);
-            await module.InvokeVoidAsync("saveRate", rate);
-            Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
-            await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{FormatRate(rate)}x");
-        }
-        catch (Exception ex)
-        {
-            Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
-        }
-    }
+    private void OnLoadedMetadata() => _available = true;
 
     private async Task OnPlay()
     {
@@ -119,23 +57,5 @@
     {
         Logger.LogInformation("TTS finished: {Slug}", Slug);
         await Analytics.TrackInteractionAsync("TTS.Finished", Slug);
-    }
-
-    private static string FormatRate(double rate) => rate.ToString("0.##", CultureInfo.InvariantCulture);
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_module is not { IsCompletedSuccessfully: true })
-        {
-            return;
-        }
-
-        try
-        {
-            await _module.Result.DisposeAsync();
-        }
-        catch (JSDisconnectedException)
-        {
-        }
     }
 }

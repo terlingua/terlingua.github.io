@@ -6,14 +6,19 @@ namespace ObserverMagazine.Web.Tests.Services;
 public class HtmlPostProcessorTests
 {
     [Fact]
-    public void WrapsCodeBlocksAndTables()
+    public void WrapsTables()
     {
-        var html = HtmlPostProcessor.Process("<pre><code>x</code></pre><table><tr><td>1</td></tr></table>");
+        var html = HtmlPostProcessor.Process("<table><tr><td>1</td></tr></table>");
 
-        Assert.Contains("<div class=\"code-block-wrap\">", html);
-        Assert.Contains("</pre></div>", html);
-        Assert.Contains("<div class=\"table-scroll-wrap\"><table", html);
-        Assert.Contains("</table></div>", html);
+        Assert.Equal("<div class=\"table-scroll-wrap\"><table><tr><td>1</td></tr></table></div>", html);
+    }
+
+    [Fact]
+    public void LeavesCodeBlocksUntouched()
+    {
+        const string code = "<pre><code class=\"language-csharp\"><span class=\"hl-keyword\">var</span></code></pre>";
+
+        Assert.Equal(code, HtmlPostProcessor.Process(code));
     }
 
     [Theory]

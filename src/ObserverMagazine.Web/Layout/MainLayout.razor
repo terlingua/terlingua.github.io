@@ -1,12 +1,14 @@
 @inherits LayoutComponentBase
+@inject IBrowserStorage Storage
+@inject ILogger<MainLayout> Logger
 
-<div class="page">
+<div class="page" data-theme="@_theme.Id">
     <header class="top-bar">
         <div class="container top-bar-inner">
             <a class="brand" href="/">
                 <strong>Terlingua</strong> Magazine
             </a>
-            <NavMenu />
+            <NavMenu CurrentTheme="_theme" ThemeChanged="SetThemeAsync" />
         </div>
     </header>
 
@@ -31,3 +33,32 @@
         </div>
     </footer>
 </div>
+
+@code {
+    private Theme _theme = Theme.Default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _theme = Theme.FromId(await Storage.GetAsync(Theme.StorageKey));
+        }
+        catch (BrowserStorageException ex)
+        {
+            Logger.LogDebug(ex, "Could not read the saved theme");
+        }
+    }
+
+    private async Task SetThemeAsync(Theme theme)
+    {
+        _theme = theme;
+        try
+        {
+            await Storage.SetAsync(Theme.StorageKey, theme.Id);
+        }
+        catch (BrowserStorageException ex)
+        {
+            Logger.LogDebug(ex, "Could not save the theme");
+        }
+    }
+}
