@@ -1,0 +1,2 @@
+title: Data Engineering with Lakeflow
+summary: Ingesting with Lakeflow Connect and Auto Loader, transforming with Spark Declarative Pipelines and the medallion pattern, and orchestrating with Lakeflow Jobs.

@@ -1,0 +1,10 @@
+title: "Databricks Fundamentals: The Platform Without the Brochure"
+author: terlingua-team
+summary: A companion to the Databricks Fundamentals course that goes further — the problems the lakehouse solves, how the control and compute planes work, what DBUs really cost, Lakeflow, Databricks SQL and Genie, MLflow and Model Serving, Unity Catalog governance, the workspace, and the trade-offs, lock-in and failure modes the marketing leaves out. Hundreds of quiz questions.
+date: 2026-11-12
+tags:
+  - databricks
+  - lakehouse
+  - unity-catalog
+  - data-engineering
+  - fundamentals

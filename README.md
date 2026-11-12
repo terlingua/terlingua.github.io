@@ -97,6 +97,9 @@ Markdown body…
 | Working Effectively with Legacy Code: A Companion | `working-effectively-with-legacy-code` | Chapter-by-chapter quizzes for Feathers' book: seams, characterization tests, sprouting and wrapping, the 24 dependency-breaking techniques |
 | Dapper: Fast, Honest Data Access | `dapper` | Queries, parameters, mapping, transactions, architecture, testing |
 | The Databricks Data Intelligence Platform | `databricks-platform` | Spark, Delta Lake, Unity Catalog, pipelines, jobs, SQL, MLflow, GenAI |
+| Databricks Fundamentals: The Platform Without the Brochure | `databricks-fundamentals` | Companion to the Databricks Fundamentals course: lakehouse, control and compute planes, DBUs and cost, Lakeflow, Databricks SQL and Genie, MLflow and serving, Unity Catalog, workspace, lock-in and when not to use Databricks |
+| Generative AI Fundamentals: How It Works, Where It Fails | `generative-ai-fundamentals` | Companion to the Generative AI Fundamentals course: tokens, embeddings, training and alignment, decoding, hallucination, prompting and injection, RAG, fine-tuning, evaluation, economics, regulation, GenAI on Databricks |
+| AI Agent Fundamentals: From Loops to Production | `ai-agent-fundamentals` | Companion to the AI Agent Fundamentals course: tools, memory, planning, workflow patterns, multi-agent systems, MCP and A2A, Agent Bricks, evaluation, the lethal trifecta, ROI, agents in .NET with Microsoft.Extensions.AI, Agent Framework, MCP and C# 15 |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
 | Amazon Web Services for Builders | `amazon-web-services` | IAM, compute, storage, databases, integration, VPC, IaC, cost |
 | Blazor WebAssembly Basics | `blazor-basics` | A short introduction |

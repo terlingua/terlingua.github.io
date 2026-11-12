@@ -1,0 +1,10 @@
+title: "AI Agent Fundamentals: From Loops to Production"
+author: terlingua-team
+summary: A companion to the Databricks AI Agent Fundamentals course that goes deeper — what agents are and are not, tools, memory and planning, workflow patterns and multi-agent systems, MCP and A2A, Agent Bricks and Mosaic AI, evaluating and tracing agents, the lethal trifecta and other security realities, honest economics, and building agents in .NET with Microsoft.Extensions.AI, Agent Framework, MCP and C# 15. Hundreds of quiz questions.
+date: 2026-11-12
+tags:
+  - ai-agents
+  - generative-ai
+  - mcp
+  - databricks
+  - dotnet

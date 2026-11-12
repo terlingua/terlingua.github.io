@@ -1,0 +1,10 @@
+title: "Generative AI Fundamentals: How It Works, Where It Fails"
+author: terlingua-team
+summary: A companion to the Databricks Generative AI Fundamentals course that builds real understanding — tokens, embeddings, attention, training and alignment, decoding, hallucination, prompting and prompt injection, RAG, fine-tuning, evaluation, economics, regulation, the Databricks GenAI stack, and practices that will still hold in ten years. Hundreds of quiz questions.
+date: 2026-11-12
+tags:
+  - generative-ai
+  - llm
+  - rag
+  - databricks
+  - fundamentals
