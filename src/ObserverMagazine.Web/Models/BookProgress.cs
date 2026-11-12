@@ -10,7 +10,7 @@ public sealed class BookProgress
     public DateTimeOffset? UpdatedAt { get; set; }
     public string? LastChapterSlug { get; set; }
     public string? LastSubchapterSlug { get; set; }
-    public Dictionary<string, SubchapterProgress> Subchapters { get; set; } = new(StringComparer.Ordinal);
+    public Dictionary<string, SubchapterProgress> Subchapters { get; set; } = [with(StringComparer.Ordinal)];
 
     public bool IsStarted => StartedAt is not null;
 
@@ -21,7 +21,7 @@ public sealed class SubchapterProgress
 {
     public DateTimeOffset? FirstVisitedAt { get; set; }
     public DateTimeOffset? LastVisitedAt { get; set; }
-    public Dictionary<string, QuestionProgress> Questions { get; set; } = new(StringComparer.Ordinal);
+    public Dictionary<string, QuestionProgress> Questions { get; set; } = [with(StringComparer.Ordinal)];
 }
 
 public sealed class QuestionProgress

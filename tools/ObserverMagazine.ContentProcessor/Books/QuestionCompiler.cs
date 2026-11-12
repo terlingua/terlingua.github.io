@@ -16,8 +16,8 @@ public static class QuestionCompiler
             return [];
         }
 
-        var questions = new List<QuestionDocument>(definitions.Count);
-        var seenIds = new HashSet<string>(StringComparer.Ordinal);
+        List<QuestionDocument> questions = [with(capacity: definitions.Count)];
+        HashSet<string> seenIds = [with(StringComparer.Ordinal)];
 
         for (var i = 0; i < definitions.Count; i++)
         {
@@ -97,8 +97,8 @@ public static class QuestionCompiler
         string location,
         BuildDiagnostics diagnostics)
     {
-        var options = new List<OptionDocument>(definitions.Count);
-        var seenIds = new HashSet<string>(StringComparer.Ordinal);
+        List<OptionDocument> options = [with(capacity: definitions.Count)];
+        HashSet<string> seenIds = [with(StringComparer.Ordinal)];
 
         for (var i = 0; i < definitions.Count; i++)
         {

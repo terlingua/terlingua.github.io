@@ -8,7 +8,7 @@ public sealed class BookService(HttpClient http, ILogger<BookService> logger) : 
 {
     public const string DataRoot = "book-data";
 
-    private readonly Dictionary<string, BookToc> _tocCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, BookToc> _tocCache = [with(StringComparer.Ordinal)];
     private BookSummary[]? _indexCache;
 
     public async Task<BookSummary[]> GetBooksAsync()

@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   schedule:
-    # Rebuild daily at 6 AM UTC to publish scheduled posts
     - cron: '0 6 * * *'
   workflow_dispatch:
 
@@ -14,13 +13,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # xunit.v3 pulls in Microsoft.Testing.Extensions.Telemetry. Opt out in CI.
-  TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: true
 
 jobs:
   build-and-deploy:
@@ -35,19 +34,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
-      - name: Restore .NET dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Run content processor (markdown → JSON + HTML)
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
-
-      # ── Audio generation with caching ──────────────────────────────
-      # Cache key is based on the content of all blog markdown files.
-      # Exact hit  → all MP3s restored, ALL Python steps skipped.
-      # Partial hit → most MP3s restored, only changed posts regenerated.
-      # Miss        → full regeneration (first run or cache eviction).
+      - name: Process content
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor --no-restore
 
       - name: Restore audio cache
         id: audio-cache
@@ -61,48 +54,35 @@ jobs:
       - name: Copy cached audio to output
         run: |
           mkdir -p src/ObserverMagazine.Web/wwwroot/blog-data
-          if [ -d .audio-cache ] && [ "$(ls -A .audio-cache 2>/dev/null)" ]; then
-            cp .audio-cache/*.mp3 src/ObserverMagazine.Web/wwwroot/blog-data/ 2>/dev/null || true
-            cp .audio-cache/audio-manifest.json src/ObserverMagazine.Web/wwwroot/blog-data/ 2>/dev/null || true
-            echo "Restored $(ls .audio-cache/*.mp3 2>/dev/null | wc -l) cached MP3 file(s)"
-          else
-            echo "No audio cache to restore"
-          fi
+          shopt -s nullglob
+          files=(.audio-cache/*.mp3 .audio-cache/audio-manifest.json)
+          if (( ${#files[@]} )); then cp "${files[@]}" src/ObserverMagazine.Web/wwwroot/blog-data/; fi
+          echo "Restored ${#files[@]} cached audio file(s)"
 
-      # All Python/audio steps are skipped on exact cache hit
-      - name: Setup Python 3.12 (for TTS audio generation)
+      - name: Setup Python
         if: steps.audio-cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: tools/requirements-audio.txt
 
-      - name: Install system dependencies (espeak-ng + ffmpeg)
+      - name: Install system dependencies
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
 
-      - name: Cache HuggingFace model
+      - name: Cache Hugging Face model
         if: steps.audio-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v6
         with:
           path: ~/.cache/huggingface
           key: hf-kitten-tts-nano-0.8
 
-      - name: Cache pip packages
-        if: steps.audio-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/pip
-          key: pip-audio-${{ hashFiles('tools/requirements-audio.txt') }}
-          restore-keys: |
-            pip-audio-
-
       - name: Install Python audio dependencies
         if: steps.audio-cache.outputs.cache-hit != 'true'
-        run: |
-          pip install onnxruntime
-          pip install -r tools/requirements-audio.txt
+        run: pip install onnxruntime -r tools/requirements-audio.txt
 
-      - name: Generate TTS audio (markdown → MP3)
+      - name: Generate TTS audio
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: python tools/generate_audio.py --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot/blog-data --voice Bella --model KittenML/kitten-tts-nano-0.8
 
@@ -110,30 +90,20 @@ jobs:
         if: steps.audio-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p .audio-cache
-          cp src/ObserverMagazine.Web/wwwroot/blog-data/*.mp3 .audio-cache/ 2>/dev/null || true
-          cp src/ObserverMagazine.Web/wwwroot/blog-data/audio-manifest.json .audio-cache/ 2>/dev/null || true
-          echo "Cached $(ls .audio-cache/*.mp3 2>/dev/null | wc -l) MP3 file(s) for next build"
+          shopt -s nullglob
+          files=(src/ObserverMagazine.Web/wwwroot/blog-data/*.mp3 src/ObserverMagazine.Web/wwwroot/blog-data/audio-manifest.json)
+          if (( ${#files[@]} )); then cp "${files[@]}" .audio-cache/; fi
+          echo "Cached ${#files[@]} audio file(s)"
 
-      # ── End audio generation ───────────────────────────────────────
-
-      # Microsoft.Testing.Platform mode (opted in via global.json).
-      # `dotnet test <path>` is no longer valid syntax; the target is named with
-      # --solution / --project / --test-modules. MTP fails the run if zero tests
-      # execute, so a silently empty run cannot pass CI.
-      - name: Run tests
+      - name: Test
         run: dotnet test --solution ObserverMagazine.slnx --no-restore
 
-      - name: Publish Blazor WASM
+      - name: Publish
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
 
-      - name: Strip source map references from framework JS
+      - name: Prepare site
         run: |
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/# sourceMappingURL=/d' {} + 2>/dev/null || true
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/@ sourceMappingURL=/d' {} + 2>/dev/null || true
-
-      - name: Prepare GitHub Pages artifacts
-        run: |
-          cp publish/wwwroot/.nojekyll publish/wwwroot/.nojekyll 2>/dev/null || touch publish/wwwroot/.nojekyll
+          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
           cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Setup Pages
@@ -144,6 +114,6 @@ jobs:
         with:
           path: publish/wwwroot
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5

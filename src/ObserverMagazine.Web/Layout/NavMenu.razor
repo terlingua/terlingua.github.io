@@ -1,8 +1,8 @@
 @inject IJSRuntime Js
 @inject NavigationManager Nav
-@implements IDisposable
+@implements IAsyncDisposable
 
-<nav class="nav-menu" role="navigation">
+<nav class="nav-menu">
     <button class="nav-toggle" @onclick="ToggleMenu" @onclick:stopPropagation="true" aria-label="Toggle navigation">
         ☰
     </button>
@@ -55,6 +55,7 @@
 </nav>
 
 @code {
+    private IJSObjectReference? _module;
     private bool _isOpen;
     private string _currentTheme = "system";
 
@@ -80,7 +81,8 @@
     {
         if (firstRender)
         {
-            _currentTheme = await Js.InvokeAsync<string>("observerTheme.get");
+            _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Layout/NavMenu.razor.js");
+            _currentTheme = await _module.InvokeAsync<string>("getTheme");
             StateHasChanged();
         }
     }
@@ -88,11 +90,24 @@
     private async Task OnThemeChanged(ChangeEventArgs e)
     {
         _currentTheme = e.Value?.ToString() ?? "system";
-        await Js.InvokeVoidAsync("observerTheme.set", _currentTheme);
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("setTheme", _currentTheme);
+        }
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         Nav.LocationChanged -= OnLocationChanged;
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+        }
     }
 }

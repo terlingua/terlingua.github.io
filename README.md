@@ -2,7 +2,8 @@
 
 A free, open-source Blazor WebAssembly application deployed to GitHub Pages.
 
-Built with **.NET 10** (LTS) and **C# 14**.
+Built with **.NET 11** and **C# 15**. Targets the current stable releases of evergreen browsers only
+(Chrome, Edge, Firefox, Safari); there are no polyfills, vendor prefixes or legacy fallbacks.
 
 ## Features
 
@@ -15,8 +16,12 @@ Built with **.NET 10** (LTS) and **C# 14**.
 - **Full Test Suite** — bUnit component tests + xUnit.net v3 integration tests, running on Microsoft.Testing.Platform
 
 ## Quick Start
+
+`global.json` asks for SDK `11.0.100-rc.3` or any later 11.0.1xx SDK, so the Fedora RC 3 SDK works
+locally and CI uses the latest .NET 11 GA SDK.
+
 ```bash
-# Restore & process blog posts and books
+# Process blog posts and books
 dotnet run --project tools/ObserverMagazine.ContentProcessor
 
 # Run the app locally
@@ -120,6 +125,20 @@ Content guidelines for new sections:
   local progress record to avoid counting repeat visits. Quiz answers are sent as
   interaction events. Nothing is shown and nothing breaks when the backend is down.
 
+## Front end
+
+- `wwwroot/index.html` contains no inline script. `js/theme.js` applies the saved theme before
+  first paint; everything else is an ES module loaded through `IJSRuntime` `import`.
+- JavaScript lives next to the component that uses it (`Components/RichContent.razor.js`,
+  `Components/BlogTtsPlayer.razor.js`, `Layout/NavMenu.razor.js`). `wwwroot/js/book-progress.js`
+  backs `IndexedDbProgressStore`.
+- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js` and fills the import map, so
+  JS modules are cache-busted on every deploy.
+- Themes are CSS custom properties. The default `system` theme uses `light-dark()` and
+  `color-scheme`, so it follows the OS setting live without script. Other themes set
+  `data-theme` on `<html>` and their own `color-scheme`.
+- GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
+
 ## Testing
 
 Tests run on **Microsoft.Testing.Platform (MTP)**, not VSTest. The opt-in lives in
@@ -156,11 +175,11 @@ xUnit configuration for MTP lives in `testconfig.json` next to a test project
 
 | Component | Technology | License |
 |-----------|-----------|---------|
-| Framework | .NET 10 / Blazor WASM 10.0.14 | MIT |
+| Framework | .NET 11 / Blazor WASM 11.0.0 | MIT |
 | Markdown | Markdig 1.6.0 | BSD-2-Clause |
 | YAML | YamlDotNet 18.1.0 | MIT |
-| Test framework | xUnit.net v3 4.0.2 | Apache-2.0 |
-| Component testing | bUnit 2.14.0 | MIT |
+| Test framework | xUnit.net v3 4.0.3 | Apache-2.0 |
+| Component testing | bUnit 2.15.2 | MIT |
 | Test runner | Microsoft.Testing.Platform v2 | MIT |
 
 All dependencies are free for any use — no payment required, ever.

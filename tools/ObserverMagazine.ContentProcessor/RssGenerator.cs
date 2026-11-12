@@ -13,27 +13,20 @@ public static class RssGenerator
     {
         var items = posts.Select(p =>
         {
-            var itemElements = new List<object>
-            {
+            List<object> itemElements =
+            [
                 new XElement("title", p.Title),
                 new XElement("link", $"{siteUrl}/blog/{p.Slug}"),
                 new XElement("description", p.Summary),
                 new XElement("pubDate", p.Date.ToString("R")),
                 new XElement("guid", $"{siteUrl}/blog/{p.Slug}")
-            };
+            ];
 
-            // Include author email if available (RSS spec: email (name))
             if (!string.IsNullOrEmpty(p.AuthorEmail))
             {
                 itemElements.Add(new XElement("author", $"{p.AuthorEmail} ({p.AuthorName})"));
             }
-            else if (!string.IsNullOrEmpty(p.AuthorName))
-            {
-                // dc:creator could be used here, but for simplicity just skip <author>
-                // when no email is available (RSS spec requires email in <author>)
-            }
 
-            // Include full HTML content if available
             var html = getPostHtml?.Invoke(p.Slug);
             if (!string.IsNullOrEmpty(html))
             {

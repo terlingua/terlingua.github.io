@@ -56,9 +56,6 @@ src/ObserverMagazine.Web/wwwroot/book-data/
 ## Generated RSS feed
 src/ObserverMagazine.Web/wwwroot/feed.xml
 
-## Client-side libraries (restored by LibMan at build time)
-src/ObserverMagazine.Web/wwwroot/lib/
-
 ## Python
 __pycache__/
 *.pyc

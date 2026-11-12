@@ -127,7 +127,7 @@ public sealed class BookCompiler(
     private List<ChapterToc> CompileChapters(string bookDir, string bookSlug, List<SubchapterDocument> documents)
     {
         var chapters = new List<ChapterToc>();
-        var seenSlugs = new HashSet<string>(StringComparer.Ordinal);
+        HashSet<string> seenSlugs = [with(StringComparer.Ordinal)];
 
         foreach (var entry in ReadNumberedEntries(Directory.GetDirectories(bookDir), p => Path.GetFileName(p)))
         {
@@ -187,7 +187,7 @@ public sealed class BookCompiler(
         List<SubchapterDocument> documents)
     {
         var subchapters = new List<SubchapterToc>();
-        var seenSlugs = new HashSet<string>(StringComparer.Ordinal);
+        HashSet<string> seenSlugs = [with(StringComparer.Ordinal)];
 
         foreach (var entry in ReadNumberedEntries(Directory.GetFiles(chapterDir, "*.md"), p => Path.GetFileNameWithoutExtension(p)))
         {

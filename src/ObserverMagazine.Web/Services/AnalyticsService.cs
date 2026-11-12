@@ -2,21 +2,22 @@ using System.Net.Http.Json;
 
 namespace ObserverMagazine.Web.Services;
 
-public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> logger) : IAnalyticsService
+public sealed class AnalyticsService(HttpClient http, TimeProvider time, ILogger<AnalyticsService> logger) : IAnalyticsService
 {
     private const string BackendBaseUrl = "https://my-api.2w7sp317.workers.dev";
     private static readonly TimeSpan HealthCacheDuration = TimeSpan.FromMinutes(5);
 
     private bool _backendAvailable;
-    private DateTime _lastHealthCheck = DateTime.MinValue;
+    private DateTimeOffset? _lastHealthCheck;
 
     public bool IsBackendAvailable => _backendAvailable;
 
     public async Task CheckHealthAsync()
     {
-        // Cache health check result for 5 minutes
-        if (DateTime.UtcNow - _lastHealthCheck < HealthCacheDuration)
+        if (_lastHealthCheck is { } last && time.GetUtcNow() - last < HealthCacheDuration)
+        {
             return;
+        }
 
         try
         {
@@ -31,7 +32,7 @@ public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> 
         }
         finally
         {
-            _lastHealthCheck = DateTime.UtcNow;
+            _lastHealthCheck = time.GetUtcNow();
         }
     }
 
@@ -125,8 +126,10 @@ public sealed class AnalyticsService(HttpClient http, ILogger<AnalyticsService> 
 
     private async Task EnsureHealthChecked()
     {
-        if (_lastHealthCheck == DateTime.MinValue)
+        if (_lastHealthCheck is null)
+        {
             await CheckHealthAsync();
+        }
     }
 
     private async Task SendEventAsync(string title, string content)

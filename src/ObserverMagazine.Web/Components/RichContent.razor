@@ -1,13 +1,16 @@
+@implements IAsyncDisposable
 @inject IJSRuntime Js
 @inject ILogger<RichContent> Logger
 
-<div class="blog-content">
+<div class="blog-content" @ref="_container">
     @((MarkupString)_processedHtml)
 </div>
 
 @code {
     [Parameter, EditorRequired] public string Html { get; set; } = "";
 
+    private ElementReference _container;
+    private IJSObjectReference? _module;
     private string _processedHtml = "";
     private string? _sourceHtml;
     private bool _enhancementPending;
@@ -34,12 +37,26 @@
         _enhancementPending = false;
         try
         {
-            await Js.InvokeVoidAsync("observerHighlight.highlightAll");
-            await Js.InvokeVoidAsync("observerCodeScroll.init");
+            _module ??= await Js.InvokeAsync<IJSObjectReference>("import", "./Components/RichContent.razor.js");
+            await _module.InvokeVoidAsync("enhance", _container);
         }
         catch (Exception ex)
         {
             Logger.LogDebug(ex, "Post-render content enhancement failed");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_module is not null)
+            {
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
         }
     }
 }

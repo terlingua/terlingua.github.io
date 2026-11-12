@@ -47,7 +47,7 @@
     min-width: 11.25rem;
     max-height: 20rem;
     overflow-y: auto;
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 0.12);
 }
 
 .sc-col-option {
@@ -170,8 +170,7 @@
     padding: 0.5rem 0.6rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border);
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sc-table th {
@@ -221,7 +220,7 @@
 .sc-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,12 +235,11 @@
     max-width: 25rem;
     width: 90%;
 }
-.sc-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.sc-dialog h4 { margin-bottom: 0.75rem; }
 .sc-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
     font-size: 0.95rem;
-    overflow-wrap: break-word;
 }
 
 /* ---- Mobile: collapse table to cards ---- */
@@ -255,10 +253,9 @@
         bottom: 0;
         left: 0;
         right: 0;
-        max-height: 50vh;
         max-height: 50dvh;
         border-radius: var(--radius) var(--radius) 0 0;
-        box-shadow: 0 -0.25rem 1.25rem rgba(0, 0, 0, 0.2);
+        box-shadow: 0 -0.25rem 1.25rem rgb(0 0 0 / 0.2);
         z-index: 100;
     }
 

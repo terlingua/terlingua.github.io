@@ -28,7 +28,7 @@ Console.WriteLine($"Authors directory: {authorsDir}");
 Console.WriteLine($"Books directory:   {booksDir}");
 Console.WriteLine($"Publish before:    {publishBefore:yyyy-MM-dd HH:mm:ss} UTC");
 
-var authorProfiles = new Dictionary<string, AuthorProfile>(StringComparer.OrdinalIgnoreCase);
+Dictionary<string, AuthorProfile> authorProfiles = [with(StringComparer.OrdinalIgnoreCase)];
 
 if (Directory.Exists(authorsDir))
 {
@@ -80,8 +80,8 @@ if (!Directory.Exists(contentDir))
 var markdownFiles = Directory.GetFiles(contentDir, "*.md", SearchOption.TopDirectoryOnly);
 Console.WriteLine($"Found {markdownFiles.Length} markdown files");
 
-var allPostMetadata = new List<PostIndexEntry>();
-var postHtmlMap = new Dictionary<string, string>();
+List<PostIndexEntry> allPostMetadata = [];
+Dictionary<string, string> postHtmlMap = [];
 int skippedDrafts = 0;
 int skippedFuture = 0;
 
@@ -165,7 +165,7 @@ Console.WriteLine($"Wrote posts index: {indexPath} ({allPostMetadata.Count} post
 var feedPath = Path.Combine(outputDir, "feed.xml");
 var rssXml = RssGenerator.Generate(
     title: "Terlingua Magazine",
-    description: "A free, open-source Blazor WebAssembly showcase on .NET 10",
+    description: "A free, open-source Blazor WebAssembly showcase on .NET 11",
     siteUrl: "https://terlingua.github.io",
     posts: allPostMetadata,
     getPostHtml: slug => postHtmlMap.GetValueOrDefault(slug)
@@ -188,13 +188,14 @@ if (bookDiagnostics.HasErrors)
         Console.Error.WriteLine($"  ERROR: {error}");
     }
     Console.Error.WriteLine($"Book processing failed with {bookDiagnostics.Errors.Count} error(s).");
-    Environment.Exit(1);
+    return 1;
 }
 
 var bookDataDir = BookOutputWriter.Write(books, outputDir, jsonOptions);
 Console.WriteLine($"Wrote book data: {bookDataDir} ({books.Count} books)");
 
 Console.WriteLine("Content processing complete.");
+return 0;
 
 public sealed class PostIndexEntry
 {

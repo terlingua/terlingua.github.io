@@ -42,17 +42,16 @@
     min-width: 0;
 }
 
-.md-list li:hover { background: var(--color-border); }
+.md-list li:not(.md-selected):hover { background: var(--color-border); }
 
 .md-selected {
-    background: var(--color-primary) !important;
+    background: var(--color-primary);
     color: var(--color-primary-fg);
 }
 
 .md-item-name {
     font-weight: 500;
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .md-item-price { font-size: 0.9rem; opacity: 0.8; white-space: nowrap; }
@@ -88,7 +87,6 @@
 .md-content h3 {
     font-size: 1.35rem;
     margin-bottom: 1rem;
-    overflow-wrap: break-word;
 }
 
 .md-content dl {
@@ -101,8 +99,7 @@
 
 .md-content dd {
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .md-star { color: var(--color-accent); }
@@ -111,7 +108,7 @@
 .confirm-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,13 +124,12 @@
     width: 90%;
 }
 
-.confirm-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.confirm-dialog h4 { margin-bottom: 0.75rem; }
 
 .confirm-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
     font-size: 0.95rem;
-    overflow-wrap: break-word;
 }
 
 @media (max-width: 40em) {

@@ -49,7 +49,7 @@
     font-size: 0.8rem;
     padding: 0.2rem 0.4rem;
     border-radius: var(--radius);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid color-mix(in srgb, var(--color-header-fg) 30%, transparent);
     background: transparent;
     color: var(--color-header-fg);
     cursor: pointer;

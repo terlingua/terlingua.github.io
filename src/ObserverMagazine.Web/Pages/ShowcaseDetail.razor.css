@@ -5,14 +5,12 @@
     border-radius: var(--radius);
     padding: 1.5rem;
     background: var(--color-card-bg);
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sd-card h2 {
     font-size: 1.5rem;
     margin-bottom: 0.75rem;
-    overflow-wrap: break-word;
 }
 
 .sd-badge {
@@ -40,8 +38,7 @@
 .sd-details dt { font-weight: 600; color: var(--color-muted); }
 .sd-details dd {
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .sd-star { color: var(--color-accent); }
@@ -57,7 +54,7 @@
 .sd-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgb(0 0 0 / 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,11 +69,10 @@
     max-width: 25rem;
     width: 90%;
 }
-.sd-dialog h4 { margin-bottom: 0.75rem; overflow-wrap: break-word; }
+.sd-dialog h4 { margin-bottom: 0.75rem; }
 .sd-dialog p {
     margin-bottom: 1rem;
     color: var(--color-muted);
-    overflow-wrap: break-word;
 }
 
 @media (max-width: 40em) {

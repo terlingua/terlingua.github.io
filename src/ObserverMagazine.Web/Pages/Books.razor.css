@@ -18,12 +18,10 @@
     padding: 1.5rem;
     background: var(--color-card-bg);
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .book-card h2 {
     font-size: 1.35rem;
-    overflow-wrap: break-word;
 }
 
 .book-card .blog-meta { margin-bottom: 0; }

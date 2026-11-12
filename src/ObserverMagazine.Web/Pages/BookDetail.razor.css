@@ -3,12 +3,10 @@
 .book-header h1 {
     font-size: clamp(1.4rem, 4.5vw, 2rem);
     line-height: 1.25;
-    overflow-wrap: break-word;
 }
 
 .book-summary {
     margin: 0.5rem 0;
-    overflow-wrap: break-word;
 }
 
 .book-progress-panel {
@@ -63,7 +61,6 @@
     display: flex;
     flex-direction: column;
     font-size: 1.15rem;
-    overflow-wrap: break-word;
 }
 
 .chapter-number {
@@ -97,7 +94,7 @@
     min-width: 0;
 }
 
-.subchapter-item a { overflow-wrap: break-word; min-width: 0; }
+.subchapter-item a { min-width: 0; }
 
 .subchapter-number {
     font-weight: 600;

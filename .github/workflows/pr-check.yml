@@ -4,10 +4,17 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # xunit.v3 pulls in Microsoft.Testing.Extensions.Telemetry. Opt out in CI.
-  TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: true
 
 jobs:
   build-and-test:
@@ -19,29 +26,23 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Run content processor
-        run: dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot --authors-dir content/authors --books-dir content/books
+      - name: Process content
+        run: dotnet run --project tools/ObserverMagazine.ContentProcessor --no-restore
 
-      # Microsoft.Testing.Platform mode (opted in via global.json).
-      - name: Run tests
+      - name: Test
         run: dotnet test --solution ObserverMagazine.slnx --no-restore
 
-      - name: Publish Blazor WASM
+      - name: Publish
         run: dotnet publish src/ObserverMagazine.Web/ObserverMagazine.Web.csproj -c Release -o publish
-
-      - name: Strip source map references from framework JS
-        run: |
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/# sourceMappingURL=/d' {} + 2>/dev/null || true
-          find publish/wwwroot/_framework -name "*.js" -exec sed -i '/^\/\/@ sourceMappingURL=/d' {} + 2>/dev/null || true
 
       - name: Prepare preview
         run: |
-          touch publish/wwwroot/.nojekyll
+          find publish/wwwroot/_framework -name '*.js' -exec sed -i '/^\/\/# sourceMappingURL=/d' {} +
           cp publish/wwwroot/index.html publish/wwwroot/404.html
 
       - name: Upload preview site

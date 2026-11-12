@@ -1,7 +1,5 @@
 .blog-content {
     line-height: 1.8;
-    overflow-wrap: break-word;
-    word-break: normal;
     min-width: 0;
     width: 100%;
 }
@@ -9,24 +7,20 @@
 .blog-content ::deep h2 {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep h3 {
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep h4 {
     margin-top: 1.25rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep p {
     margin-bottom: 1rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep .code-block-wrap {
@@ -43,7 +37,7 @@
     right: 1px;
     bottom: 1px;
     width: 2.5rem;
-    background: linear-gradient(to right, transparent, var(--hl-bg, #f3f4f6));
+    background: linear-gradient(to right, transparent, var(--hl-bg));
     border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
     pointer-events: none;
     z-index: 1;
@@ -62,7 +56,7 @@
     font-size: 0.7rem;
     font-family: var(--font-sans);
     color: var(--color-muted);
-    background: var(--hl-bg, #f3f4f6);
+    background: var(--hl-bg);
     padding: 0.1rem 0.45rem;
     border-radius: 3px;
     opacity: 0.7;
@@ -83,17 +77,15 @@
     border-radius: var(--radius);
     padding: 1.15rem 1.25rem;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     min-width: 0;
     width: 100%;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.7;
     tab-size: 4;
-    -moz-tab-size: 4;
     margin-bottom: 1.25rem;
     white-space: pre;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.06);
 }
 
 .blog-content ::deep .code-block-wrap pre {
@@ -116,9 +108,9 @@
 .blog-content ::deep code {
     font-family: var(--font-mono);
     font-size: 0.875em;
-    background: var(--color-inline-code-bg, var(--color-surface));
-    color: var(--color-inline-code-fg, var(--color-text));
-    border: 1px solid var(--color-inline-code-border, var(--color-border));
+    background: var(--color-inline-code-bg);
+    color: var(--color-inline-code-fg);
+    border: 1px solid var(--color-inline-code-border);
     border-radius: 4px;
     padding: 0.15em 0.4em;
     word-break: break-all;
@@ -136,8 +128,6 @@
     padding-left: 1.5rem;
 }
 
-.blog-content ::deep li { overflow-wrap: break-word; }
-
 .blog-content ::deep img { max-width: 100%; height: auto; }
 
 .blog-content ::deep blockquote {
@@ -147,7 +137,6 @@
     color: var(--color-muted);
     background: var(--color-surface);
     border-radius: 0 var(--radius) var(--radius) 0;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep hr {
@@ -158,7 +147,6 @@
 
 .blog-content ::deep .table-scroll-wrap {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     margin-bottom: 1rem;
     min-width: 0;
     width: 100%;
@@ -193,7 +181,6 @@
 .blog-content ::deep dd {
     margin-left: 1.5rem;
     margin-bottom: 0.5rem;
-    overflow-wrap: break-word;
 }
 
 .blog-content ::deep .hl-keyword  { color: var(--hl-keyword); }

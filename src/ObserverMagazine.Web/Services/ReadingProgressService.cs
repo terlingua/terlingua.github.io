@@ -12,7 +12,7 @@ public sealed class ReadingProgressService(
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    private readonly Dictionary<string, BookProgress> _cache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, BookProgress> _cache = [with(StringComparer.Ordinal)];
     private readonly SemaphoreSlim _gate = new(1, 1);
 
     public static string StorageKey(string bookSlug) => KeyPrefix + bookSlug;
@@ -209,17 +209,17 @@ public sealed class ReadingProgressService(
 
     private static BookProgress Normalize(BookProgress progress)
     {
-        var subchapters = new Dictionary<string, SubchapterProgress>(StringComparer.Ordinal);
+        Dictionary<string, SubchapterProgress> subchapters = [with(StringComparer.Ordinal)];
 
-        foreach (var (key, subchapter) in progress.Subchapters ?? new Dictionary<string, SubchapterProgress>())
+        foreach (var (key, subchapter) in progress.Subchapters ?? [])
         {
             if (subchapter is null)
             {
                 continue;
             }
 
-            var questions = new Dictionary<string, QuestionProgress>(StringComparer.Ordinal);
-            foreach (var (questionId, question) in subchapter.Questions ?? new Dictionary<string, QuestionProgress>())
+            Dictionary<string, QuestionProgress> questions = [with(StringComparer.Ordinal)];
+            foreach (var (questionId, question) in subchapter.Questions ?? [])
             {
                 if (question is null)
                 {

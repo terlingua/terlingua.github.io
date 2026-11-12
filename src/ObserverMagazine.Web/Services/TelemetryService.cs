@@ -1,14 +1,9 @@
 namespace ObserverMagazine.Web.Services;
 
-/// <summary>
-/// Lightweight telemetry service for tracking events and metrics in the browser.
-/// Logs to ILogger (browser console). Can be extended with a real OpenTelemetry
-/// collector endpoint when one is available.
-/// </summary>
 public sealed class TelemetryService(ILogger<TelemetryService> logger)
 {
-    private readonly Dictionary<string, long> _counters = new();
-    private readonly object _lockObj = new();
+    private readonly Dictionary<string, long> _counters = [];
+    private readonly Lock _lock = new();
 
     public void TrackEvent(string eventName, IDictionary<string, string>? properties = null)
     {
@@ -20,7 +15,7 @@ public sealed class TelemetryService(ILogger<TelemetryService> logger)
 
     public void IncrementCounter(string counterName, long value = 1)
     {
-        lock (_lockObj)
+        lock (_lock)
         {
             _counters.TryGetValue(counterName, out var current);
             _counters[counterName] = current + value;
@@ -30,7 +25,7 @@ public sealed class TelemetryService(ILogger<TelemetryService> logger)
 
     public long GetCounter(string counterName)
     {
-        lock (_lockObj)
+        lock (_lock)
         {
             return _counters.GetValueOrDefault(counterName, 0);
         }

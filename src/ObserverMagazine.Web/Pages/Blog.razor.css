@@ -11,17 +11,13 @@
     background: var(--color-card-bg);
     position: relative;
     min-width: 0;
-    overflow-wrap: break-word;
 }
 
 .blog-card h2,
 .blog-card h3 {
     font-size: 1.35rem;
     margin-bottom: 0.25rem;
-    overflow-wrap: break-word;
 }
-
-.blog-card p { overflow-wrap: break-word; }
 
 .tag-filter-bar {
     display: flex;

@@ -1,268 +1,107 @@
-@implements IDisposable
+@using System.Globalization
+@implements IAsyncDisposable
 @inject IAnalyticsService Analytics
 @inject ILogger<BlogTtsPlayer> Logger
 @inject IJSRuntime Js
 
-@if (!_hidden)
-{
-    <div class="tts-player">
-        <span class="tts-icon" aria-hidden="true">🔊</span>
-        <span class="tts-label">Listen to this post</span>
+<div class="tts-player" hidden="@(!_available)">
+    <span class="tts-icon" aria-hidden="true">🔊</span>
+    <span class="tts-label">Listen to this post</span>
 
-        @if (_useFallbackControls)
-        {
-            @* Fallback: custom play/pause + seek when native controls don't render *@
-            <audio id="tts-audio-@Slug"
-                   preload="metadata"
-                   playsinline
-                   src="blog-data/@(Slug).mp3"
-                   style="display:none;">
-                Your browser does not support audio playback.
-            </audio>
-            <div class="tts-fallback">
-                <button class="tts-fallback-btn" @onclick="ToggleFallbackPlay">
-                    @(_fallbackPlaying ? "⏸ Pause" : "▶ Play")
-                </button>
-                <input type="range" class="tts-fallback-seek"
-                       min="0" max="@_fallbackDuration" step="1"
-                       value="@_fallbackCurrentTime"
-                       @oninput="OnSeek" />
-                <span class="tts-fallback-time">@FormatTime(_fallbackCurrentTime)</span>
-            </div>
-        }
-        else
-        {
-            @* Default: native browser audio controls *@
-            <audio id="tts-audio-@Slug"
-                   controls
-                   preload="metadata"
-                   playsinline
-                   src="blog-data/@(Slug).mp3"
-                   @onplay="OnPlay"
-                   @onpause="OnPause"
-                   @onended="OnEnded">
-                Your browser does not support audio playback.
-            </audio>
-        }
+    <audio @ref="_audio"
+           controls
+           preload="metadata"
+           src="@AudioUrl"
+           @onloadedmetadata="OnLoadedMetadata"
+           @onplay="OnPlay"
+           @onpause="OnPause"
+           @onended="OnEnded"></audio>
 
-        @* Playback speed selector — shared across both native and fallback modes *@
-        <div class="tts-speed">
-            <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
-            <select id="tts-speed-@Slug"
-                    class="tts-speed-select"
-                    value="@_currentRate.ToString("0.##")"
-                    @onchange="OnSpeedChange">
-                @foreach (var rate in PlaybackRates)
-                {
-                    <option value="@rate.ToString("0.##")"
-                            selected="@(Math.Abs(rate - _currentRate) < 0.01)">
-                        @(rate.ToString("0.##"))x
-                    </option>
-                }
-            </select>
-        </div>
-
-        <a class="tts-direct-link" href="blog-data/@(Slug).mp3" target="_blank" rel="noopener noreferrer"
-           title="Open audio file directly in a new tab">
-            Open audio ↗
-        </a>
+    <div class="tts-speed">
+        <label class="tts-speed-label" for="tts-speed-@Slug">Speed</label>
+        <select id="tts-speed-@Slug"
+                class="tts-speed-select"
+                value="@FormatRate(_currentRate)"
+                @onchange="OnSpeedChange">
+            @foreach (var rate in PlaybackRates)
+            {
+                <option value="@FormatRate(rate)">@(FormatRate(rate))x</option>
+            }
+        </select>
     </div>
-}
+
+    <a class="tts-direct-link" href="@AudioUrl" target="_blank" rel="noopener noreferrer"
+       title="Open audio file directly in a new tab">
+        Open audio ↗
+    </a>
+</div>
 
 @code {
-    /// <summary>Blog post slug — matches the MP3 filename in blog-data/</summary>
-    [Parameter, EditorRequired]
-    public string Slug { get; set; } = string.Empty;
-
-    private bool _hidden;
-    private bool _useFallbackControls;
-    private bool _fallbackPlaying;
-    private int _fallbackCurrentTime;
-    private int _fallbackDuration = 1; // avoid div-by-zero on range
-    private double _currentRate = 1.0;
-
-    private Timer? _pollTimer;
-
-    /// <summary>Available playback speed options.</summary>
     private static readonly double[] PlaybackRates = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                // Check if the audio source is available at all
-                var canPlay = await Js.InvokeAsync<bool>("observerAudio.checkAvailability",
-                    $"tts-audio-{Slug}");
-                if (!canPlay)
-                {
-                    _hidden = true;
-                    StateHasChanged();
-                    return;
-                }
+    [Parameter, EditorRequired]
+    public string Slug { get; set; } = "";
 
-                // Restore saved playback rate from localStorage
-                var savedRate = await Js.InvokeAsync<double>("observerAudio.getSavedPlaybackRate");
-                if (savedRate > 0)
-                {
-                    _currentRate = savedRate;
-                    await Js.InvokeVoidAsync("observerAudio.setPlaybackRate",
-                        $"tts-audio-{Slug}", _currentRate);
-                }
+    private ElementReference _audio;
+    private Task<IJSObjectReference>? _module;
+    private string? _currentSlug;
+    private bool _available;
+    private double _currentRate = 1.0;
 
-                // Check if native controls rendered properly (height > 0).
-                // Chrome Android clips the controls to 0px height in some CSS scenarios.
-                var controlsRendered = await Js.InvokeAsync<bool>("observerAudio.checkControlsRendered",
-                    $"tts-audio-{Slug}");
-                if (!controlsRendered)
-                {
-                    Logger.LogInformation("Native audio controls not rendered for {Slug}, using fallback", Slug);
-                    _useFallbackControls = true;
-                    StateHasChanged();
+    private string AudioUrl => $"blog-data/{Slug}.mp3";
 
-                    // After switching to fallback, get duration
-                    await Task.Delay(100); // let DOM update
-                    var dur = await Js.InvokeAsync<double>("observerAudio.getDuration", $"tts-audio-{Slug}");
-                    if (dur > 0)
-                        _fallbackDuration = (int)Math.Ceiling(dur);
-
-                    // Re-apply playback rate after fallback switch (new audio element may have reset)
-                    await Js.InvokeVoidAsync("observerAudio.setPlaybackRate",
-                        $"tts-audio-{Slug}", _currentRate);
-
-                    StateHasChanged();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Audio availability check failed for {Slug}", Slug);
-            }
-        }
-    }
+    private Task<IJSObjectReference> Module =>
+        _module ??= Js.InvokeAsync<IJSObjectReference>("import", "./Components/BlogTtsPlayer.razor.js").AsTask();
 
     protected override void OnParametersSet()
     {
-        _hidden = false;
-        _useFallbackControls = false;
-        _fallbackPlaying = false;
-        _fallbackCurrentTime = 0;
-    }
-
-    // --- Speed control ---
-
-    private async Task OnSpeedChange(ChangeEventArgs e)
-    {
-        if (double.TryParse(e.Value?.ToString(),
-            System.Globalization.NumberStyles.Float,
-            System.Globalization.CultureInfo.InvariantCulture, out var rate) && rate >= 0.5 && rate <= 3.0)
+        if (Slug == _currentSlug)
         {
-            _currentRate = rate;
-            try
-            {
-                await Js.InvokeVoidAsync("observerAudio.setPlaybackRate", $"tts-audio-{Slug}", rate);
-                await Js.InvokeVoidAsync("observerAudio.savePlaybackRate", rate);
-                Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
-                await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{rate}x");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
-            }
+            return;
         }
+
+        _currentSlug = Slug;
+        _available = false;
     }
 
-    // --- Fallback controls ---
-
-    private async Task ToggleFallbackPlay()
+    private async Task OnLoadedMetadata()
     {
+        _available = true;
         try
         {
-            if (_fallbackPlaying)
-            {
-                await Js.InvokeVoidAsync("observerAudio.pause", $"tts-audio-{Slug}");
-                _fallbackPlaying = false;
-                StopPolling();
-                await OnPause();
-            }
-            else
-            {
-                await Js.InvokeVoidAsync("observerAudio.play", $"tts-audio-{Slug}");
-                _fallbackPlaying = true;
-                StartPolling();
-                await OnPlay();
-            }
+            var module = await Module;
+            var saved = await module.InvokeAsync<double>("getSavedRate");
+            _currentRate = PlaybackRates.Contains(saved) ? saved : 1.0;
+            await module.InvokeVoidAsync("applyRate", _audio, _currentRate);
         }
         catch (Exception ex)
         {
-            Logger.LogWarning(ex, "Fallback play/pause failed for {Slug}", Slug);
+            Logger.LogDebug(ex, "Failed to restore playback rate for {Slug}", Slug);
         }
     }
 
-    private async Task OnSeek(ChangeEventArgs e)
+    private async Task OnSpeedChange(ChangeEventArgs e)
     {
-        if (double.TryParse(e.Value?.ToString(), out var time))
+        if (!double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var rate) ||
+            !PlaybackRates.Contains(rate))
         {
-            _fallbackCurrentTime = (int)time;
-            try
-            {
-                await Js.InvokeVoidAsync("observerAudio.setCurrentTime", $"tts-audio-{Slug}", time);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogDebug(ex, "Seek failed for {Slug}", Slug);
-            }
+            return;
         }
-    }
 
-    private void StartPolling()
-    {
-        StopPolling();
-        _pollTimer = new Timer(PollTimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
-    }
-
-    /// <summary>
-    /// Timer callback — uses async void because TimerCallback returns void.
-    /// All async work is wrapped in try-catch to prevent unobserved exceptions.
-    /// </summary>
-    private async void PollTimerCallback(object? state)
-    {
+        _currentRate = rate;
         try
         {
-            var time = await Js.InvokeAsync<double>("observerAudio.getCurrentTime", $"tts-audio-{Slug}");
-            var ended = await Js.InvokeAsync<bool>("observerAudio.hasEnded", $"tts-audio-{Slug}");
-            await InvokeAsync(() =>
-            {
-                _fallbackCurrentTime = (int)time;
-                if (ended)
-                {
-                    _fallbackPlaying = false;
-                    StopPolling();
-                    _ = OnEnded();
-                }
-                StateHasChanged();
-            });
+            var module = await Module;
+            await module.InvokeVoidAsync("applyRate", _audio, rate);
+            await module.InvokeVoidAsync("saveRate", rate);
+            Logger.LogInformation("TTS speed changed to {Rate}x for {Slug}", rate, Slug);
+            await Analytics.TrackInteractionAsync("TTS.SpeedChange", $"{Slug}:{FormatRate(rate)}x");
         }
-        catch
+        catch (Exception ex)
         {
-            // Component may have been disposed — ignore
+            Logger.LogDebug(ex, "Failed to set playback rate for {Slug}", Slug);
         }
     }
-
-    private void StopPolling()
-    {
-        _pollTimer?.Dispose();
-        _pollTimer = null;
-    }
-
-    private static string FormatTime(int seconds)
-    {
-        var m = seconds / 60;
-        var s = seconds % 60;
-        return $"{m}:{s:D2}";
-    }
-
-    // --- Analytics events ---
 
     private async Task OnPlay()
     {
@@ -282,8 +121,21 @@
         await Analytics.TrackInteractionAsync("TTS.Finished", Slug);
     }
 
-    public void Dispose()
+    private static string FormatRate(double rate) => rate.ToString("0.##", CultureInfo.InvariantCulture);
+
+    public async ValueTask DisposeAsync()
     {
-        StopPolling();
+        if (_module is not { IsCompletedSuccessfully: true })
+        {
+            return;
+        }
+
+        try
+        {
+            await _module.Result.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
     }
 }
