@@ -1,256 +1,27 @@
 kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-255M	.
+268M	.
 
-real	0m0.118s
-user	0m0.002s
-sys	0m0.062s
-
-real	0m8.651s
-user	0m16.510s
-sys	0m1.142s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-
-real	0m0.766s
-user	0m0.787s
-sys	0m0.177s
-Content directory: content/blog
-Output directory:  src/ObserverMagazine.Web/wwwroot
-Authors directory: content/authors
-Books directory:   content/books
-Publish before:    2026-11-12 03:40:03 UTC
-Found 3 author profile(s)
-  Loaded author: kushal (kushal)
-  Loaded author: abraham-lincoln (Abraham Lincoln)
-  Loaded author: terlingua-team (Terlingua Team)
-Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 5 markdown files
-Processing: 2026-03-22-good-morning.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
-Processing: 2026-09-19-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-25-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-29-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-10-21-good-night.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
-Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
-Processing book: amazon-web-services
-  8 chapter(s), 19 subchapter(s), 60 question(s)
-Processing book: blazor-basics
-  2 chapter(s), 4 subchapter(s), 8 question(s)
-Processing book: clean-code
-  7 chapter(s), 14 subchapter(s), 44 question(s)
-Processing book: dapper
-  5 chapter(s), 15 subchapter(s), 48 question(s)
-Processing book: databricks-platform
-  8 chapter(s), 24 subchapter(s), 73 question(s)
-Processing book: designing-data-intensive-applications
-  14 chapter(s), 72 subchapter(s), 1144 question(s)
-Processing book: microsoft-azure
-  7 chapter(s), 18 subchapter(s), 55 question(s)
-Processing book: modern-blazor
-  8 chapter(s), 22 subchapter(s), 73 question(s)
-Processing book: modern-dotnet
-  8 chapter(s), 21 subchapter(s), 76 question(s)
-Processing book: nutrition-science
-  11 chapter(s), 34 subchapter(s), 264 question(s)
-Processing book: solid-principles
-  7 chapter(s), 14 subchapter(s), 45 question(s)
-Processing book: sustainable-energy-without-the-hot-air
-  43 chapter(s), 159 subchapter(s), 1326 question(s)
-Processing book: timeless-dotnet
-  14 chapter(s), 39 subchapter(s), 284 question(s)
-Processing book: working-effectively-with-legacy-code
-  26 chapter(s), 122 subchapter(s), 799 question(s)
-Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (14 books)
-Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64)
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (742ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (884ms)
-
-Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net10.0/ObserverMagazine.Web.Tests.dll (net10.0|x64) passed (884ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net10.0/ObserverMagazine.Integration.Tests.dll (net10.0|x64) passed (742ms)
-
-  total: 159
-  failed: 0
-  succeeded: 159
-  skipped: 0
-  duration: 1s 058ms
-
-real	0m6.758s
-user	0m6.362s
-sys	0m1.043s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-Project 'ObserverMagazine.Web' has the following package references
-   [net10.0]: 
-   Top-level Package                                        Requested      Resolved
-   > Microsoft.AspNetCore.App.Internal.Assets         (A)   [10.0.13, )    10.0.13 
-   > Microsoft.AspNetCore.Components.WebAssembly            10.0.14        10.0.14 
-   > Microsoft.DotNet.HotReload.WebAssembly.Browser   (A)   [10.0.113, )   10.0.113
-   > Microsoft.Extensions.Http                              10.0.14        10.0.14 
-   > Microsoft.Extensions.Logging.Configuration             10.0.14        10.0.14 
-   > Microsoft.NET.ILLink.Tasks                       (A)   [10.0.13, )    10.0.13 
-   > Microsoft.NET.Sdk.WebAssembly.Pack               (A)   [10.0.1, )     10.0.1  
-
-Project 'ObserverMagazine.Integration.Tests' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > xunit.v3             4.0.3       4.0.3   
-   > YamlDotNet           18.1.0      18.1.0  
-
-Project 'ObserverMagazine.Web.Tests' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > bunit                2.14.0      2.14.0  
-   > xunit.v3             4.0.3       4.0.3   
-
-Project 'ObserverMagazine.ContentProcessor' has the following package references
-   [net10.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > YamlDotNet           18.1.0      18.1.0  
-
-(A) : Auto-referenced package.
-
-real	0m1.605s
-user	0m1.560s
-sys	0m0.345s
-Restore complete (0.5s)
-
-Build succeeded in 0.6s
-
-The following sources were used:
-   https://api.nuget.org/v3/index.json
-
-Project `ObserverMagazine.Web` has the following updates to its packages
-   [net10.0]: 
-   Top-level Package                                  Requested   Resolved   Latest
-   > Microsoft.AspNetCore.Components.WebAssembly      10.0.14     10.0.14    11.0.0
-   > Microsoft.Extensions.Http                        10.0.14     10.0.14    11.0.0
-   > Microsoft.Extensions.Logging.Configuration       10.0.14     10.0.14    11.0.0
-
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-Project `ObserverMagazine.Web.Tests` has the following updates to its packages
-   [net10.0]: 
-   Top-level Package      Requested   Resolved   Latest
-   > bunit                2.14.0      2.14.0     2.15.2
-
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
-
-real	0m3.041s
-user	0m2.126s
-sys	0m0.434s
-Export complete: docs/llm/dump.txt
-  Total files: 895
-  Blog posts (front matter only): 5
-  Full content files: 888
-  Binary files skipped: 2
-
-real	0m0.882s
-user	0m0.422s
-sys	0m0.442s
-kushal@fedora:~/src/dotnet/terlingua$ dotnet --info
-.NET SDK:
- Version:           10.0.113
- Commit:            4099f83977
- Workload version:  10.0.101.1
- MSBuild version:   18.0.36+4099f8397
-
-Runtime Environment:
- OS Name:     fedora
- OS Version:  45
- OS Platform: Linux
- RID:         fedora.45-x64
- Base Path:   /usr/lib64/dotnet/sdk/10.0.113/
-
-.NET workloads installed:
- [android]
-   Installation Source: SDK 10.0.100
-   Manifest Version:    36.1.2/10.0.100
-   Manifest Path:       /home/kushal/.dotnet/sdk-manifests/10.0.100/microsoft.net.sdk.android/36.1.2/WorkloadManifest.json
-   Install Type:        FileBased
-
-Configured to use workload sets when installing new manifests.
-
-Host:
-  Version:      11.0.0-rc.3.26522.148
-  Architecture: x64
-  Commit:       5254d8bcf5
-
-.NET SDKs installed:
-  10.0.113 [/usr/lib64/dotnet/sdk]
-  11.0.100-rc.3.26522.148 [/usr/lib64/dotnet/sdk]
-
-.NET runtimes installed:
-  Microsoft.AspNetCore.App 10.0.13 [/usr/lib64/dotnet/shared/Microsoft.AspNetCore.App]
-  Microsoft.AspNetCore.App 11.0.0-rc.3.26522.148 [/usr/lib64/dotnet/shared/Microsoft.AspNetCore.App]
-  Microsoft.NETCore.App 10.0.13 [/usr/lib64/dotnet/shared/Microsoft.NETCore.App]
-  Microsoft.NETCore.App 11.0.0-rc.3.26522.148 [/usr/lib64/dotnet/shared/Microsoft.NETCore.App]
-
-Other architectures found:
-  None
-
-Environment variables:
-  Not set
-
-global.json file:
-  /home/kushal/src/dotnet/terlingua/global.json
-
-Learn more:
-  https://aka.ms/dotnet/info
-
-Download .NET:
-  https://aka.ms/dotnet/download
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-257M	.
-
-real	0m0.033s
+real	0m0.024s
 user	0m0.004s
-sys	0m0.019s
-
-Welcome to .NET 11.0!
----------------------
-SDK Version: 11.0.100-rc.3.26522.148
-
-----------------
-Installed an ASP.NET Core HTTPS development certificate.
-To trust the certificate, run 'dotnet dev-certs https --trust'
-Learn about HTTPS: https://aka.ms/dotnet-https
-
-----------------
-Write your first app: https://aka.ms/dotnet-hello-world
-Find out what's new: https://aka.ms/dotnet-whats-new
-Explore documentation: https://aka.ms/dotnet-docs
-Report issues and find source on GitHub: https://github.com/dotnet/core
-Use 'dotnet --help' to see available commands or visit: https://aka.ms/dotnet-cli
---------------------------------------------------------------------------------------
+sys	0m0.016s
 Unable to fix BL0016. Code fix JSInteropCodeFixProvider didn't return a Fix All action.
 Unable to fix BL0016. Code fix JSInteropCodeFixProvider didn't return a Fix All action.
 
-real	0m8.877s
-user	0m12.016s
-sys	0m0.781s
-Restore complete (0.2s)
+real	0m5.726s
+user	0m12.178s
+sys	0m0.766s
+Restore complete (0.1s)
 
-Build succeeded in 0.2s
+Build succeeded in 0.1s
 
-real	0m0.341s
-user	0m0.093s
-sys	0m0.035s
+real	0m0.241s
+user	0m0.106s
+sys	0m0.030s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-12 04:22:16 UTC
+Publish before:    2026-11-12 04:23:12 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -310,9 +81,9 @@ Content processing complete.
 /home/kushal/src/dotnet/terlingua/src/ObserverMagazine.Web/Services/IndexedDbProgressStore.cs(53,21): error BL0016: JS interop call 'InvokeAsync' is not guarded with a try/catch block.
 Build failed with exit code: 1.
 
-real	0m2.376s
-user	0m0.307s
-sys	0m0.053s
+real	0m1.263s
+user	0m0.198s
+sys	0m0.050s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -345,9 +116,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.132s
-user	0m0.856s
-sys	0m0.194s
+real	0m1.148s
+user	0m0.864s
+sys	0m0.202s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -360,16 +131,16 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.270s
-user	0m1.319s
-sys	0m0.261s
+real	0m1.314s
+user	0m1.005s
+sys	0m0.232s
 Export complete: docs/llm/dump.txt
   Total files: 896
   Blog posts (front matter only): 5
   Full content files: 889
   Binary files skipped: 2
 
-real	0m0.865s
-user	0m0.415s
-sys	0m0.432s
+real	0m0.856s
+user	0m0.402s
+sys	0m0.443s
 kushal@fedora:~/src/dotnet/terlingua$ 
