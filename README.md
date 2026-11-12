@@ -141,8 +141,11 @@ Content guidelines for new sections:
   system theme.
 - The audio player uses the browser's native controls, including playback speed, and stays
   hidden until the MP3's metadata loads.
-- `OverrideHtmlAssetPlaceholders` fingerprints `blazor.webassembly.js`, so it is cache-busted on
-  every deploy.
+- `OverrideHtmlAssetPlaceholders` fingerprints the framework files (`dotnet.js` is published as
+  `dotnet.<hash>.js`) and fills the `<script type="importmap">` placeholder in `index.html`,
+  which is how `blazor.webassembly.js` finds them. Keep that placeholder, and don't modify files
+  under `_framework` after publish, because the import map can carry integrity hashes for them.
+  A 404 for `/_framework/dotnet.js` on the live site is expected.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
 
 ## Testing
