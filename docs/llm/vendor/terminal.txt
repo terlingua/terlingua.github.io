@@ -1,403 +1,100 @@
 kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-394M	.
+392M	.
 
-real	0m0.042s
-user	0m0.005s
-sys	0m0.024s
+real	0m0.149s
+user	0m0.003s
+sys	0m0.083s
 
-real	0m6.922s
-user	0m13.344s
-sys	0m0.840s
+real	0m8.226s
+user	0m14.729s
+sys	0m1.152s
 Restore complete (0.1s)
-
-Build succeeded in 0.1s
-
-real	0m0.280s
-user	0m0.132s
-sys	0m0.028s
-Content directory: content/blog
-Output directory:  src/ObserverMagazine.Web/wwwroot
-Authors directory: content/authors
-Books directory:   content/books
-Publish before:    2026-11-13 07:19:36 UTC
-Found 3 author profile(s)
-  Loaded author: kushal (kushal)
-  Loaded author: abraham-lincoln (Abraham Lincoln)
-  Loaded author: terlingua-team (Terlingua Team)
-Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 5 markdown files
-Processing: 2026-03-22-good-morning.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
-Processing: 2026-09-19-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-25-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-29-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-10-21-good-night.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
-Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
-Processing book: ai-agent-fundamentals
-  10 chapter(s), 25 subchapter(s), 214 question(s)
-Processing book: amazon-web-services
-  8 chapter(s), 19 subchapter(s), 60 question(s)
-Processing book: blazor-basics
-  2 chapter(s), 4 subchapter(s), 8 question(s)
-Processing book: clean-code
-  7 chapter(s), 14 subchapter(s), 44 question(s)
-Processing book: dapper
-  5 chapter(s), 15 subchapter(s), 48 question(s)
-Processing book: databricks-fundamentals
-  10 chapter(s), 28 subchapter(s), 272 question(s)
-Processing book: databricks-platform
-  8 chapter(s), 24 subchapter(s), 73 question(s)
-Processing book: designing-data-intensive-applications
-  14 chapter(s), 72 subchapter(s), 1144 question(s)
-Processing book: generative-ai-fundamentals
-  12 chapter(s), 30 subchapter(s), 272 question(s)
-Processing book: microsoft-azure
-  7 chapter(s), 18 subchapter(s), 55 question(s)
-Processing book: modern-blazor
-  8 chapter(s), 22 subchapter(s), 73 question(s)
-Processing book: modern-dotnet
-  8 chapter(s), 21 subchapter(s), 76 question(s)
-Processing book: nutrition-science
-  11 chapter(s), 34 subchapter(s), 264 question(s)
-Processing book: solid-principles
-  7 chapter(s), 14 subchapter(s), 45 question(s)
-Processing book: sustainable-energy-without-the-hot-air
-  43 chapter(s), 159 subchapter(s), 1326 question(s)
-Processing book: timeless-dotnet
-  14 chapter(s), 39 subchapter(s), 284 question(s)
-Processing book: working-effectively-with-legacy-code
-  26 chapter(s), 122 subchapter(s), 799 question(s)
-Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
-Content processing complete.
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (788ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 014ms)
-
-Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (788ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 014ms)
-
-  total: 169
-  failed: 0
-  succeeded: 169
-  skipped: 0
-  duration: 1s 221ms
-
-real	0m4.707s
-user	0m4.006s
-sys	0m0.482s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-Project 'ObserverMagazine.Web' has the following package references
-   [net11.0]: 
-   Top-level Package                                     Requested                   Resolved             
-   > Microsoft.AspNetCore.App.Internal.Assets      (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.AspNetCore.Components.WebAssembly         11.0.0                      11.0.0               
-   > Microsoft.NET.ILLink.Tasks                    (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.NET.Sdk.WebAssembly.Pack            (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-
-Project 'ObserverMagazine.Integration.Tests' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > xunit.v3             4.0.3       4.0.3   
-   > YamlDotNet           18.1.0      18.1.0  
-
-Project 'ObserverMagazine.Web.Tests' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > bunit                2.15.2      2.15.2  
-   > xunit.v3             4.0.3       4.0.3   
-
-Project 'ObserverMagazine.ContentProcessor' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > YamlDotNet           18.1.0      18.1.0  
-
-(A) : Auto-referenced package.
-
-real	0m1.310s
-user	0m1.000s
-sys	0m0.209s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-
-The following sources were used:
-   https://api.nuget.org/v3/index.json
-
-The given project `ObserverMagazine.Web` has no updates given the current sources.
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
-
-real	0m1.532s
-user	0m1.198s
-sys	0m0.264s
-export.sh: line 199: syntax error near unexpected token `done'
-
-real	0m0.057s
-user	0m0.024s
-sys	0m0.028s
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-394M	.
-
-real	0m0.037s
-user	0m0.002s
-sys	0m0.024s
-
-real	0m6.714s
-user	0m13.295s
-sys	0m0.764s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-
-real	0m0.267s
-user	0m0.111s
-sys	0m0.039s
-Content directory: content/blog
-Output directory:  src/ObserverMagazine.Web/wwwroot
-Authors directory: content/authors
-Books directory:   content/books
-Publish before:    2026-11-13 07:22:03 UTC
-Found 3 author profile(s)
-  Loaded author: kushal (kushal)
-  Loaded author: abraham-lincoln (Abraham Lincoln)
-  Loaded author: terlingua-team (Terlingua Team)
-Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 5 markdown files
-Processing: 2026-03-22-good-morning.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
-Processing: 2026-09-19-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-25-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-29-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-10-21-good-night.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
-Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
-Processing book: ai-agent-fundamentals
-  10 chapter(s), 25 subchapter(s), 214 question(s)
-Processing book: amazon-web-services
-  8 chapter(s), 19 subchapter(s), 60 question(s)
-Processing book: blazor-basics
-  2 chapter(s), 4 subchapter(s), 8 question(s)
-Processing book: clean-code
-  7 chapter(s), 14 subchapter(s), 44 question(s)
-Processing book: dapper
-  5 chapter(s), 15 subchapter(s), 48 question(s)
-Processing book: databricks-fundamentals
-  10 chapter(s), 28 subchapter(s), 272 question(s)
-Processing book: databricks-platform
-  8 chapter(s), 24 subchapter(s), 73 question(s)
-Processing book: designing-data-intensive-applications
-  14 chapter(s), 72 subchapter(s), 1144 question(s)
-Processing book: generative-ai-fundamentals
-  12 chapter(s), 30 subchapter(s), 272 question(s)
-Processing book: microsoft-azure
-  7 chapter(s), 18 subchapter(s), 55 question(s)
-Processing book: modern-blazor
-  8 chapter(s), 22 subchapter(s), 73 question(s)
-Processing book: modern-dotnet
-  8 chapter(s), 21 subchapter(s), 76 question(s)
-Processing book: nutrition-science
-  11 chapter(s), 34 subchapter(s), 264 question(s)
-Processing book: solid-principles
-  7 chapter(s), 14 subchapter(s), 45 question(s)
-Processing book: sustainable-energy-without-the-hot-air
-  43 chapter(s), 159 subchapter(s), 1326 question(s)
-Processing book: timeless-dotnet
-  14 chapter(s), 39 subchapter(s), 284 question(s)
-Processing book: working-effectively-with-legacy-code
-  26 chapter(s), 122 subchapter(s), 799 question(s)
-Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
-Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (786ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (985ms)
-
-Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (985ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (786ms)
-
-  total: 169
-  failed: 0
-  succeeded: 169
-  skipped: 0
-  duration: 1s 191ms
-
-real	0m3.278s
-user	0m3.734s
-sys	0m0.521s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-Project 'ObserverMagazine.Web' has the following package references
-   [net11.0]: 
-   Top-level Package                                     Requested                   Resolved             
-   > Microsoft.AspNetCore.App.Internal.Assets      (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.AspNetCore.Components.WebAssembly         11.0.0                      11.0.0               
-   > Microsoft.NET.ILLink.Tasks                    (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.NET.Sdk.WebAssembly.Pack            (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-
-Project 'ObserverMagazine.Integration.Tests' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > xunit.v3             4.0.3       4.0.3   
-   > YamlDotNet           18.1.0      18.1.0  
-
-Project 'ObserverMagazine.Web.Tests' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > bunit                2.15.2      2.15.2  
-   > xunit.v3             4.0.3       4.0.3   
-
-Project 'ObserverMagazine.ContentProcessor' has the following package references
-   [net11.0]: 
-   Top-level Package      Requested   Resolved
-   > Markdig              1.6.0       1.6.0   
-   > YamlDotNet           18.1.0      18.1.0  
-
-(A) : Auto-referenced package.
-
-real	0m1.253s
-user	0m0.980s
-sys	0m0.202s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-
-The following sources were used:
-   https://api.nuget.org/v3/index.json
-
-The given project `ObserverMagazine.Web` has no updates given the current sources.
-The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
-The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
-
-real	0m1.411s
-user	0m1.110s
-sys	0m0.220s
-Export complete: docs/llm/dump.txt
-  Total files: 1016
-  Blog posts (front matter only): 5
-  Book posts (front matter only): 660
-  Full content files: 349
-  Binary files skipped: 2
-
-real	0m1.481s
-user	0m0.893s
-sys	0m0.569s
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-394M	.
-
-real	0m0.044s
-user	0m0.005s
-sys	0m0.020s
-
-real	0m6.704s
-user	0m13.159s
-sys	0m0.836s
-Restore complete (0.1s)
-
-Build succeeded in 0.1s
-
-real	0m0.273s
-user	0m0.113s
-sys	0m0.038s
-Content directory: content/blog
-Output directory:  src/ObserverMagazine.Web/wwwroot
-Authors directory: content/authors
-Books directory:   content/books
-Publish before:    2026-11-13 07:27:48 UTC
-Found 3 author profile(s)
-  Loaded author: kushal (kushal)
-  Loaded author: abraham-lincoln (Abraham Lincoln)
-  Loaded author: terlingua-team (Terlingua Team)
-Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
-Found 5 markdown files
-Processing: 2026-03-22-good-morning.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
-Processing: 2026-09-19-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-25-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-09-29-good-afternoon.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
-Processing: 2026-10-21-good-night.md
-  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
-Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
-Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
-Processing book: ai-agent-fundamentals
-  10 chapter(s), 25 subchapter(s), 214 question(s)
-Processing book: amazon-web-services
-  8 chapter(s), 19 subchapter(s), 60 question(s)
-Processing book: blazor-basics
-  2 chapter(s), 4 subchapter(s), 8 question(s)
-Processing book: clean-code
-  7 chapter(s), 14 subchapter(s), 44 question(s)
-Processing book: dapper
-  5 chapter(s), 15 subchapter(s), 48 question(s)
-Processing book: databricks-fundamentals
-  10 chapter(s), 28 subchapter(s), 272 question(s)
-Processing book: databricks-platform
-  8 chapter(s), 24 subchapter(s), 73 question(s)
-Processing book: designing-data-intensive-applications
-  14 chapter(s), 72 subchapter(s), 1144 question(s)
-Processing book: generative-ai-fundamentals
-  12 chapter(s), 30 subchapter(s), 272 question(s)
-Processing book: microsoft-azure
-  7 chapter(s), 18 subchapter(s), 55 question(s)
-Processing book: modern-blazor
-  8 chapter(s), 22 subchapter(s), 73 question(s)
-Processing book: modern-dotnet
-  8 chapter(s), 21 subchapter(s), 76 question(s)
-Processing book: nutrition-science
-  11 chapter(s), 34 subchapter(s), 264 question(s)
-Processing book: solid-principles
-  7 chapter(s), 14 subchapter(s), 45 question(s)
-Processing book: sustainable-energy-without-the-hot-air
-  43 chapter(s), 159 subchapter(s), 1326 question(s)
-Processing book: timeless-dotnet
-  14 chapter(s), 39 subchapter(s), 284 question(s)
-Processing book: working-effectively-with-legacy-code
-  26 chapter(s), 122 subchapter(s), 799 question(s)
-Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
-Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (913ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 100ms)
-
-Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 100ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (913ms)
-
-  total: 169
-  failed: 0
-  succeeded: 169
-  skipped: 0
-  duration: 1s 306ms
-
-real	0m4.155s
-user	0m4.219s
-sys	0m0.567s
-Restore complete (0.2s)
 
 Build succeeded in 0.2s
+
+real	0m0.324s
+user	0m0.120s
+sys	0m0.050s
+Content directory: content/blog
+Output directory:  src/ObserverMagazine.Web/wwwroot
+Authors directory: content/authors
+Books directory:   content/books
+Publish before:    2026-11-13 07:42:14 UTC
+Found 3 author profile(s)
+  Loaded author: kushal (kushal)
+  Loaded author: abraham-lincoln (Abraham Lincoln)
+  Loaded author: terlingua-team (Terlingua Team)
+Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
+Found 5 markdown files
+Processing: 2026-03-22-good-morning.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
+Processing: 2026-09-19-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-25-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-29-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-10-21-good-night.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
+Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
+Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
+Processing book: ai-agent-fundamentals
+  10 chapter(s), 25 subchapter(s), 214 question(s)
+Processing book: amazon-web-services
+  8 chapter(s), 19 subchapter(s), 60 question(s)
+Processing book: blazor-basics
+  2 chapter(s), 4 subchapter(s), 8 question(s)
+Processing book: clean-code
+  7 chapter(s), 14 subchapter(s), 44 question(s)
+Processing book: dapper
+  5 chapter(s), 15 subchapter(s), 48 question(s)
+Processing book: databricks-fundamentals
+  10 chapter(s), 28 subchapter(s), 272 question(s)
+Processing book: databricks-platform
+  8 chapter(s), 24 subchapter(s), 73 question(s)
+Processing book: designing-data-intensive-applications
+  14 chapter(s), 72 subchapter(s), 1144 question(s)
+Processing book: generative-ai-fundamentals
+  12 chapter(s), 30 subchapter(s), 272 question(s)
+Processing book: microsoft-azure
+  7 chapter(s), 18 subchapter(s), 55 question(s)
+Processing book: modern-blazor
+  8 chapter(s), 22 subchapter(s), 73 question(s)
+Processing book: modern-dotnet
+  8 chapter(s), 21 subchapter(s), 76 question(s)
+Processing book: nutrition-science
+  11 chapter(s), 34 subchapter(s), 264 question(s)
+Processing book: solid-principles
+  7 chapter(s), 14 subchapter(s), 45 question(s)
+Processing book: sustainable-energy-without-the-hot-air
+  43 chapter(s), 159 subchapter(s), 1326 question(s)
+Processing book: timeless-dotnet
+  14 chapter(s), 39 subchapter(s), 284 question(s)
+Processing book: working-effectively-with-legacy-code
+  26 chapter(s), 122 subchapter(s), 799 question(s)
+Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
+Content processing complete.
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (906ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 147ms)
+
+Test run summary: Passed!
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (906ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 147ms)
+
+  total: 169
+  failed: 0
+  succeeded: 169
+  skipped: 0
+  duration: 1s 357ms
+
+real	0m5.930s
+user	0m4.389s
+sys	0m0.591s
+Restore complete (0.1s)
+
+Build succeeded in 0.1s
 Project 'ObserverMagazine.Web' has the following package references
    [net11.0]: 
    Top-level Package                                     Requested                   Resolved             
@@ -427,9 +124,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.469s
-user	0m1.117s
-sys	0m0.229s
+real	0m1.375s
+user	0m1.022s
+sys	0m0.239s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -442,17 +139,24 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m1.435s
-user	0m1.092s
-sys	0m0.236s
-Export complete: docs/llm/dump.txt
-  Total files: 1016
-  Blog posts (front matter only): 5
-  Book posts (front matter only): 660
-  Full content files: 349
-  Binary files skipped: 2
+real	0m1.667s
+user	0m1.327s
+sys	0m0.264s
+Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 425681 bytes, ~106420 tokens
+  text files: 136, book files summarized: 877, path only: 3
+  largest:
+       26443  src/ObserverMagazine.Web/Pages/Showcase.razor
+       20429  tests/ObserverMagazine.Web.Tests/Components/ShowcaseTests.cs
+       20144  tools/ObserverMagazine.ContentProcessor/SyntaxHighlighter.cs
+       15255  tools/generate_audio.py
+       14120  src/ObserverMagazine.Web/Pages/ShowcaseDetail.razor
+       13129  src/ObserverMagazine.Web/Components/MasterDetail.razor
+       12369  src/ObserverMagazine.Web/wwwroot/css/app.css
+       12095  tests/ObserverMagazine.Integration.Tests/ContentProcessorTests.cs
+       12022  README.md
+       10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m1.181s
-user	0m0.714s
-sys	0m0.443s
+real	0m2.472s
+user	0m1.216s
+sys	0m1.497s
 kushal@fedora:~/src/dotnet/terlingua$ 
