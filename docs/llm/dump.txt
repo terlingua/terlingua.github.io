@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-13T07:57:32Z
+# terlingua.github.io export 2026-11-13T07:58:43Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -9316,10 +9316,10 @@ public class ProductDataGeneratorTests
     }
 
     [Fact]
-    public void Generate_DefaultCountIs20_000()
+    public void Generate_DefaultCountIs1_000()
     {
         var products = ProductDataGenerator.Generate();
-        Assert.Equal(20_000, products.Count);
+        Assert.Equal(1_000, products.Count);
     }
 
     [Fact]
