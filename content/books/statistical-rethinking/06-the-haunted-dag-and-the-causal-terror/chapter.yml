@@ -1,0 +1,2 @@
+title: "The Haunted DAG & The Causal Terror (Chapter 6)"
+summary: "How adding variables can hurt: multicollinearity, post-treatment bias, collider bias, and the four elemental confounds with the backdoor criterion for choosing what to condition on."

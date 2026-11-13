@@ -1,0 +1,2 @@
+title: "Markov Chain Monte Carlo (Chapter 9)"
+summary: "How samplers explore a posterior: the Metropolis algorithm, Gibbs sampling, Hamiltonian Monte Carlo, ulam and Stan, and diagnosing chains with trace plots, n_eff, R-hat and divergent transitions."

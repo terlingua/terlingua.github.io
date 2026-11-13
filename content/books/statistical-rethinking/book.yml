@@ -1,0 +1,10 @@
+title: "Statistical Rethinking (2nd Edition): A Companion for Software Engineers"
+author: "terlingua-team"
+summary: "An unofficial, concept-first companion to Richard McElreath's Statistical Rethinking: A Bayesian Course with Examples in R and Stan (2nd edition, CRC Press, 2020). It follows the book's chapters and sections with page pointers, explains each idea in full so you rarely need to switch context, and asks hundreds of reasoning questions framed in the world of software, DevOps, A/B tests, incident data, latency and telemetry. Explanations quote short passages from the book so they can be checked against the source."
+date: 2026-11-13
+tags:
+  - "statistics"
+  - "bayesian"
+  - "causal-inference"
+  - "data-science"
+  - "book-companion"
