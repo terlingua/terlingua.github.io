@@ -1,231 +1,174 @@
 #!/usr/bin/env bash
-# ===========================================================================
-# export.sh — Export git-tracked project files to docs/llm/dump.txt
-#
-# Blog posts (content/blog/*.md): only front matter is included; the
-# markdown body is omitted to save context space. Every other git-tracked
-# file is exported in full.
-#
-# Excluded from export:
-#   - The docs/ directory itself (to avoid recursion / stale LLM context)
-#   - Binary files (images, fonts, etc.)
-#
-# Usage:
-#   bash export.sh            # writes docs/llm/dump.txt
-#   bash export.sh -o out.txt # writes to a custom path
-# ===========================================================================
-
 set -euo pipefail
 
-# ── Configuration ────────────────────────────────────────────────────────────
+readonly PROJECT="terlingua.github.io"
+readonly BOOK_ROOT="content/books"
+readonly BLOG_GLOB="content/blog/*.md"
+readonly SKIP_GLOBS=("docs/*")
+readonly DATA_GLOBS=("src/*/wwwroot/plaintext/*")
+FULL=0
 
-OUTPUT_FILE="docs/llm/dump.txt"
-BLOG_DIR="content/blog"
-BOOK_DIR="content/books"
-SEPARATOR="-------------------------------------------------------------------------------"
-WIDE_SEP="==============================================================================="
+usage() {
+    cat <<USAGE
+Usage: bash export.sh [-o FILE] [-f] [-- PATHSPEC...]
 
-# Binary file extensions to skip (lowercase comparison)
-BINARY_EXTENSIONS="png jpg jpeg gif ico bmp svg webp woff woff2 ttf eot otf mp3 mp4 wav ogg pdf zip tar gz"
+Writes an LLM context dump of the repository (default: docs/llm/dump.txt).
 
-# ── Parse arguments ──────────────────────────────────────────────────────────
+  Source, config, docs     full text
+  ${BLOG_GLOB}        front matter only
+  ${BOOK_ROOT}/           one inventory line per book
+  Binary and data files    path only
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -o|--output)
-            OUTPUT_FILE="$2"
-            shift 2
-            ;;
-        -h|--help)
-            echo "Usage: bash export.sh [-o OUTPUT_FILE]"
-            echo "  Exports git-tracked project files to docs/llm/dump.txt"
-            echo "  Blog posts include front matter only (body omitted)."
-            exit 0
-            ;;
-        *)
-            echo "Unknown argument: $1" >&2
-            exit 1
-            ;;
-    esac
-done
+  -o, --output FILE   write to FILE
+  -f, --full          full text for blog posts, books and data files too
+  -h, --help          show this help
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+PATHSPECs are passed to git ls-files to narrow the export:
 
-is_binary_extension() {
-    local file="$1"
-    local ext="${file##*.}"
-    ext="${ext,,}" # lowercase
-    for bin_ext in $BINARY_EXTENSIONS; do
-        if [[ "$ext" == "$bin_ext" ]]; then
-            return 0
-        fi
+  bash export.sh -- src tools
+  bash export.sh -- ':!tests' ':!*Showcase*'
+  bash export.sh -f -o /tmp/ddia.txt -- ${BOOK_ROOT}/designing-data-intensive-applications
+USAGE
+}
+
+matches_any() {
+    local path="$1" glob
+    shift
+    for glob in "$@"; do
+        [[ "$path" == $glob ]] && return 0
     done
     return 1
 }
 
-is_blog_post() {
-    local file="$1"
-    [[ "$file" == ${BLOG_DIR}/*.md ]]
+is_text() {
+    [[ ! -s "$1" ]] || LC_ALL=C grep -qI '' "$1"
 }
 
-is_book() {
-    local file="$1"
-    [[ "$file" == ${BOOK_DIR}/*.md ]]
-}
-
-is_excluded_dir() {
-    local file="$1"
-    [[ "$file" == docs/* ]]
-}
-
-# Extract only the YAML front matter (between first --- and second ---).
-# Prints the front matter block including delimiters.
-extract_front_matter() {
-    local file="$1"
-    local in_front_matter=0
-    local found_start=0
-
-    while IFS= read -r line; do
-        if [[ "$found_start" -eq 0 && "$line" == "---" ]]; then
-            found_start=1
-            in_front_matter=1
-            echo "$line"
-            continue
-        fi
-        if [[ "$in_front_matter" -eq 1 && "$line" == "---" ]]; then
-            echo "$line"
-            return
-        fi
-        if [[ "$in_front_matter" -eq 1 ]]; then
-            echo "$line"
-        fi
-    done < "$file"
-}
-
-# Extract only the first line starting with "Title:"
-extract_book_title() {
-    local file="$1"
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        if [[ "$line" == Title:* ]]; then
-            echo "$line"
-            return
-        fi
-    done < "$file"
-}
-
-# ── Collect git-tracked files ────────────────────────────────────────────────
-
-mapfile -t ALL_FILES < <(git ls-files --cached --others --exclude-standard | sort)
-
-# ── Counters ─────────────────────────────────────────────────────────────────
-
-total_files=0
-blog_front_matter_only=0
-book_front_matter_only=0
-full_content_files=0
-binary_skipped=0
-
-# ── Ensure output directory exists ───────────────────────────────────────────
-
-mkdir -p "$(dirname "$OUTPUT_FILE")"
-
-# ── Write output ─────────────────────────────────────────────────────────────
-
-{
-    # Header
-    echo "$WIDE_SEP"
-    echo "PROJECT EXPORT: terlingua.github.io"
-    echo "DATE: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-    echo "$WIDE_SEP"
-    echo ""
-
-    # Directory tree
-    echo "$WIDE_SEP"
-    echo "DIRECTORY TREE (all git-tracked files)"
-    echo "$WIDE_SEP"
-    echo ""
-
-    # Use tree if available, otherwise fall back to a simple listing
-    if command -v tree &>/dev/null; then
-        # Build a temp file list for tree --fromfile
-        printf '%s\n' "${ALL_FILES[@]}" | tree --fromfile --charset utf-8 -a 2>/dev/null || {
-            # Fallback: just print the sorted file list as an indented tree
-            echo "."
-            printf '%s\n' "${ALL_FILES[@]}" | sed 's|^|├── |'
-        }
+classify() {
+    local path="$1"
+    if [[ "$path" == "$OUTPUT_REL" ]] || matches_any "$path" "${SKIP_GLOBS[@]}"; then
+        echo skip
+    elif ! is_text "$path"; then
+        echo binary
+    elif (( FULL )); then
+        echo full
+    elif [[ "$path" == "$BOOK_ROOT"/* ]]; then
+        echo book
+    elif matches_any "$path" "${DATA_GLOBS[@]}"; then
+        echo data
+    elif [[ "$path" == $BLOG_GLOB ]]; then
+        echo frontmatter
     else
-        echo "."
-        printf '%s\n' "${ALL_FILES[@]}" | sed 's|^|├── |'
+        echo full
     fi
+}
 
-    echo ""
+front_matter() {
+    awk 'NR == 1 && $0 != "---" { exit } { print } NR > 1 && $0 == "---" { exit }' "$1"
+}
 
-    # File contents
-    for file in "${ALL_FILES[@]}"; do
-        # Skip files in docs/ directory
-        if is_excluded_dir "$file"; then
-            continue
-        fi
+yaml_scalar() {
+    sed -n "s/^$2:[[:space:]]*//p" "$1" | head -n 1 | sed -E 's/^"(.*)"$/\1/; s/^'\''(.*)'\''$/\1/'
+}
 
-        # Skip binary files
-        if is_binary_extension "$file"; then
-            binary_skipped=$((binary_skipped + 1))
-            total_files=$((total_files + 1))
-            continue
-        fi
+book_inventory() {
+    local manifest slug dir chapters sections
+    printf '%s\n' "${BOOK_FILES[@]}" | { grep -E "^${BOOK_ROOT}/[^/]+/book\.yml$" || true; } | while read -r manifest; do
+        dir="${manifest%/book.yml}"
+        slug="${dir##*/}"
+        chapters=$(printf '%s\n' "${BOOK_FILES[@]}" | grep -cE "^${dir}/[^/]+/chapter\.yml$" || true)
+        sections=$(printf '%s\n' "${BOOK_FILES[@]}" | grep -cE "^${dir}/[^/]+/[^/]+\.md$" || true)
+        printf '%s | %s | %s | %s\n' "$slug" "$chapters" "$sections" "$(yaml_scalar "$manifest" title)"
+    done
+}
 
-        # Skip the export script itself
-        if [[ "$file" == "export.sh" ]]; then
-            # Still include it — it's useful context for the LLM
-            :
-        fi
+emit_file() {
+    printf '==> %s <==\n' "$1"
+    if [[ "$2" == frontmatter ]]; then
+        front_matter "$1"
+    else
+        cat "$1"
+        [[ -z "$(tail -c 1 "$1")" ]] || echo
+    fi
+    echo
+}
 
-        echo ""
-        echo "$SEPARATOR"
+write_dump() {
+    echo "# ${PROJECT} export $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    if (( FULL )); then
+        echo "# Full text of every text file. Binary files: path only."
+    else
+        echo "# Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only."
+    fi
+    echo
+    if (( ${#BOOK_FILES[@]} )); then
+        echo "## Books (slug | chapters | sections | title)"
+        book_inventory
+        echo
+    fi
+    if (( ${#LISTED_FILES[@]} )); then
+        echo "## Path only"
+        printf '%s\n' "${LISTED_FILES[@]}"
+        echo
+    fi
+    echo "## Files"
+    echo
+    local path
+    for path in "${TEXT_FILES[@]}"; do
+        emit_file "$path" "${KIND[$path]}"
+    done
+}
 
-        if is_blog_post "$file"; then
-            # Blog post: front matter only
-            echo "FILE: ${file}  [FRONT MATTER ONLY — body omitted to save context space]"
-            echo "$SEPARATOR"
-            extract_front_matter "$file"
-            echo ""
-            blog_front_matter_only=$((blog_front_matter_only + 1))
-        elif is_book "$file"; then
-            # Blog post: front matter only
-            echo "FILE: ${file}  [FRONT MATTER ONLY — body omitted to save context space]"
-            echo "$SEPARATOR"
-            extract_book_title "$file"
-            echo ""
-            book_front_matter_only=$((book_front_matter_only + 1))
-        else
-            # All other files: full content
-            echo "FILE: ${file}"
-            echo "$SEPARATOR"
-            cat "$file"
-            echo ""
-            full_content_files=$((full_content_files + 1))
-        fi
+report() {
+    local bytes
+    bytes=$(wc -c < "$OUTPUT")
+    {
+        echo "Wrote ${OUTPUT}: ${bytes} bytes, ~$((bytes / 4)) tokens"
+        echo "  text files: ${#TEXT_FILES[@]}, book files summarized: ${#BOOK_FILES[@]}, path only: ${#LISTED_FILES[@]}"
+        echo "  largest:"
+        local path
+        for path in "${TEXT_FILES[@]}"; do
+            printf '%s\t%s\n' "$(wc -c < "$path")" "$path"
+        done | sort -rn | head -n 10 | awk -F'\t' '{ printf "    %8d  %s\n", $1, $2 }'
+    } >&2
+}
 
-        total_files=$((total_files + 1))
+main() {
+    local output="" path kind
+    local -a pathspecs=()
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -o|--output) output="$(realpath -m "$2")"; shift 2 ;;
+            -f|--full) FULL=1; shift ;;
+            -h|--help) usage; exit 0 ;;
+            --) shift; pathspecs=("$@"); break ;;
+            *) usage >&2; exit 1 ;;
+        esac
     done
 
-    # Footer
-    echo ""
-    echo "$WIDE_SEP"
-    echo "EXPORT COMPLETED"
-    echo "Total Files Exported: ${total_files}"
-    echo "  Blog posts (front matter only): ${blog_front_matter_only}"
-    echo "  Book posts (front matter only): ${book_front_matter_only}"
-    echo "  Full content files: ${full_content_files}"
-    echo "  Binary files skipped: ${binary_skipped}"
-    echo "Output File: ${OUTPUT_FILE}"
-    echo "$WIDE_SEP"
+    cd "$(git rev-parse --show-toplevel)"
+    OUTPUT="${output:-$PWD/docs/llm/dump.txt}"
+    OUTPUT_REL="$(realpath -m --relative-to="$PWD" "$OUTPUT")"
 
-} > "$OUTPUT_FILE"
+    declare -gA KIND=()
+    TEXT_FILES=()
+    BOOK_FILES=()
+    LISTED_FILES=()
 
-echo "Export complete: ${OUTPUT_FILE}"
-echo "  Total files: ${total_files}"
-echo "  Blog posts (front matter only): ${blog_front_matter_only}"
-echo "  Book posts (front matter only): ${book_front_matter_only}"
-echo "  Full content files: ${full_content_files}"
-echo "  Binary files skipped: ${binary_skipped}"
+    while IFS= read -r path; do
+        [[ -f "$path" ]] || continue
+        kind="$(classify "$path")"
+        case "$kind" in
+            skip) ;;
+            book) BOOK_FILES+=("$path") ;;
+            data|binary) LISTED_FILES+=("$path") ;;
+            *) TEXT_FILES+=("$path"); KIND[$path]="$kind" ;;
+        esac
+    done < <(git ls-files --cached --others --exclude-standard -- "${pathspecs[@]}" | LC_ALL=C sort -u)
+
+    mkdir -p "$(dirname "$OUTPUT")"
+    write_dump > "$OUTPUT"
+    report
+}
+
+main "$@"

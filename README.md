@@ -100,6 +100,8 @@ Markdown body…
 | Databricks Fundamentals: The Platform Without the Brochure | `databricks-fundamentals` | Companion to the Databricks Fundamentals course: lakehouse, control and compute planes, DBUs and cost, Lakeflow, Databricks SQL and Genie, MLflow and serving, Unity Catalog, workspace, lock-in and when not to use Databricks |
 | Generative AI Fundamentals: How It Works, Where It Fails | `generative-ai-fundamentals` | Companion to the Generative AI Fundamentals course: tokens, embeddings, training and alignment, decoding, hallucination, prompting and injection, RAG, fine-tuning, evaluation, economics, regulation, GenAI on Databricks |
 | AI Agent Fundamentals: From Loops to Production | `ai-agent-fundamentals` | Companion to the AI Agent Fundamentals course: tools, memory, planning, workflow patterns, multi-agent systems, MCP and A2A, Agent Bricks, evaluation, the lethal trifecta, ROI, agents in .NET with Microsoft.Extensions.AI, Agent Framework, MCP and C# 15 |
+| Designing Data-Intensive Applications (2nd Edition): A Companion | `designing-data-intensive-applications` | Chapter-by-chapter companion to Kleppmann and Riccomini's second edition: foundations checks, links to today's cloud, streaming and AI systems, explanations that quote the book |
+| Sustainable Energy — Without the Hot Air: A Quiz Companion | `sustainable-energy-without-the-hot-air` | Self-test companion to MacKay's free book: chapters 1–32 as in the book, technical chapters A–H as 33–40, data chapters I–K as 41–43, with page pointers |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
 | Amazon Web Services for Builders | `amazon-web-services` | IAM, compute, storage, databases, integration, VPC, IaC, cost |
 | Blazor WebAssembly Basics | `blazor-basics` | A short introduction |
@@ -182,6 +184,20 @@ from whichever MTP extensions the test projects reference.
 
 xUnit configuration for MTP lives in `testconfig.json` next to a test project
 (not `xunit.runner.json`, which is the VSTest-era file).
+
+## LLM context export
+
+`export.sh` writes `docs/llm/dump.txt`, a single-file snapshot of the repository for LLM
+project knowledge. To keep it small it includes full text only for source, config and docs.
+Blog posts contribute front matter, books one inventory line each (the book format is
+documented above), and binary and data files (`wwwroot/plaintext/`) their path. `docs/` is
+never exported. The script prints the dump's size and largest files when it finishes.
+
+```bash
+bash export.sh                                   # whole repository
+bash export.sh -- ':!tests' ':!*Showcase*'       # narrow with git pathspecs
+bash export.sh -f -o /tmp/dapper.txt -- content/books/dapper   # full text of one book
+```
 
 ## Technology
 
