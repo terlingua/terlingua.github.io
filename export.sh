@@ -21,6 +21,7 @@ set -euo pipefail
 
 OUTPUT_FILE="docs/llm/dump.txt"
 BLOG_DIR="content/blog"
+BOOK_DIR="content/books"
 SEPARATOR="-------------------------------------------------------------------------------"
 WIDE_SEP="==============================================================================="
 
@@ -67,6 +68,11 @@ is_blog_post() {
     [[ "$file" == ${BLOG_DIR}/*.md ]]
 }
 
+is_book() {
+    local file="$1"
+    [[ "$file" == ${BOOK_DIR}/*.md ]]
+}
+
 is_excluded_dir() {
     local file="$1"
     [[ "$file" == docs/* ]]
@@ -104,6 +110,7 @@ mapfile -t ALL_FILES < <(git ls-files --cached --others --exclude-standard | sor
 
 total_files=0
 blog_front_matter_only=0
+book_front_matter_only=0
 full_content_files=0
 binary_skipped=0
 
@@ -172,6 +179,13 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
             extract_front_matter "$file"
             echo ""
             blog_front_matter_only=$((blog_front_matter_only + 1))
+        elif is_book "$file"; then
+            # Blog post: front matter only
+            echo "FILE: ${file}  [FRONT MATTER ONLY — body omitted to save context space]"
+            echo "$SEPARATOR"
+            extract_front_matter "$file"
+            echo ""
+            book_front_matter_only=$((book_front_matter_only + 1))
         else
             # All other files: full content
             echo "FILE: ${file}"
@@ -190,6 +204,7 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
     echo "EXPORT COMPLETED"
     echo "Total Files Exported: ${total_files}"
     echo "  Blog posts (front matter only): ${blog_front_matter_only}"
+    echo "  Book posts (front matter only): ${book_front_matter_only}"
     echo "  Full content files: ${full_content_files}"
     echo "  Binary files skipped: ${binary_skipped}"
     echo "Output File: ${OUTPUT_FILE}"
@@ -200,5 +215,6 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
 echo "Export complete: ${OUTPUT_FILE}"
 echo "  Total files: ${total_files}"
 echo "  Blog posts (front matter only): ${blog_front_matter_only}"
+echo "  Book posts (front matter only): ${book_front_matter_only}"
 echo "  Full content files: ${full_content_files}"
 echo "  Binary files skipped: ${binary_skipped}"
