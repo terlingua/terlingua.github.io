@@ -1,25 +1,25 @@
 kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-392M	.
+391M	.
 
-real	0m0.149s
-user	0m0.003s
+real	0m0.192s
+user	0m0.012s
 sys	0m0.083s
 
-real	0m8.226s
-user	0m14.729s
-sys	0m1.152s
+real	0m8.690s
+user	0m14.826s
+sys	0m1.163s
 Restore complete (0.1s)
 
-Build succeeded in 0.2s
+Build succeeded in 0.1s
 
-real	0m0.324s
-user	0m0.120s
-sys	0m0.050s
+real	0m0.340s
+user	0m0.135s
+sys	0m0.056s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-13 07:42:14 UTC
+Publish before:    2026-11-13 07:57:17 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -74,27 +74,37 @@ Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
 Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (17 books)
 Content processing complete.
-Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (906ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 147ms)
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
+failed ObserverMagazine.Web.Tests.Components.ProductDataGeneratorTests.Generate_DefaultCountIs20_000 (3ms)
+  from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+  Assert.Equal() Failure: Values differ
+  Expected: 20000
+  Actual:   1000
+    at ObserverMagazine.Web.Tests.Components.ProductDataGeneratorTests.Generate_DefaultCountIs20_000() in tests/ObserverMagazine.Web.Tests/Components/ShowcaseTests.cs:26
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (919ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) failed with 1 error(s) [✓113/x1/↓0] (1s 153ms)
+Exit code: 2
 
-Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (906ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 147ms)
+Test run summary: Failed!
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) failed with 1 error(s) [✓113/x1/↓0] (1s 153ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (919ms)
 
   total: 169
-  failed: 0
-  succeeded: 169
+  failed: 1
+  succeeded: 168
   skipped: 0
-  duration: 1s 357ms
+  duration: 1s 391ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
 
-real	0m5.930s
-user	0m4.389s
-sys	0m0.591s
-Restore complete (0.1s)
+real	0m6.502s
+user	0m4.506s
+sys	0m0.633s
+Restore complete (0.2s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 Project 'ObserverMagazine.Web' has the following package references
    [net11.0]: 
    Top-level Package                                     Requested                   Resolved             
@@ -124,9 +134,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.375s
-user	0m1.022s
-sys	0m0.239s
+real	0m1.715s
+user	0m1.189s
+sys	0m0.324s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -139,10 +149,10 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m1.667s
-user	0m1.327s
-sys	0m0.264s
-Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 425681 bytes, ~106420 tokens
+real	0m2.756s
+user	0m1.739s
+sys	0m0.326s
+Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 425680 bytes, ~106420 tokens
   text files: 136, book files summarized: 877, path only: 3
   largest:
        26443  src/ObserverMagazine.Web/Pages/Showcase.razor
@@ -156,7 +166,7 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 425681 bytes, ~106420
        12022  README.md
        10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m2.472s
-user	0m1.216s
-sys	0m1.497s
+real	0m2.691s
+user	0m1.168s
+sys	0m1.695s
 kushal@fedora:~/src/dotnet/terlingua$ 
