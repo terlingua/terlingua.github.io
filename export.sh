@@ -102,6 +102,17 @@ extract_front_matter() {
     done < "$file"
 }
 
+# Extract only the first line starting with "Title:"
+extract_book_title() {
+    local file="$1"
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        if [[ "$line" == Title:* ]]; then
+            echo "$line"
+            return
+        fi
+    done < "$file"
+}
+
 # ── Collect git-tracked files ────────────────────────────────────────────────
 
 mapfile -t ALL_FILES < <(git ls-files --cached --others --exclude-standard | sort)
@@ -183,7 +194,7 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
             # Blog post: front matter only
             echo "FILE: ${file}  [FRONT MATTER ONLY — body omitted to save context space]"
             echo "$SEPARATOR"
-            extract_front_matter "$file"
+            extract_book_title "$file"
             echo ""
             book_front_matter_only=$((book_front_matter_only + 1))
         else
