@@ -1,25 +1,25 @@
 kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
 397M	.
 
-real	0m0.206s
-user	0m0.005s
-sys	0m0.099s
+real	0m0.091s
+user	0m0.020s
+sys	0m0.057s
 
-real	0m6.806s
-user	0m12.750s
-sys	0m0.766s
-Restore complete (0.2s)
+real	0m12.909s
+user	0m17.861s
+sys	0m1.359s
+Restore complete (0.3s)
 
-Build succeeded in 0.2s
+Build succeeded in 0.3s
 
-real	0m0.318s
-user	0m0.098s
-sys	0m0.025s
+real	0m0.454s
+user	0m0.132s
+sys	0m0.044s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-14 04:17:55 UTC
+Publish before:    2026-11-14 06:23:56 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -78,25 +78,25 @@ Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (18 books)
 Content processing complete.
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (754ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (916ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (933ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 042ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (754ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (916ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (933ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 042ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 099ms
+  duration: 1s 278ms
 
-real	0m6.183s
-user	0m3.649s
-sys	0m0.483s
+real	0m7.284s
+user	0m4.163s
+sys	0m0.562s
 Restore complete (0.1s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 Project 'ObserverMagazine.Web' has the following package references
    [net11.0]: 
    Top-level Package                                     Requested                   Resolved             
@@ -126,12 +126,12 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.140s
-user	0m0.845s
-sys	0m0.193s
+real	0m1.615s
+user	0m1.278s
+sys	0m0.273s
 Restore complete (0.1s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 
 The following sources were used:
    https://api.nuget.org/v3/index.json
@@ -141,10 +141,10 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.420s
-user	0m1.418s
-sys	0m0.226s
-Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 426305 bytes, ~106576 tokens
+real	0m2.984s
+user	0m2.036s
+sys	0m0.352s
+Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 430410 bytes, ~107602 tokens
   text files: 136, book files summarized: 960, path only: 3
   largest:
        26443  src/ObserverMagazine.Web/Pages/Showcase.razor
@@ -158,7 +158,7 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 426305 bytes, ~106576
        12095  tests/ObserverMagazine.Integration.Tests/ContentProcessorTests.cs
        10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m2.653s
-user	0m1.312s
-sys	0m1.513s
+real	0m4.672s
+user	0m1.555s
+sys	0m3.455s
 kushal@fedora:~/src/dotnet/terlingua$ 
