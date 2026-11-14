@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-14T10:49:36Z
+# terlingua.github.io export 2026-11-14T11:37:40Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -16,6 +16,7 @@ microsoft-azure | 7 | 18 | Microsoft Azure for .NET Developers
 modern-blazor | 8 | 22 | Modern Web Development with Blazor
 modern-dotnet | 8 | 21 | .NET 10 and Modern C#
 nutrition-science | 11 | 34 | Nutrition Science: What We Know and What We Don't
+social-psychology | 17 | 73 | Social Psychology (12th Edition): A Companion for Software Engineers
 solid-principles | 7 | 14 | SOLID Principles in C#
 statistical-rethinking | 17 | 65 | Statistical Rethinking (2nd Edition): A Companion for Software Engineers
 sustainable-energy-without-the-hot-air | 43 | 159 | Sustainable Energy — Without the Hot Air: A Quiz Companion
@@ -320,8 +321,6 @@ A free, open-source Blazor WebAssembly application deployed to GitHub Pages.
 
 Built with **.NET 11** and **C# 15**. Targets the current stable releases of evergreen browsers only
 (Chrome, Edge, Firefox, Safari); there are no polyfills, vendor prefixes or legacy fallbacks.
-Other browsers get an explicit error instead of a page stuck on loading (see
-[Unsupported browsers](#unsupported-browsers)).
 
 ## Features
 
@@ -420,8 +419,8 @@ Markdown body…
 | AI Agent Fundamentals: From Loops to Production | `ai-agent-fundamentals` | Companion to the AI Agent Fundamentals course: tools, memory, planning, workflow patterns, multi-agent systems, MCP and A2A, Agent Bricks, evaluation, the lethal trifecta, ROI, agents in .NET with Microsoft.Extensions.AI, Agent Framework, MCP and C# 15 |
 | Designing Data-Intensive Applications (2nd Edition): A Companion | `designing-data-intensive-applications` | Chapter-by-chapter companion to Kleppmann and Riccomini's second edition: foundations checks, links to today's cloud, streaming and AI systems, explanations that quote the book |
 | Statistical Rethinking (2nd Edition): A Companion for Software Engineers | `statistical-rethinking` | Concept-first companion to McElreath's second edition: Bayesian updating, sampling, linear and generalized linear models, DAGs and confounding, overfitting and PSIS/WAIC, interactions, MCMC and HMC, maximum entropy, multilevel and covariance models, measurement error and missing data, scientific models; explanations quote the book with page pointers, questions framed in software, DevOps and telemetry settings |
-| In Pursuit of the Traveling Salesman: A Concept Companion for Software Engineers | `in-pursuit-of-the-traveling-salesman` | Chapter-by-chapter companion to Cook's book: tours and graphs, the √n law, applications as modeling patterns, heuristics from nearest neighbor to LKH and EAX, LP and duality, subtour and comb cuts, separation via max-flow, branch-and-cut, Concorde and certificates, P vs NP, Held–Karp, approximation limits; explanations quote the book with page pointers, plus a 2011–2026 update chapter and capstone review |
 | Sustainable Energy — Without the Hot Air: A Quiz Companion | `sustainable-energy-without-the-hot-air` | Self-test companion to MacKay's free book: chapters 1–32 as in the book, technical chapters A–H as 33–40, data chapters I–K as 41–43, with page pointers |
+| Social Psychology (12th Edition): A Companion for Software Engineers | `social-psychology` | Concept-first companion to Aronson, Lewis, Page-Gould, Sommers and Wilson's twelfth edition: construal and the power of the situation, methods and open science, culture, the self and dissonance, heuristics, attribution, persuasion, prejudice, groups, conformity and obedience, helping, aggression, relationships, and the applied chapters on sustainability, health and law, plus a cross-chapter review; explanations quote the book's definitions with page pointers, questions framed in incident response, code review, hiring and team settings |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
 | Amazon Web Services for Builders | `amazon-web-services` | IAM, compute, storage, databases, integration, VPC, IaC, cost |
 | Blazor WebAssembly Basics | `blazor-basics` | A short introduction |
@@ -452,10 +451,9 @@ Content guidelines for new sections:
 
 ## Front end
 
-- The site ships no JavaScript of its own apart from the inline boot-failure reporter in
-  `index.html` (see [Unsupported browsers](#unsupported-browsers)). The only interop is
-  `localStorage` through `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in
-  `try`/`catch` as analyzer BL0016 requires.
+- The site ships no JavaScript of its own. The only interop is `localStorage` through
+  `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in `try`/`catch` as
+  analyzer BL0016 requires.
 - Code blocks are highlighted at build time by `SyntaxHighlighter` in the content processor,
   plugged into Markdig as `SyntaxHighlightingExtension`. The `hl-*` colour classes live in
   `app.css`.
@@ -473,43 +471,6 @@ Content guidelines for new sections:
   under `_framework` after publish, because the import map can carry integrity hashes for them.
   A 404 for `/_framework/dotnet.js` on the live site is expected.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
-
-### Unsupported browsers
-
-`index.html` makes the app fail loudly instead of leaving "Loading Terlingua Magazine…" on screen
-forever. Both failure states use the `.app-failure` card in `app.css`, built from the same design
-tokens as the rest of the site.
-
-- **JavaScript off.** A `<noscript>` card inside `#app` says JavaScript is required, and a
-  `<noscript>` style in `<head>` hides the loading text.
-- **Boot failure.** An inline classic script, placed before `blazor.webassembly.js`, listens for
-  `error` (capture phase) and `unhandledrejection`. On the first one it replaces the loading text
-  with a copy of `<template id="boot-error-template">` and appends one line per error:
-  `[unhandledrejection]` for rejected promises such as WebAssembly compile errors and runtime
-  feature checks, `[error]` for script errors such as syntax the browser can't parse, and
-  `[resource error]` for a `<script>` that fails to load. Other failed resources (stylesheets,
-  images) are ignored because they don't stop the app.
-- **After boot** the reporter does nothing: Blazor clears `#app` when it renders, so the loading
-  text is gone and later errors go to `#blazor-error-ui` as before.
-- The reporter is the one place where older browsers matter, because it has to run where the app
-  can't. It uses ES2015 syntax and DOM APIs that any browser with WebAssembly support understands.
-  It sets text with `textContent` only. Keep it before `blazor.webassembly.js` and keep it a
-  classic script, not a module.
-- `app.css` uses `light-dark()`, which these browsers ignore, so the card falls back to the
-  browser's default colours. That is expected; it stays readable and needs no fallback.
-
-Before, an iPhone 8 Plus or a Nexus 6 sat on the loading text with no explanation:
-
-<img src="docs/images/nexus-6-loading.png" alt="Nexus 6 stuck on Loading Terlingua Magazine" width="240">
-
-Now they report why the runtime can't start (no WebAssembly SIMD on the Nexus 6, no WebAssembly
-exception handling on the iPhone 8 Plus):
-
-<img src="docs/images/nexus-6-failed.png" alt="Nexus 6 boot failure: WASM SIMD not supported" width="240"> <img src="docs/images/iphone-eight-plus-failed.png" alt="iPhone 8 Plus boot failure: WASM exception handling not supported" width="240">
-
-To check the boot-failure path locally, block `_framework/blazor.webassembly*.js` in the browser
-dev tools' network panel and reload; the card shows a `[resource error]` line. To check the
-no-JavaScript path, turn JavaScript off for the site and reload.
 
 ## Testing
 
