@@ -186,8 +186,7 @@ Before, an iPhone 8 Plus or a Nexus 6 sat on the loading text with no explanatio
 <img src="docs/images/nexus-6-loading.png" alt="Nexus 6 stuck on Loading Terlingua Magazine" width="240">
 
 Now they report why the runtime can't start (no WebAssembly SIMD on the Nexus 6, no WebAssembly
-exception handling on the iPhone 8 Plus). These were taken before the card switched to the site's
-design tokens and wording, so colours and the second line differ; the error lines are the same:
+exception handling on the iPhone 8 Plus):
 
 <img src="docs/images/nexus-6-failed.png" alt="Nexus 6 boot failure: WASM SIMD not supported" width="240"> <img src="docs/images/iphone-eight-plus-failed.png" alt="iPhone 8 Plus boot failure: WASM exception handling not supported" width="240">
 
