@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-14T07:19:27Z
+# terlingua.github.io export 2026-11-14T07:31:19Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -24,9 +24,6 @@ working-effectively-with-legacy-code | 26 | 122 | Working Effectively with Legac
 ## Path only
 src/ObserverMagazine.Web/wwwroot/images/authors/kushal.png
 src/ObserverMagazine.Web/wwwroot/images/authors/terlingua-team.png
-src/ObserverMagazine.Web/wwwroot/images/iphone-eight-plus-failed.png
-src/ObserverMagazine.Web/wwwroot/images/nexus-6-failed.png
-src/ObserverMagazine.Web/wwwroot/images/nexus-6-loading.png
 src/ObserverMagazine.Web/wwwroot/plaintext/2026-04-26-zelensky.txt
 
 ## Files
@@ -322,6 +319,8 @@ A free, open-source Blazor WebAssembly application deployed to GitHub Pages.
 
 Built with **.NET 11** and **C# 15**. Targets the current stable releases of evergreen browsers only
 (Chrome, Edge, Firefox, Safari); there are no polyfills, vendor prefixes or legacy fallbacks.
+Other browsers get an explicit error instead of a page stuck on loading (see
+[Unsupported browsers](#unsupported-browsers)).
 
 ## Features
 
@@ -451,9 +450,10 @@ Content guidelines for new sections:
 
 ## Front end
 
-- The site ships no JavaScript of its own. The only interop is `localStorage` through
-  `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in `try`/`catch` as
-  analyzer BL0016 requires.
+- The site ships no JavaScript of its own apart from the inline boot-failure reporter in
+  `index.html` (see [Unsupported browsers](#unsupported-browsers)). The only interop is
+  `localStorage` through `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in
+  `try`/`catch` as analyzer BL0016 requires.
 - Code blocks are highlighted at build time by `SyntaxHighlighter` in the content processor,
   plugged into Markdig as `SyntaxHighlightingExtension`. The `hl-*` colour classes live in
   `app.css`.
@@ -471,6 +471,44 @@ Content guidelines for new sections:
   under `_framework` after publish, because the import map can carry integrity hashes for them.
   A 404 for `/_framework/dotnet.js` on the live site is expected.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
+
+### Unsupported browsers
+
+`index.html` makes the app fail loudly instead of leaving "Loading Terlingua Magazine…" on screen
+forever. Both failure states use the `.app-failure` card in `app.css`, built from the same design
+tokens as the rest of the site.
+
+- **JavaScript off.** A `<noscript>` card inside `#app` says JavaScript is required, and a
+  `<noscript>` style in `<head>` hides the loading text.
+- **Boot failure.** An inline classic script, placed before `blazor.webassembly.js`, listens for
+  `error` (capture phase) and `unhandledrejection`. On the first one it replaces the loading text
+  with a copy of `<template id="boot-error-template">` and appends one line per error:
+  `[unhandledrejection]` for rejected promises such as WebAssembly compile errors and runtime
+  feature checks, `[error]` for script errors such as syntax the browser can't parse, and
+  `[resource error]` for a `<script>` that fails to load. Other failed resources (stylesheets,
+  images) are ignored because they don't stop the app.
+- **After boot** the reporter does nothing: Blazor clears `#app` when it renders, so the loading
+  text is gone and later errors go to `#blazor-error-ui` as before.
+- The reporter is the one place where older browsers matter, because it has to run where the app
+  can't. It uses ES2015 syntax and DOM APIs that any browser with WebAssembly support understands.
+  It sets text with `textContent` only. Keep it before `blazor.webassembly.js` and keep it a
+  classic script, not a module.
+- `app.css` uses `light-dark()`, which these browsers ignore, so the card falls back to the
+  browser's default colours. That is expected; it stays readable and needs no fallback.
+
+Before, an iPhone 8 Plus or a Nexus 6 sat on the loading text with no explanation:
+
+<img src="docs/images/nexus-6-loading.png" alt="Nexus 6 stuck on Loading Terlingua Magazine" width="240">
+
+Now they report why the runtime can't start (no WebAssembly SIMD on the Nexus 6, no WebAssembly
+exception handling on the iPhone 8 Plus). These were taken before the card switched to the site's
+design tokens and wording, so colours and the second line differ; the error lines are the same:
+
+<img src="docs/images/nexus-6-failed.png" alt="Nexus 6 boot failure: WASM SIMD not supported" width="240"> <img src="docs/images/iphone-eight-plus-failed.png" alt="iPhone 8 Plus boot failure: WASM exception handling not supported" width="240">
+
+To check the boot-failure path locally, block `_framework/blazor.webassembly*.js` in the browser
+dev tools' network panel and reload; the card shows a `[resource error]` line. To check the
+no-JavaScript path, turn JavaScript off for the site and reload.
 
 ## Testing
 
@@ -7801,6 +7839,27 @@ a.tag:hover {
     min-height: 100dvh;
 }
 
+/* ========== BOOT FAILURE ========== */
+.app-failure {
+    width: min(42rem, 100% - 2rem);
+    margin: 2rem auto;
+    padding: 1rem 1.25rem;
+    border: 1px solid #dc2626;
+    border-radius: var(--radius);
+}
+.app-failure h1 { font-size: 1.125rem; }
+.app-failure p { margin-top: 0.5rem; color: var(--color-muted); }
+.app-failure pre {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: var(--hl-bg);
+    color: var(--hl-fg);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
 /* ========== BLAZOR ERROR UI ========== */
 #blazor-error-ui {
     display: none;
@@ -7838,17 +7897,15 @@ can you please generate a 200px by 200px png image for src/ObserverMagazine.Web
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="ObserverMagazine.Web.styles.css" />
     <script type="importmap"></script>
-    <noscript>
-        <style>.app-loading { display: none; }</style>
-    </noscript>
+    <noscript><style>.app-loading { display: none; }</style></noscript>
 </head>
 <body>
     <div id="app">
         <p class="app-loading">Loading Terlingua Magazine…</p>
         <noscript>
-            <div style="max-width: 38rem; margin: 2rem auto; padding: 1rem 1.25rem; border: 1px solid #d0d7de; border-radius: 6px; font-family: system-ui, -apple-system, sans-serif; line-height: 1.5;">
-                <strong>JavaScript is required</strong>
-                <p style="margin: 0.5rem 0 0;">Terlingua Magazine runs in the browser using WebAssembly and requires JavaScript to be enabled.</p>
+            <div class="app-failure">
+                <h1>JavaScript is required</h1>
+                <p>Terlingua Magazine runs in your browser with WebAssembly. Turn on JavaScript and reload the page.</p>
             </div>
         </noscript>
     </div>
@@ -7859,76 +7916,51 @@ can you please generate a 200px by 200px png image for src/ObserverMagazine.Web
         <span class="dismiss">🗙</span>
     </div>
 
+    <template id="boot-error-template">
+        <div class="app-failure" role="alert">
+            <h1>Unable to start Terlingua Magazine in this browser</h1>
+            <p>This site supports only the current versions of Chrome, Edge, Firefox and Safari.</p>
+            <pre></pre>
+        </div>
+    </template>
+
     <script>
-        (function () {
-            function showBootError(label, detail) {
-                var app = document.getElementById('app');
-                if (!app) return;
+        (() => {
+            const app = document.getElementById('app');
+            const template = document.getElementById('boot-error-template');
+            let log = null;
 
-                var loading = app.querySelector('.app-loading');
-                var box = document.getElementById('boot-error');
-
-                // Once Blazor mounts and removes .app-loading (with no active boot error),
-                // step aside and let #blazor-error-ui handle post-boot runtime errors.
-                if (!loading && !box) return;
-
-                if (!box) {
-                    if (loading && loading.parentNode) {
-                        loading.parentNode.removeChild(loading);
-                    }
-                    box = document.createElement('div');
-                    box.id = 'boot-error';
-                    box.setAttribute('role', 'alert');
-                    box.style.cssText = 'max-width:42rem;margin:2rem auto;padding:1rem 1.25rem;border:1px solid #cf222e;border-radius:6px;background:#fff8f8;color:#24292f;font-family:system-ui,-apple-system,sans-serif;line-height:1.5;';
-
-                    var heading = document.createElement('strong');
-                    heading.textContent = 'Unable to start Terlingua Magazine in this browser';
-                    box.appendChild(heading);
-
-                    var note = document.createElement('p');
-                    note.style.cssText = 'margin:0.4rem 0 0.75rem;font-size:0.95rem;';
-                    note.textContent = 'This site targets current evergreen browsers without legacy shims.';
-                    box.appendChild(note);
-
-                    var log = document.createElement('pre');
-                    log.id = 'boot-error-log';
-                    log.style.cssText = 'margin:0;padding:0.75rem;background:#f6f8fa;border-radius:4px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;font-size:0.85rem;';
-                    box.appendChild(log);
-
-                    app.appendChild(box);
+            const report = (kind, detail) => {
+                if (!log) {
+                    const loading = app.querySelector('.app-loading');
+                    if (!loading) return;
+                    const card = template.content.firstElementChild.cloneNode(true);
+                    log = card.querySelector('pre');
+                    loading.replaceWith(card);
                 }
+                if (!log.isConnected) return;
+                log.textContent += `${log.textContent ? '\n' : ''}[${kind}] ${detail}`;
+            };
 
-                var logEl = document.getElementById('boot-error-log');
-                if (logEl) {
-                    var line = '[' + label + '] ' + detail;
-                    logEl.textContent = logEl.textContent ? (logEl.textContent + '\n' + line) : line;
+            const describe = (reason) => {
+                if (reason instanceof Error) return `${reason.name}: ${reason.message}`;
+                try {
+                    return String(reason);
+                } catch (error) {
+                    return 'Unknown error';
                 }
-            }
+            };
 
-            function formatError(err) {
-                if (!err) return 'Unknown error';
-                if (typeof err === 'string') return err;
-                if (err.message) return (err.name ? err.name + ': ' : '') + err.message;
-                try { return String(err); } catch (e) { return 'Unserializable error'; }
-            }
-
-            window.addEventListener('error', function (event) {
-                if (event && event.target && event.target !== window) {
-                    var src = event.target.src || event.target.href || event.target.tagName;
-                    showBootError('resource error', 'Failed to load ' + src);
-                    return;
+            addEventListener('error', (event) => {
+                if (event.target instanceof HTMLScriptElement) {
+                    report('resource error', `Failed to load ${event.target.src}`);
+                } else if (event instanceof ErrorEvent) {
+                    const where = event.filename ? ` (${event.filename}:${event.lineno}:${event.colno})` : '';
+                    report('error', `${event.message}${where}`);
                 }
-
-                var msg = (event && event.message) ? event.message : formatError(event && event.error);
-                var loc = (event && event.filename)
-                    ? ' (' + event.filename + ':' + event.lineno + ':' + event.colno + ')'
-                    : '';
-                showBootError('error', msg + loc);
             }, true);
 
-            window.addEventListener('unhandledrejection', function (event) {
-                showBootError('unhandledrejection', formatError(event && event.reason));
-            });
+            addEventListener('unhandledrejection', (event) => report('unhandledrejection', describe(event.reason)));
         })();
     </script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
