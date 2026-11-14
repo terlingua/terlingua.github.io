@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-14T06:24:14Z
+# terlingua.github.io export 2026-11-14T07:19:27Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -24,6 +24,9 @@ working-effectively-with-legacy-code | 26 | 122 | Working Effectively with Legac
 ## Path only
 src/ObserverMagazine.Web/wwwroot/images/authors/kushal.png
 src/ObserverMagazine.Web/wwwroot/images/authors/terlingua-team.png
+src/ObserverMagazine.Web/wwwroot/images/iphone-eight-plus-failed.png
+src/ObserverMagazine.Web/wwwroot/images/nexus-6-failed.png
+src/ObserverMagazine.Web/wwwroot/images/nexus-6-loading.png
 src/ObserverMagazine.Web/wwwroot/plaintext/2026-04-26-zelensky.txt
 
 ## Files
