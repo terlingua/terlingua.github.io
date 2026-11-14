@@ -410,6 +410,27 @@ a.tag:hover {
     min-height: 100dvh;
 }
 
+/* ========== BOOT FAILURE ========== */
+.app-failure {
+    width: min(42rem, 100% - 2rem);
+    margin: 2rem auto;
+    padding: 1rem 1.25rem;
+    border: 1px solid #dc2626;
+    border-radius: var(--radius);
+}
+.app-failure h1 { font-size: 1.125rem; }
+.app-failure p { margin-top: 0.5rem; color: var(--color-muted); }
+.app-failure pre {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: var(--hl-bg);
+    color: var(--hl-fg);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
 /* ========== BLAZOR ERROR UI ========== */
 #blazor-error-ui {
     display: none;

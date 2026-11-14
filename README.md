@@ -4,6 +4,8 @@ A free, open-source Blazor WebAssembly application deployed to GitHub Pages.
 
 Built with **.NET 11** and **C# 15**. Targets the current stable releases of evergreen browsers only
 (Chrome, Edge, Firefox, Safari); there are no polyfills, vendor prefixes or legacy fallbacks.
+Other browsers get an explicit error instead of a page stuck on loading (see
+[Unsupported browsers](#unsupported-browsers)).
 
 ## Features
 
@@ -133,9 +135,10 @@ Content guidelines for new sections:
 
 ## Front end
 
-- The site ships no JavaScript of its own. The only interop is `localStorage` through
-  `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in `try`/`catch` as
-  analyzer BL0016 requires.
+- The site ships no JavaScript of its own apart from the inline boot-failure reporter in
+  `index.html` (see [Unsupported browsers](#unsupported-browsers)). The only interop is
+  `localStorage` through `LocalBrowserStorage` (`IBrowserStorage`), which wraps every call in
+  `try`/`catch` as analyzer BL0016 requires.
 - Code blocks are highlighted at build time by `SyntaxHighlighter` in the content processor,
   plugged into Markdig as `SyntaxHighlightingExtension`. The `hl-*` colour classes live in
   `app.css`.
@@ -153,6 +156,44 @@ Content guidelines for new sections:
   under `_framework` after publish, because the import map can carry integrity hashes for them.
   A 404 for `/_framework/dotnet.js` on the live site is expected.
 - GitHub Pages deep links work because CI copies the published `index.html` to `404.html`.
+
+### Unsupported browsers
+
+`index.html` makes the app fail loudly instead of leaving "Loading Terlingua Magazine…" on screen
+forever. Both failure states use the `.app-failure` card in `app.css`, built from the same design
+tokens as the rest of the site.
+
+- **JavaScript off.** A `<noscript>` card inside `#app` says JavaScript is required, and a
+  `<noscript>` style in `<head>` hides the loading text.
+- **Boot failure.** An inline classic script, placed before `blazor.webassembly.js`, listens for
+  `error` (capture phase) and `unhandledrejection`. On the first one it replaces the loading text
+  with a copy of `<template id="boot-error-template">` and appends one line per error:
+  `[unhandledrejection]` for rejected promises such as WebAssembly compile errors and runtime
+  feature checks, `[error]` for script errors such as syntax the browser can't parse, and
+  `[resource error]` for a `<script>` that fails to load. Other failed resources (stylesheets,
+  images) are ignored because they don't stop the app.
+- **After boot** the reporter does nothing: Blazor clears `#app` when it renders, so the loading
+  text is gone and later errors go to `#blazor-error-ui` as before.
+- The reporter is the one place where older browsers matter, because it has to run where the app
+  can't. It uses ES2015 syntax and DOM APIs that any browser with WebAssembly support understands.
+  It sets text with `textContent` only. Keep it before `blazor.webassembly.js` and keep it a
+  classic script, not a module.
+- `app.css` uses `light-dark()`, which these browsers ignore, so the card falls back to the
+  browser's default colours. That is expected; it stays readable and needs no fallback.
+
+Before, an iPhone 8 Plus or a Nexus 6 sat on the loading text with no explanation:
+
+<img src="docs/images/nexus-6-loading.png" alt="Nexus 6 stuck on Loading Terlingua Magazine" width="240">
+
+Now they report why the runtime can't start (no WebAssembly SIMD on the Nexus 6, no WebAssembly
+exception handling on the iPhone 8 Plus). These were taken before the card switched to the site's
+design tokens and wording, so colours and the second line differ; the error lines are the same:
+
+<img src="docs/images/nexus-6-failed.png" alt="Nexus 6 boot failure: WASM SIMD not supported" width="240"> <img src="docs/images/iphone-eight-plus-failed.png" alt="iPhone 8 Plus boot failure: WASM exception handling not supported" width="240">
+
+To check the boot-failure path locally, block `_framework/blazor.webassembly*.js` in the browser
+dev tools' network panel and reload; the card shows a `[resource error]` line. To check the
+no-JavaScript path, turn JavaScript off for the site and reload.
 
 ## Testing
 
