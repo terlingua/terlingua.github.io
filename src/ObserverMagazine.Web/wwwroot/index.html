@@ -10,10 +10,19 @@
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="ObserverMagazine.Web.styles.css" />
     <script type="importmap"></script>
+    <noscript>
+        <style>.app-loading { display: none; }</style>
+    </noscript>
 </head>
 <body>
     <div id="app">
         <p class="app-loading">Loading Terlingua Magazine…</p>
+        <noscript>
+            <div style="max-width: 38rem; margin: 2rem auto; padding: 1rem 1.25rem; border: 1px solid #d0d7de; border-radius: 6px; font-family: system-ui, -apple-system, sans-serif; line-height: 1.5;">
+                <strong>JavaScript is required</strong>
+                <p style="margin: 0.5rem 0 0;">Terlingua Magazine runs in the browser using WebAssembly and requires JavaScript to be enabled.</p>
+            </div>
+        </noscript>
     </div>
 
     <div id="blazor-error-ui">
@@ -22,6 +31,78 @@
         <span class="dismiss">🗙</span>
     </div>
 
+    <script>
+        (function () {
+            function showBootError(label, detail) {
+                var app = document.getElementById('app');
+                if (!app) return;
+
+                var loading = app.querySelector('.app-loading');
+                var box = document.getElementById('boot-error');
+
+                // Once Blazor mounts and removes .app-loading (with no active boot error),
+                // step aside and let #blazor-error-ui handle post-boot runtime errors.
+                if (!loading && !box) return;
+
+                if (!box) {
+                    if (loading && loading.parentNode) {
+                        loading.parentNode.removeChild(loading);
+                    }
+                    box = document.createElement('div');
+                    box.id = 'boot-error';
+                    box.setAttribute('role', 'alert');
+                    box.style.cssText = 'max-width:42rem;margin:2rem auto;padding:1rem 1.25rem;border:1px solid #cf222e;border-radius:6px;background:#fff8f8;color:#24292f;font-family:system-ui,-apple-system,sans-serif;line-height:1.5;';
+
+                    var heading = document.createElement('strong');
+                    heading.textContent = 'Unable to start Terlingua Magazine in this browser';
+                    box.appendChild(heading);
+
+                    var note = document.createElement('p');
+                    note.style.cssText = 'margin:0.4rem 0 0.75rem;font-size:0.95rem;';
+                    note.textContent = 'This site targets current evergreen browsers without legacy shims.';
+                    box.appendChild(note);
+
+                    var log = document.createElement('pre');
+                    log.id = 'boot-error-log';
+                    log.style.cssText = 'margin:0;padding:0.75rem;background:#f6f8fa;border-radius:4px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;font-size:0.85rem;';
+                    box.appendChild(log);
+
+                    app.appendChild(box);
+                }
+
+                var logEl = document.getElementById('boot-error-log');
+                if (logEl) {
+                    var line = '[' + label + '] ' + detail;
+                    logEl.textContent = logEl.textContent ? (logEl.textContent + '\n' + line) : line;
+                }
+            }
+
+            function formatError(err) {
+                if (!err) return 'Unknown error';
+                if (typeof err === 'string') return err;
+                if (err.message) return (err.name ? err.name + ': ' : '') + err.message;
+                try { return String(err); } catch (e) { return 'Unserializable error'; }
+            }
+
+            window.addEventListener('error', function (event) {
+                if (event && event.target && event.target !== window) {
+                    var src = event.target.src || event.target.href || event.target.tagName;
+                    showBootError('resource error', 'Failed to load ' + src);
+                    return;
+                }
+
+                var msg = (event && event.message) ? event.message : formatError(event && event.error);
+                var loc = (event && event.filename)
+                    ? ' (' + event.filename + ':' + event.lineno + ':' + event.colno + ')'
+                    : '';
+                showBootError('error', msg + loc);
+            }, true);
+
+            window.addEventListener('unhandledrejection', function (event) {
+                showBootError('unhandledrejection', formatError(event && event.reason));
+            });
+        })();
+    </script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 </body>
 </html>
