@@ -1,0 +1,12 @@
+title: "In Pursuit of the Traveling Salesman: A Concept Companion for Software Engineers"
+author: kushal
+summary: "Chapter-by-chapter companion to William J. Cook's In Pursuit of the Traveling Salesman (Princeton, 2012). Every section explains the ideas in full — tours and graphs, heuristics from nearest neighbor to LKH, linear programming and duality, cutting planes and separation, branch-and-cut, P vs NP and approximation — so the questions can be answered without the book. Questions are framed in software, DevOps and data settings; explanations quote the book with page pointers, and a closing chapter covers what changed after 2011."
+date: 2026-11-14
+tags:
+  - traveling-salesman
+  - optimization
+  - algorithms
+  - complexity
+  - linear-programming
+  - operations-research
+  - companion
