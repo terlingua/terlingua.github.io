@@ -1,25 +1,25 @@
-kushal@fedora:~$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-393M	.
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+397M	.
 
-real	0m0.130s
-user	0m0.003s
-sys	0m0.075s
+real	0m0.206s
+user	0m0.005s
+sys	0m0.099s
 
-real	0m6.629s
-user	0m11.230s
-sys	0m0.784s
+real	0m6.806s
+user	0m12.750s
+sys	0m0.766s
 Restore complete (0.2s)
 
 Build succeeded in 0.2s
 
-real	0m0.347s
-user	0m0.106s
-sys	0m0.027s
+real	0m0.318s
+user	0m0.098s
+sys	0m0.025s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-13 12:35:34 UTC
+Publish before:    2026-11-14 04:17:55 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -76,24 +76,24 @@ Processing book: working-effectively-with-legacy-code
   26 chapter(s), 122 subchapter(s), 799 question(s)
 Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (18 books)
 Content processing complete.
-Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (769ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (934ms)
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (754ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (916ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (934ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (769ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (754ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (916ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 119ms
+  duration: 1s 099ms
 
-real	0m6.087s
-user	0m3.577s
-sys	0m0.499s
+real	0m6.183s
+user	0m3.649s
+sys	0m0.483s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -126,9 +126,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.174s
-user	0m0.882s
-sys	0m0.201s
+real	0m1.140s
+user	0m0.845s
+sys	0m0.193s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -141,9 +141,9 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.575s
-user	0m1.506s
-sys	0m0.244s
+real	0m2.420s
+user	0m1.418s
+sys	0m0.226s
 Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 426305 bytes, ~106576 tokens
   text files: 136, book files summarized: 960, path only: 3
   largest:
@@ -158,7 +158,7 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 426305 bytes, ~106576
        12095  tests/ObserverMagazine.Integration.Tests/ContentProcessorTests.cs
        10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m2.281s
-user	0m1.260s
-sys	0m1.256s
+real	0m2.653s
+user	0m1.312s
+sys	0m1.513s
 kushal@fedora:~/src/dotnet/terlingua$ 

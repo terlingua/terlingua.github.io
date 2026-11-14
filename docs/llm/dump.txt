@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-13T12:35:47Z
+# terlingua.github.io export 2026-11-14T04:18:08Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
