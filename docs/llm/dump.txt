@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-14T07:31:19Z
+# terlingua.github.io export 2026-11-14T10:49:36Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -11,6 +11,7 @@ databricks-fundamentals | 10 | 28 | Databricks Fundamentals: The Platform Withou
 databricks-platform | 8 | 24 | The Databricks Data Intelligence Platform
 designing-data-intensive-applications | 14 | 72 | Designing Data-Intensive Applications (2nd Edition): A Companion
 generative-ai-fundamentals | 12 | 30 | Generative AI Fundamentals: How It Works, Where It Fails
+in-pursuit-of-the-traveling-salesman | 14 | 59 | In Pursuit of the Traveling Salesman: A Concept Companion for Software Engineers
 microsoft-azure | 7 | 18 | Microsoft Azure for .NET Developers
 modern-blazor | 8 | 22 | Modern Web Development with Blazor
 modern-dotnet | 8 | 21 | .NET 10 and Modern C#
@@ -419,6 +420,7 @@ Markdown body…
 | AI Agent Fundamentals: From Loops to Production | `ai-agent-fundamentals` | Companion to the AI Agent Fundamentals course: tools, memory, planning, workflow patterns, multi-agent systems, MCP and A2A, Agent Bricks, evaluation, the lethal trifecta, ROI, agents in .NET with Microsoft.Extensions.AI, Agent Framework, MCP and C# 15 |
 | Designing Data-Intensive Applications (2nd Edition): A Companion | `designing-data-intensive-applications` | Chapter-by-chapter companion to Kleppmann and Riccomini's second edition: foundations checks, links to today's cloud, streaming and AI systems, explanations that quote the book |
 | Statistical Rethinking (2nd Edition): A Companion for Software Engineers | `statistical-rethinking` | Concept-first companion to McElreath's second edition: Bayesian updating, sampling, linear and generalized linear models, DAGs and confounding, overfitting and PSIS/WAIC, interactions, MCMC and HMC, maximum entropy, multilevel and covariance models, measurement error and missing data, scientific models; explanations quote the book with page pointers, questions framed in software, DevOps and telemetry settings |
+| In Pursuit of the Traveling Salesman: A Concept Companion for Software Engineers | `in-pursuit-of-the-traveling-salesman` | Chapter-by-chapter companion to Cook's book: tours and graphs, the √n law, applications as modeling patterns, heuristics from nearest neighbor to LKH and EAX, LP and duality, subtour and comb cuts, separation via max-flow, branch-and-cut, Concorde and certificates, P vs NP, Held–Karp, approximation limits; explanations quote the book with page pointers, plus a 2011–2026 update chapter and capstone review |
 | Sustainable Energy — Without the Hot Air: A Quiz Companion | `sustainable-energy-without-the-hot-air` | Self-test companion to MacKay's free book: chapters 1–32 as in the book, technical chapters A–H as 33–40, data chapters I–K as 41–43, with page pointers |
 | Microsoft Azure for .NET Developers | `microsoft-azure` | Identity, compute, data, messaging, networking, Bicep, governance |
 | Amazon Web Services for Builders | `amazon-web-services` | IAM, compute, storage, databases, integration, VPC, IaC, cost |
@@ -501,8 +503,7 @@ Before, an iPhone 8 Plus or a Nexus 6 sat on the loading text with no explanatio
 <img src="docs/images/nexus-6-loading.png" alt="Nexus 6 stuck on Loading Terlingua Magazine" width="240">
 
 Now they report why the runtime can't start (no WebAssembly SIMD on the Nexus 6, no WebAssembly
-exception handling on the iPhone 8 Plus). These were taken before the card switched to the site's
-design tokens and wording, so colours and the second line differ; the error lines are the same:
+exception handling on the iPhone 8 Plus):
 
 <img src="docs/images/nexus-6-failed.png" alt="Nexus 6 boot failure: WASM SIMD not supported" width="240"> <img src="docs/images/iphone-eight-plus-failed.png" alt="iPhone 8 Plus boot failure: WASM exception handling not supported" width="240">
 
