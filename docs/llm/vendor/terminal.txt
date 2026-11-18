@@ -1,25 +1,25 @@
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-411M	.
+kushal@fedora:~/src/ts/kphoto$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+416M	.
 
-real	0m0.161s
-user	0m0.012s
-sys	0m0.100s
+real	0m0.033s
+user	0m0.005s
+sys	0m0.025s
 
-real	0m9.379s
-user	0m14.838s
-sys	0m1.078s
+real	0m7.238s
+user	0m12.662s
+sys	0m0.856s
 Restore complete (0.2s)
 
 Build succeeded in 0.3s
 
-real	0m0.449s
-user	0m0.141s
-sys	0m0.037s
+real	0m0.412s
+user	0m0.107s
+sys	0m0.039s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-14 23:09:26 UTC
+Publish before:    2026-11-18 15:12:12 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -84,22 +84,22 @@ Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (21 books)
 Content processing complete.
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (853ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 104ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (830ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 018ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 104ms)
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (853ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (1s 018ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (830ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 322ms
+  duration: 1s 210ms
 
-real	0m7.823s
-user	0m4.357s
-sys	0m0.574s
+real	0m7.220s
+user	0m4.046s
+sys	0m0.568s
 Restore complete (0.1s)
 
 Build succeeded in 0.2s
@@ -132,12 +132,12 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.520s
-user	0m1.140s
-sys	0m0.234s
+real	0m1.385s
+user	0m1.034s
+sys	0m0.265s
 Restore complete (0.1s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 
 The following sources were used:
    https://api.nuget.org/v3/index.json
@@ -147,9 +147,9 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.871s
-user	0m1.981s
-sys	0m0.304s
+real	0m3.214s
+user	0m1.833s
+sys	0m0.369s
 Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 434543 bytes, ~108635 tokens
   text files: 136, book files summarized: 1237, path only: 3
   largest:
@@ -164,7 +164,7 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 434543 bytes, ~108635
        12095  tests/ObserverMagazine.Integration.Tests/ContentProcessorTests.cs
        10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m3.980s
-user	0m1.510s
-sys	0m2.892s
+real	0m2.927s
+user	0m1.584s
+sys	0m1.681s
 kushal@fedora:~/src/dotnet/terlingua$ 
