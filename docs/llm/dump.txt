@@ -1,4 +1,4 @@
-# terlingua.github.io export 2026-11-27T15:29:25Z
+# terlingua.github.io export 2026-11-27T16:25:03Z
 # Full text of source, config and docs. Blog posts: front matter only. Books: inventory only, format in README.md (Books). Data and binary files: path only.
 
 ## Books (slug | chapters | sections | title)
@@ -7,6 +7,7 @@ amazon-web-services | 8 | 19 | Amazon Web Services for Builders
 blazor-basics | 2 | 4 | Blazor WebAssembly Basics
 clean-code | 7 | 14 | Clean Code in C#
 dapper | 5 | 15 | Dapper: Fast, Honest Data Access
+data-representation-traps | 7 | 28 | Data Representation Traps: Floating-Point, Unicode, and Time
 databricks-fundamentals | 10 | 28 | Databricks Fundamentals: The Platform Without the Brochure
 databricks-platform | 8 | 24 | The Databricks Data Intelligence Platform
 designing-data-intensive-applications | 14 | 72 | Designing Data-Intensive Applications (2nd Edition): A Companion
@@ -581,6 +582,1263 @@ All dependencies are free for any use — no payment required, ever.
 ## License
 
 AGPLv3
+
+==> _build/data-representation-traps/NOTES.md <==
+# NOTES — data-representation-traps
+
+Decisions and conflicts, logged as the build proceeds. Source-of-truth order: compiler source > existing books > prompt.
+
+## Repository facts learned (Step 0)
+
+- `dump.txt` (project doc) read first; full repo cloned read-only from `github.com/terlingua/terlingua.github.io` at commit `033766a2` (2026-11-27) to read existing books. Only files under `content/books/data-representation-traps/` and `_build/data-representation-traps/` are created.
+- Author id: `terlingua-team` exists in `content/authors/terlingua-team.yml` → used.
+- Date format in existing `book.yml`: unquoted `YYYY-MM-DD` (e.g. `date: 2026-11-10`). Used `date: 2026-11-27`. `BookManifest.Date` is `DateTime`; YamlDotNet parses the plain scalar. A quoted date would also parse, but unquoted matches existing books.
+- `publishBefore` defaults to `DateTime.UtcNow`; `2026-11-27` (midnight) is not in the future on the build day, so the book is not skipped.
+- Naming: `ContentNaming` regexes — book slug `^[a-z0-9]+(?:-[a-z0-9]+)*$`; numbered entries `^(\d+)[-_]([a-z0-9]+(?:-[a-z0-9]+)*)$`. Files/folders starting with `.` or `_` are hidden (ignored).
+- YAML keys: camelCase naming convention, unmatched properties ignored. Book: `title` (required), `author`, `summary`, `date`, `updated`, `tags`, `image`, `draft`. Chapter: `title` (required), `summary`, `draft`. Subchapter: `title` (required), `draft`, `questions`.
+- Questions (`QuestionCompiler`): `id` optional (defaults `q1`…) but must match slug regex and be unique; `prompt` required; `type` optional: `single` | `multiple` (case-insensitive after trim); unknown type = error; `single` with >1 correct = error; ≥2 options; ≥1 correct. Option `id` optional (defaults `a`, `b`, …), `text` required, `correct` is a YAML bool (missing = false).
+- `explanation` optional in the compiler; the prompt makes it mandatory → stricter rule applied.
+- Front matter delimiter: content must start with `---`; the block ends at the FIRST occurrence of `\n---` anywhere after it. Therefore no line inside front matter may start with `---` (indented lines inside block scalars are safe). The body is everything after.
+- Code fences: `SyntaxHighlighter` handles `csharp`(`cs`), `javascript`(`js`), `typescript`(`ts`), `python`, `sql`, `bash`(`sh`,`shell`,`zsh`), `json`, `yaml`(`yml`), `html`(`xml`), `css`. Intersection with the prompt's set = all eight of `csharp python javascript sql bash json yaml html`. Unknown languages would still render (plain), but are disallowed by the validator.
+
+## Conflicts and resolutions
+
+1. **Block scalars.** Existing books never use `explanation: |-` (59 files use folded `>`). YamlDotNet supports literal block scalars (YAML 1.1/1.2 core syntax), so `|-` is accepted by the compiler; prompt prefers it → used `|-` for every explanation.
+2. **Real compiler not runnable.** The sandbox cannot reach `dot.net`, `builds.dotnet.microsoft.com` or `api.nuget.org` (proxy 403), so the .NET 11 SDK and the Markdig/YamlDotNet packages cannot be installed; `dotnet run --project tools/ObserverMagazine.ContentProcessor` was not possible. Mitigation: `validate.py` contains a faithful Python port of `FrontMatterParser.Parse` (delimiter logic), `ContentNaming`, `BookCompiler` (manifest/title/draft/numbering/duplicate checks) and `QuestionCompiler` (ids, options, correct counts, type resolution), parsed with PyYAML (YAML 1.1, which is stricter than YamlDotNet about booleans — every string is double-quoted, so the difference cannot bite). The author should run `dotnet run --project tools/ObserverMagazine.ContentProcessor` once locally; see REPORT.md.
+3. **`draft: false`.** Existing book.yml files omit `draft`; the prompt requires `draft: false`. Harmless (default false) → included.
+4. **`type` required by prompt, optional in compiler** → always written.
+5. **Answer positions.** The prompt's formula is applied mechanically by `normalize.py`: options are authored in any order, then the script moves correct options to index `(k + s) mod n` (and the following indexes, wrapping, for `multiple`) while keeping distractors in authored order. Explanations never reference positions, so reordering is safe. `s` is the 1-based section number across the whole book (1–28).
+6. **The 40% rule** is checked over all correct options (including every correct option of `multiple` questions) per section, and also over first-correct positions.
+7. **Book `summary`/`title`** taken verbatim from the prompt.
+8. **Section count:** 28 (4+5+4+4+4+4+3).
+
+## Dated-claim verification log (all checked 2026-11-27)
+
+- Unicode: `unicode.org/versions/latest` redirects to `Unicode18.0.0`; Unicode 18.0 released September 2026 (planned 15 Sept 2026 per unicode.org beta page; GCC libstdc++ patch dated 17 Sept 2026 updates to 18.0.0). Character totals differ between sources (13,047 vs 13,007 new) → no counts stated.
+- CGPM: 28th CGPM (13–15 Oct 2026) adopted Resolution 5 "On the technical actions needed to ensure the continuity of UTC" (listed on bipm.org/en/cgpm-2026). Draft Resolution C text (bipm.org): continuous UTC effective 20 May 2027; max |UT1−UTC| = 3 600 s. 27th CGPM (2022) Resolution 4 is the earlier "in, or before, 2035" decision.
+- IERS Bulletin C 72 (6 Jul 2026): no leap second end of December 2026; UTC−TAI = −37 s since 2017-01-01.
+- Temporal: reached TC39 Stage 4 at the March 2026 plenary (Igalia announcement 2026-03-13; proposal README says Stage 4). Which ECMAScript edition includes it is reported inconsistently → not stated.
+- MySQL 8.4 Reference Manual: `utf8` is a deprecated alias for `utf8mb3`; `utf8mb3` is BMP-only, max 3 bytes, deprecated; `utf8mb4` recommended. `TIMESTAMP` range '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC.
+- Python 3.12 What's New: `sum()` uses Neumaier summation for floats.
+- glibc 2.34: `_TIME_BITS=64` (with `_FILE_OFFSET_BITS=64`) gives 64-bit `time_t` on 32-bit Linux ABIs.
+- IEEE P3109 (Arithmetic Formats for Machine Learning): still a draft / active PAR (interim report v4.0 dated June 2026). OCP MX specification v1.1 dated October 2026. OCP FP8 E4M3/E5M2 layouts from the OCP 8-bit floating point spec.
+- Not stated because unverifiable or volatile: specific browser versions shipping Temporal, Linux kernel version numbers, current tzdata release name, NumPy internals beyond "pairwise".
+
+## Section-level decisions
+
+- Product facts used only in "Where this shows up today" or labeled vendor-specific; no answer depends solely on a dated fact. Questions that touch vendor behavior (e.g. MySQL `utf8mb3`) are explained from the invariant (4-byte UTF-8 for astral code points).
+
+## Decisions made while writing (chronological)
+
+- **Write-tool escape hazard.** Escapes such as `́` and `‍` typed into files were turned into the literal characters by the file-writing tool (seen in s=12, s=14, s=15). Fixed each case, then added guards: `normalize.py` rejects format, control, private-use, surrogate and combining characters (Cf/Cc/Co/Cs/Mn/Me) in YAML strings, and `validate.py` rejects them in bodies. Code samples now use `chr(0x301)` or explicit `"́"` escapes that were verified on disk.
+- **ZWJ emoji are never written literally** (they contain U+200D); they are described by code points instead.
+- **Markdig emphasis extras.** `MarkdownProcessor` uses `UseAdvancedExtensions()`, which enables `^superscript^` and `==mark==`. Prose such as "2^−126 … 2^−149" or "x == y … x == y" in one paragraph would render as superscript/highlight. `normalize.py` therefore escapes `^` as `\^` and `==` as `\==` outside code spans and fences in bodies, prompts, options and explanations (titles and chapter summaries are plain text and left alone). Checked that no `$`, `~`, `++`, `{`, `[^` or definition-list `: ` lines occur outside code.
+- **Table pipes.** A `|` inside a table cell (bitwise OR in the UTF-16 decode formula) broke a table in s=13; rewrote the formula with `+`. A table-shape check found no other issues.
+- **Mix rules per section** (≥2 compute/trace, ≥1 spot-the-bug/what-prints) were checked by hand; s=4 and s=18 lacked a what-prints question, so their first/second questions were rewritten as code-output questions (Python `struct` decoding of `0xFF800000`; JavaScript `| 0` int32 wrap).
+- **Correct-answer length.** validate.py fails a section if the correct option is the unique longest in more than half of its single-answer questions (book-wide limit 40%); several option sets were rebalanced. Final: 21 of 141.
+- **Explanation quotes** were normalized (fix_quotes.py) so every distractor is referred to by its exact option text; audit.py's remaining 16 hits are verified false positives (prefix matches such as "Plane 15" vs "Plane 1", or explanations that discuss a distractor inside a sentence instead of quoting it).
+- **Dated questions** (at most one per section): s=4 OCP FP8 details, s=9 ISO 4217 exponents, s=13 MySQL 8.4 `utf8`, s=18 MySQL 8.4 `TIMESTAMP`, s=20 CGPM 2026 Resolution 5, s=24 tzdata packaging. Each explanation states the timeless rule that also justifies the answer.
+- **Removed unverified version claims**: NumPy's pairwise-summation start version (not confirmed in primary sources) was replaced by a reference to the current NumPy documentation; exact Unicode 18.0 character counts omitted; ECMAScript edition containing Temporal omitted.
+- **Plan deviations**: s=5 replaced "shortest round-trip printing" (covered in s=2) with a float-literal-versus-double question; s=13 has 7 questions; s=25 uses 2027-01-01 (week-year 2026-W53) for the ISO week question because it exposes the `%Y`/`%G` trap; s=18's wraparound question became a JavaScript `| 0` question.
+
+==> _build/data-representation-traps/REPORT.md <==
+# REPORT — Data Representation Traps: Floating-Point, Unicode, and Time
+
+Built 2026-11-27. Book slug `data-representation-traps`, author `terlingua-team`, `date: 2026-11-27`.
+
+## Contents
+
+| Chapter | Sections | Questions |
+|---|---|---|
+| 01-binary-floating-point-anatomy | 4 | 24 |
+| 02-floating-point-arithmetic-and-traps | 5 | 30 |
+| 03-code-points-utf-8-and-utf-16 | 4 | 25 |
+| 04-text-length-indexing-normalization-and-sorting | 4 | 24 |
+| 05-calendars-epochs-and-clocks | 4 | 24 |
+| 06-time-zones-dst-and-serialization | 4 | 24 |
+| 07-cross-chapter-review-and-diagnostics | 3 | 18 |
+| **Total** | **28** | **169** (141 single, 28 multiple) |
+
+Prose per section (excluding code and tables): 408–666 words; 14,015 words in total.
+
+## Validation
+
+`validate.py` checks every HARD FORMAT RULE: naming regexes, book/chapter keys, double-quoted strings, `|-` explanations, no `---` lines inside front matter, 5–7 questions, ids (slug, unique, not reserved), `type` present and consistent (single = 1 correct of 4–5; multiple = 2–3 correct of 5, prompt ends with "Select all that apply."), `correct: true` only on right answers, no option letters/positions in explanations, no "all/none of the above", body heading order and bullet counts, code-fence languages, prose length, "Where this shows up today" ≤ 20% (warning above 15.5%) with an "As of November 2026" statement, no literal invisible/combining characters, answer positions `(k + s) mod n` (and following indexes for multiple), the 40% position-concentration rule (on all correct options and on first-correct positions), and correct-answer length balance. It also contains a Python port of the content processor's `FrontMatterParser`, `ContentNaming`, `BookCompiler` and `QuestionCompiler` rules.
+
+Final output (`validate_output.txt`):
+
+```
+chapters=7 sections=28 questions=169 single=141 multiple=28 correct-is-longest=21/141
+prose words: min=408 max=666 total=14015
+0 error(s), 0 warning(s)
+```
+
+YAML was also parsed with ruamel.yaml (YAML 1.2) and PyYAML (YAML 1.1); both produce identical data for all 36 files.
+
+**Real compiler not run.** The sandbox cannot reach `dot.net`, `builds.dotnet.microsoft.com` or `api.nuget.org`, so the .NET 11 SDK and NuGet packages could not be installed. Please run once locally:
+
+```bash
+dotnet run --project tools/ObserverMagazine.ContentProcessor
+dotnet test
+```
+
+## Math audit
+
+`check_math.py` recomputes every numeric claim used in answers and worked examples: bit patterns and decoded values (struct, NumPy float16/float32), ULPs, exact decimal expansions (Decimal/Fraction), ties, Kahan and naive sums, UTF-8/UTF-16 encodings and byte counts, normalization results, IDNA, Unix-time conversions and overflows, leap-year counts, TAI/GPS offsets, smear and slew rates, DST transitions and offsets via `zoneinfo`, ISO week dates. It also runs 14 JavaScript snippets in Node.js 22 (NaN/zero semantics, JSON parsing, `Intl.Segmenter`, `Intl.Collator`, `TextDecoder`, `encodeURIComponent`, Date parsing). Result: **216 checks passed, 14 JavaScript checks run** (`check_math_output.txt`).
+
+## Question audit
+
+- Every question was re-read; correct marks, explanations and distractor rationales were cross-checked. `audit.py` verifies that each distractor is addressed in its explanation by its option text and that multiple-answer explanations separate Correct/Wrong; its 16 remaining hits are confirmed false positives (prefix matches).
+- Two sections lacked a code-output question and were fixed (s=4, s=18).
+- Quotes in explanations were aligned to exact option text.
+
+## Dated claims and how they were verified (2026-11-27)
+
+| Claim | Source checked |
+|---|---|
+| Unicode 18.0 is current, released September 2026 | unicode.org/versions/latest → Unicode18.0.0; Unicode beta page; GCC libstdc++ patch (17 Sept 2026) |
+| 28th CGPM Resolution 5: continuous UTC from 20 May 2027, abs(UT1 − UTC) ≤ 3,600 s | bipm.org/en/cgpm-2026 (lists Resolution 5); BIPM Draft Resolution C text |
+| No leap second at end of 2026; TAI − UTC = 37 s | IERS Bulletin C 72 (6 Jul 2026) via tz mailing list |
+| Temporal reached TC39 Stage 4 (March 2026) | Igalia announcement; proposal README |
+| MySQL 8.4: `utf8` = deprecated alias of `utf8mb3` (BMP only); `TIMESTAMP` range ends 2038-01-19 03:14:07 UTC | MySQL 8.4 Reference Manual |
+| Python 3.12 `sum()` uses Neumaier summation | Python 3.12 What's New |
+| glibc 2.34 `_TIME_BITS=64` | glibc/gnulib announcements |
+| OCP MX v1.1 (October 2026); IEEE P3109 still a draft | OCP spec PDF; IEEE P3109 interim report v4.0 (June 2026) |
+| US and EU DST dates in 2026 | timeanddate.com, Live Science |
+
+## Unresolved uncertainties and how they were handled
+
+- **Not verifiable / dropped:** the ECMAScript edition that contains Temporal (sources disagree); exact Unicode 18.0 character totals (13,047 vs 13,007); the NumPy version that introduced pairwise summation; specific browser versions. These are stated generically or omitted.
+- **Stated from long-standing documentation without a fresh fetch:** .NET behaviors (`Math.Round` half-even default, `AddYears` clamping, `ToUpperInvariant` simple case mapping, `Stopwatch.GetElapsedTime` in .NET 7+, `TimeProvider` in .NET 8, IANA IDs on all platforms since .NET 6), PostgreSQL `timestamptz` semantics, SQL Server `varchar`/`nvarchar` length units, RFC 3339 `-00:00` semantics and lowercase `t`/`z`, RFC 2781 big-endian default, UTS #39 skeleton guidance. All are vendor-labeled in the text; none is the sole basis of an answer.
+- **C# snippets were not executed** (no .NET SDK); their outputs were reasoned from documented behavior and, where possible, cross-checked by computing the same values in Python.
+- **Markdig rendering** was not executed; escaping of `^` and `==` was added defensively because `UseAdvancedExtensions()` enables superscript and mark syntax.
+
+## Files
+
+- `content/books/data-representation-traps/` — `book.yml`, 7 × `chapter.yml`, 28 section files.
+- `_build/data-representation-traps/` — `plan.md`, `progress.md`, `NOTES.md`, `REPORT.md`, `common.py`, `normalize.py` (answer placement, canonical YAML emission, Markdig escaping), `validate.py`, `check_math.py`, `audit.py`, `fix_quotes.py`, `positions.py`, and the three `*_output.txt` logs. Delete `_build/` when done.
+
+==> _build/data-representation-traps/audit.py <==
+import re
+import yaml
+from common import sections, split_front_matter
+
+
+def norm(t):
+    t = t.replace("`", "").replace("\\", "")
+    t = re.sub(r"[\s\.\,;:!?\"']+", " ", t).strip().lower()
+    return t
+
+
+def main():
+    problems = 0
+    for s, (_, path) in enumerate(sections(), start=1):
+        fm = yaml.safe_load(split_front_matter(open(path, encoding="utf-8").read())[0])
+        for k, q in enumerate(fm["questions"], start=1):
+            loc = f"s={s} {q['id']}"
+            expl = q["explanation"]
+            quoted = [norm(m) for m in re.findall(r'^\s*(?:- )?"(.+?)"(?= )', expl, flags=re.M)]
+            wrong_section = expl.split("Wrong:")[1] if "Wrong:" in expl else expl
+            for o in q["options"]:
+                t = norm(o["text"])
+                hits = [x for x in quoted if x and (t.startswith(x) or x.startswith(t))]
+                if o.get("correct"):
+                    if hits and q["type"] == "single":
+                        print(f"{loc}: correct option quoted like a distractor: {o['text']}")
+                        problems += 1
+                else:
+                    mentioned = hits or t[:25] in norm(wrong_section)
+                    if not mentioned:
+                        print(f"{loc}: distractor not addressed in explanation: {o['text']}")
+                        problems += 1
+            if q["type"] == "multiple":
+                if "Correct:" not in expl or "Wrong:" not in expl:
+                    print(f"{loc}: multiple question lacks Correct:/Wrong: structure")
+                    problems += 1
+                else:
+                    corr_part = expl.split("Wrong:")[0]
+                    for o in q["options"]:
+                        if not o.get("correct") and norm(o["text"])[:30] in norm(corr_part) and norm(o["text"])[:30] not in norm(wrong_section):
+                            print(f"{loc}: wrong option appears only in the Correct part: {o['text']}")
+                            problems += 1
+    print(f"audit: {problems} potential problem(s)")
+
+
+if __name__ == "__main__":
+    main()
+
+==> _build/data-representation-traps/audit_output.txt <==
+s=5 what-prints-point-three: correct option quoted like a distractor: False 0.30000000000000004
+s=6 ulp-at-ten-to-sixteen: correct option quoted like a distractor: 2
+s=7 association-order-output: correct option quoted like a distractor: 0.6000000000000001 0.6
+s=8 division-by-zero-by-language: distractor not addressed in explanation: C# `1 / zero` where `int zero = 0`
+s=10 plane-of-grinning-face: correct option quoted like a distractor: Plane 1
+s=11 encode-euro-sign: correct option quoted like a distractor: E2 82 AC
+s=12 never-valid-byte-values: multiple question lacks Correct:/Wrong: structure
+s=14 grapheme-counting-apis: distractor not addressed in explanation: Python `len(s)`
+s=14 grapheme-counting-apis: distractor not addressed in explanation: Java `s.length()`
+s=14 grapheme-counting-apis: distractor not addressed in explanation: C# `s.Length`
+s=15 canonical-equivalence-pairs: distractor not addressed in explanation: U+FB01 (ﬁ ligature) and `fi`
+s=15 canonical-equivalence-pairs: distractor not addressed in explanation: U+2460 (①) and `1`
+s=15 canonical-equivalence-pairs: multiple question lacks Correct:/Wrong: structure
+s=17 fullwidth-admin-key: correct option quoted like a distractor: `admin`
+s=19 mean-gregorian-year: correct option quoted like a distractor: 365.2425
+s=27 byte-truncated-status-text: correct option quoted like a distractor: `'Café �'`
+audit: 16 potential problem(s)
+
+==> _build/data-representation-traps/check_math.py <==
+import warnings; warnings.filterwarnings("ignore")
+import struct, math, unicodedata, datetime, calendar
+from decimal import Decimal
+from fractions import Fraction
+
+checks = 0
+def ok(cond, label):
+    global checks
+    checks += 1
+    if not cond:
+        raise AssertionError(label)
+
+def f32_bits(x): return struct.unpack(">I", struct.pack(">f", x))[0]
+def f64_bits(x): return struct.unpack(">Q", struct.pack(">d", x))[0]
+def bits_f32(b): return struct.unpack(">f", struct.pack(">I", b))[0]
+def bits_f64(b): return struct.unpack(">d", struct.pack(">Q", b))[0]
+def s32(u): return u - (1 << 32) if u & 0x80000000 else u
+
+# s=1 three fields and the bias
+ok(2**(8-1)-1 == 127 and 2**(11-1)-1 == 1023, "biases")
+ok(f32_bits(32.0) == 0x42000000 and (0x42000000 >> 23) & 0xFF == 132, "32.0f")
+ok(f32_bits(1.0) == 0x3F800000, "1.0f")
+ok(f64_bits(1.0) == 0x3FF0000000000000, "1.0")
+ok(f64_bits(2.0) == 0x4000000000000000, "2.0")
+ok(f64_bits(32.0) == 0x4040000000000000 and (0x4040000000000000 >> 52) == 1028, "32.0 double")
+ok(f32_bits(2.5) == 0x40200000 and bits_f32(0x40200000 ^ 0x80000000) == -2.5, "xor sign")
+ok(s32(0xC0200000) == -1071644672, "reinterpreted int")
+ok(s32(f32_bits(-1.0)) == -1082130432 and s32(f32_bits(-2.0)) == -1073741824, "neg sort")
+ok(f32_bits(-2.5) == 0xC0200000 and f64_bits(-2.5) == 0xC004000000000000, "-2.5")
+ok(bits_f64(1) == 2**-1074 and str(Decimal(2**-1074))[:4] == "4.94", "min subnormal double")
+
+# s=2 hidden bit
+ok(f32_bits(-6.5) == 0xC0D00000 and bits_f32(0xC0E80000) == -7.25 and bits_f32(0xC0500000) == -3.25, "-6.5")
+ok(bits_f32(0x3E200000) == 0.15625 and bits_f32(0x3EA00000) == 0.3125, "0x3E200000")
+ok(Decimal(bits_f32(0x40490FDB)) == Decimal("3.1415927410125732421875"), "float pi exact")
+ok(Fraction(bits_f32(0x40490FDB)) == Fraction(13176795, 4194304), "float pi fraction")
+ok(abs((bits_f32(0x40490FDB) - math.pi) - 8.74e-8) < 1e-9, "float pi error")
+ok(repr(bits_f32(0x40490FDB)) == "3.1415927410125732", "repr widened")
+ok(((0x40000000 >> 23) & 0x7F) - 127 == -127 and ((0x3F800000 >> 23) & 0x7F) - 127 == 0, "mask bug")
+ok(bits_f32(0x7F7FFFFF) == (2 - 2**-23) * 2**127 == 2**128 - 2**104, "max float")
+ok(bits_f32(0x7F800000) == math.inf, "inf")
+ok(round(53 * math.log10(2), 2) == 15.95, "digits")
+
+# s=3 subnormals
+import numpy as np
+ok(bits_f32(0x00800000) == 2.0**-126 and bits_f32(0x00000001) == 2.0**-149, "min normal/subnormal f32")
+ok(bits_f32(0x00200000) == 2.0**-128, "2^-128 pattern")
+ok(bits_f32(0x00000003) == 3 * 2.0**-149, "0x3 subnormal")
+ok(5e-324 == 2.0**-1074 and 5e-324 / 2 == 0.0 and 5e-324 * 0.75 == 5e-324, "underflow print")
+a32, b32 = np.float32(1.5e-38), np.float32(1.2e-38)
+ok(a32 >= np.float32(2.0**-126) and b32 >= np.float32(2.0**-126), "inputs normal")
+d32 = a32 - b32
+ok(0 < d32 < np.float32(2.0**-126), "difference subnormal")
+ok(abs(float(np.float32(1) / d32) - 3.33e38) / 3.33e38 < 0.01 and np.isfinite(np.float32(1) / d32), "reciprocal finite")
+ok(2.0**-1022 == 2.2250738585072014e-308, "min normal f64")
+ok(np.finfo(np.float32).smallest_subnormal == np.float32(2.0**-149), "float.Epsilon")
+
+# s=4 special encodings
+ok(math.isinf(bits_f32(0xFF800000)) and bits_f32(0xFF800000) < 0, "-inf")
+ok(bits_f32(0xFF7FFFFF) == -bits_f32(0x7F7FFFFF), "most negative finite")
+b = 0x7FA00000
+ok((b >> 23) & 0xFF == 0xFF and b & 0x7FFFFF != 0 and not (b >> 22) & 1, "signaling NaN")
+ok((0x7FC00000 >> 22) & 1 == 1, "quiet NaN bit")
+ok(2 * (2**23 - 1) == 2**24 - 2 == 16777214, "NaN count")
+ok((2 - 2**-10) * 2**15 == 65504 and float(np.frombuffer(bytes.fromhex("7bff")[::-1], dtype=np.float16)[0]) == 65504, "binary16 max")
+ok(np.isinf(np.frombuffer(bytes.fromhex("7c00")[::-1], dtype=np.float16)[0]), "binary16 inf")
+ok(np.isinf(np.float16(65520.0)) and float(np.float16(65504.0)) == 65504.0, "65520 overflows")
+ok(bits_f32(0x40490000) == 3.140625 and 0x0FDB < 0x8000, "bfloat16 pi")
+ok(bits_f32(0x40480000) == 3.125, "3.125 distractor")
+ok((2 - 2**-7) * 2**127 > 3.38e38 and (2 - 2**-7) * 2**127 < 3.40e38, "bfloat16 max")
+ok(1.75 * 2**15 == 57344 and 1.75 * 2**8 == 448 and 1.875 * 2**7 == 240, "fp8 maxima")
+
+# s=5 0.1 + 0.2
+for v in (0.375, 0.5, 2.25):
+    ok(Fraction(v) == Fraction(str(v)), f"exact {v}")
+for v in (0.1, 0.3):
+    ok(Fraction(v) != Fraction(str(v)), f"inexact {v}")
+ok(Fraction(0.1) > Fraction(1, 10), "0.1 rounds up")
+ok(f64_bits(0.1) == 0x3FB999999999999A and f64_bits(0.2) == 0x3FC999999999999A, "0.1/0.2 hex")
+ok(f64_bits(0.3) == 0x3FD3333333333333 and f64_bits(0.1 + 0.2) == 0x3FD3333333333334, "0.3 hex")
+s_exact = Fraction(0.1) + Fraction(0.2)
+ok(s_exact - Fraction(0.3) == Fraction(0.1 + 0.2) - s_exact == Fraction(1, 2**55), "tie")
+ok(repr(0.1 + 0.2) == "0.30000000000000004" and (0.1 + 0.2 == 0.3) is False, "what prints")
+ok(float(np.float32(0.1)) != 0.1 and Decimal(float(np.float32(0.1))) == Decimal("0.100000001490116119384765625"), "0.1f")
+ok(f32_bits(0.1) == 0x3DCCCCCD, "0.1f hex")
+
+# s=6 ULPs
+ok(math.ulp(1e16) == 2.0 and 2**53 < 1e16 < 2**54, "ulp 1e16")
+ok(float(2**53) == 2**53 and float(2**53 + 1) == 2**53 and float(2**52 + 1) == 2**52 + 1, "first unrepresentable")
+ok(int(float(2**53 + 3)) == 2**53 + 4 and float(2**64) == 2**64, "2^53+3 and 2^64")
+ok(np.float32(16777216) + np.float32(1) == np.float32(16777216), "float counter stall")
+ok(math.ulp(1.76e9) == 2**-22 and 2**30 < 1.76e9 < 2**31 and round(2**-22 * 1e9) == 238, "ulp unix seconds")
+ok(float(np.spacing(np.float32(1.76e9))) == 128.0 and 2**-20 * 1e6 < 0.96, "binary32 unix seconds")
+ok(math.ulp(2.0**24) == 2**-28 and float(np.spacing(np.float32(2.0**53))) == 2.0**30, "table")
+for x in (1.0, 1.5, 1.999999, 3.7e10, 9.9e300):
+    ok(2**-53 <= math.ulp(x) / x <= 2**-52, "relative spacing")
+ok(float(9007199254740993) == 9007199254740992.0, "json id")
+
+# s=7 cancellation
+ok(repr((0.1 + 0.2) + 0.3) == "0.6000000000000001" and repr(0.1 + (0.2 + 0.3)) == "0.6" and 0.2 + 0.3 == 0.5, "assoc")
+ok((1e16 + 1.0) - 1e16 == 0.0 and (10**16 // 2) % 2 == 0, "absorb")
+ok(abs((2 * 1000 * 1e-8) / 1e-4 - 0.2) < 1e-12, "cancellation 20%")
+_a, _b, _c = 1.0, 1e8, 1.0
+_d = math.sqrt(_b * _b - 4 * _a * _c)
+ok(repr(_d) == "99999999.99999999" and (-_b + _d) / (2 * _a) == -7.450580596923828e-09 and 2 * _c / (-_b - _d) == -1e-08, "quadratic")
+ok(-_b + _d == -2**-26 and -_b - _d == -2e8, "quadratic numerators")
+def _kahan(xs):
+    s = c = 0.0
+    for x in xs:
+        y = x - c; t = s + y; c = (t - s) - y; s = t
+    return s
+_n = 0.0
+for _x in [1e16, 1.0, 1.0]:
+    _n += _x
+ok(_n == 1e16 and repr(_kahan([1e16, 1.0, 1.0])) == "1.0000000000000002e+16", "kahan")
+ok(math.fsum([1e16, 1.0, 1.0]) == 1e16 + 2, "fsum")
+
+# s=8 NaN / zero / inf
+_nan = float("nan")
+ok(sorted([3.0, _nan, 1.0, 2.0])[0] == 3.0 and sorted([3.0, _nan, 1.0, 2.0])[2:] == [1.0, 2.0], "sort nan")
+ok(math.isnan(max(_nan, 1.0)) and max(1.0, _nan) == 1.0, "max nan")
+ok(math.isnan(math.inf - math.inf) and math.copysign(1.0, -0.0) == -1.0 and 0.0 == -0.0, "inf/zero")
+ok({_nan: 1}.get(float("nan")) is None, "dict nan")
+ok(json.dumps(_nan) == "NaN" if (json := __import__("json")) else False, "json nan")
+try:
+    1.0 / 0.0
+    ok(False, "py zero div")
+except ZeroDivisionError:
+    ok(True, "py zero div")
+ok(np.float64(-1.0) / np.float64(np.inf) == 0 and math.copysign(1, np.float64(-1.0) / np.float64(np.inf)) == -1, "-1/inf")
+
+# s=9 tolerances and money
+from decimal import ROUND_HALF_UP, getcontext
+ok(math.isclose(0.1 + 0.2, 0.3) and not math.isclose(1e-12, 0.0) and math.isclose(1e-12, 0.0, abs_tol=1e-9), "isclose")
+ok(math.ulp(1e9) == 2**-23 and math.ulp(1e9) > 1e-9 and 2**29 < 1e9 < 2**30, "ulp 1e9")
+ok(Decimal("0.1") + Decimal("0.2") == Decimal("0.3") and str(Decimal(1) / Decimal(3) * 3) == "0.9999999999999999999999999999", "decimal")
+ok(divmod(10000, 3) == (3333, 1) and 3334 + 3333 + 3333 == 10000 and 3 * 3333 == 9999 and 3 * 3334 == 10002, "allocation")
+ok(round(2.675, 2) == 2.67 and str(round(Decimal("2.675"), 2)) == "2.68", "round 2.675")
+ok(str(Decimal(2.675)) == "2.67499999999999982236431605997495353221893310546875", "2.675 exact")
+ok(str(Decimal("2.675").quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)) == "2.68", "half up")
+ok(round(2.5) == 2, "py half even")
+
+# s=10 code points
+ok(0x10FFFF + 1 == 1114112 == 17 * 65536 and 1114112 - 2048 == 1112064 and 2**21 == 2097152, "codespace")
+ok(0x1F600 >> 16 == 1 and len("😀") == 1 and len("😀".encode("utf-16-le")) // 2 == 2 and len("😀".encode()) == 4, "plane/len")
+try:
+    "\ud83d".encode("utf-8"); ok(False, "lone surrogate")
+except UnicodeEncodeError:
+    ok(True, "lone surrogate")
+ok("\ud83d".encode("utf-8", "surrogatepass") == b"\xed\xa0\xbd" and "\ud83d".encode("utf-8", "replace") == b"?", "surrogatepass")
+_s = "a€😀"
+ok((len(_s), len(_s.encode()), len(_s.encode("utf-16-le")) // 2) == (3, 8, 4), "a€😀")
+ok(65536 + 2**20 == 1114112, "utf16 reach")
+
+import subprocess
+JS = []
+def js(code, expected, label):
+    JS.append((code, expected, label))
+js('const x=NaN; console.log(x === x, x !== x, [NaN].includes(NaN), [NaN].indexOf(NaN))', "false true true -1", "nan js")
+js('console.log(0 === -0, 1 / -0, Object.is(0, -0))', "true -Infinity false", "zero js")
+js('console.log(0.1 + 0.2, 0.1 + 0.2 === 0.3); console.log((0.1).toString(2))', "0.30000000000000004 false\n0.0001100110011001100110011001100110011001100110011001101", "0.1 js")
+js('console.log(JSON.parse(\'{"id": 9007199254740993}\').id)', "9007199254740992", "json id js")
+js('const s = "a€😀"; console.log(s.length, [...s].length)', "4 3", "length js")
+js('console.log(JSON.stringify([NaN, Infinity]))', "[null,null]", "json nan js")
+
+# s=11 UTF-8 patterns
+ok(chr(0x800).encode() == b"\xe0\xa0\x80" and chr(0x7FF).encode() == b"\xdf\xbf", "u0800")
+ok("€".encode() == b"\xe2\x82\xac" and bytes.fromhex("c282").decode() == "\x82", "euro")
+ok(ord(bytes.fromhex("f09f92a9").decode()) == 0x1F4A9 and "\U0001F4A9".encode("utf-16-be") == bytes.fromhex("d83ddca9"), "poo")
+_g = "Grüße, 東京 👋"
+ok(len(_g) == 11 and len(_g.encode()) == 20 and len(_g.encode("utf-16-le")) == 24, "byte count")
+ok(sum(1 for b in "héllo".encode() if (b & 0x80) == 0) == 4 and sum(1 for b in "héllo".encode() if (b & 0xC0) != 0x80) == 5, "count bug")
+ok("é".encode() == b"\xc3\xa9" and "😀".encode() == bytes.fromhex("f09f9880"), "examples")
+_words = ["z", "é", "€", "😀", "a", "\x7f", "߿", "￿", "\U00010000"]
+ok(sorted(_words) == sorted(_words, key=lambda w: w.encode()), "byte order = code point order")
+
+# s=12 invalid UTF-8
+def _bad(b):
+    try:
+        b.decode("utf-8"); return False
+    except UnicodeDecodeError:
+        return True
+for _b in (0xC0, 0xC1, 0xF5, 0xFF):
+    ok(all(_bad(bytes([_b]) + bytes([c]) + b"\x80\x80") for c in range(0x80, 0xC0)), f"never valid {_b:x}")
+ok(bytes.fromhex("f09f9880").decode() == "😀" and bytes.fromhex("ed9fbf").decode() == "퟿", "0x80 / 0xED valid")
+ok(((0xC0 & 0x1F) << 6 | (0xAF & 0x3F)) == 0x2F and b"\xc0\xaf".decode("utf-8", "replace") == "��", "overlong slash")
+ok(((0xED & 0x0F) << 12 | (0xA0 & 0x3F) << 6 | (0x80 & 0x3F)) == 0xD800 and _bad(b"\xed\xa0\x80"), "encoded surrogate")
+ok(((0xF8 & 0x07) << 24 | 0x08 << 18) == 0x200000 and _bad(b"\xf8\x88\x80\x80\x80"), "five byte")
+ok(len(b"\xef\xbb\xbfid".decode("utf-8")) == 3 and len(b"\xef\xbb\xbfid".decode("utf-8-sig")) == 2, "bom")
+ok(b"a\xe2\x82".decode("utf-8", "replace") == "a�" and b"\xf4\x90\x80\x80".decode("utf-8", "replace") == "�" * 4, "replacement counts")
+js('console.log(JSON.stringify(new TextDecoder().decode(new Uint8Array([0x61,0xe2,0x82]))), new TextDecoder().decode(new Uint8Array([0xef,0xbb,0xbf,0x69,0x64])).length)', '"a�" 2', "textdecoder")
+
+# s=13 UTF-16
+ok("😀".encode("utf-16-be") == bytes.fromhex("d83dde00") and 0xD800 + (0x1F600 >> 10) == 0xD87D, "encode pair")
+ok(((0xD83C - 0xD800) << 10 | (0xDF89 - 0xDC00)) + 0x10000 == 0x1F389 and bytes.fromhex("d83cdf89").decode("utf-16-be") == "\U0001F389", "decode pair")
+_doc = "一" * 1000 + "😀" * 1000
+ok(len(_doc.encode()) == 7000 and len(_doc.encode("utf-16-le")) == 6000, "sizes")
+ok("A".encode("utf-16-le") == b"A\x00" and "A".encode("utf-16") == b"\xff\xfeA\x00", "bom le")
+ok(bytes.fromhex("4100").decode("utf-16-be") == "䄀", "mixed endian")
+ok(1024 * 1024 == 2**20 == 0x10FFFF - 0xFFFF, "pairs = supplementary")
+js('try { encodeURIComponent("😀abc".slice(0, 1)) } catch (e) { console.log(e.name + ": " + e.message) }', "URIError: URI malformed", "lone surrogate js")
+
+# s=14 four lengths
+def _lens(s):
+    return (len(s.encode()), len(s.encode("utf-16-le")) // 2, len(s))
+_fam = "\U0001F468‍\U0001F469‍\U0001F467"
+ok(_lens(_fam) == (18, 8, 5), "family")
+ok(_lens("\U0001F44D\U0001F3FD") == (8, 4, 2) and _lens("é") == (3, 2, 2) and _lens("\U0001F1FA\U0001F1F8") == (8, 4, 2), "others")
+_c = "cafe" + chr(0x301)
+ok(_c[:4] == "cafe" and len(_c) == 5, "truncate")
+js('const seg=new Intl.Segmenter("en",{granularity:"grapheme"}); const c=s=>[...seg.segment(s)].length; const fam=String.fromCodePoint(0x1F468,0x200D,0x1F469,0x200D,0x1F467); console.log(new TextEncoder().encode(fam).length, fam.length, [...fam].length, c(fam), "\\u{1F44D}\\u{1F3FD}".length, c(String.fromCodePoint(0x1F1FA,0x1F1F8,0x1F1E6)), c("e\\u0301"))', "18 8 5 1 4 2 1", "graphemes js")
+
+# s=15 normalization
+import unicodedata as ud
+ok(ud.normalize("NFC", "é") == "é" and len("é".encode()) == 2 and len("é".encode()) == 3, "nfc e")
+ok(ud.normalize("NFC", "Å") == "Å" and ud.normalize("NFC", "Ω") == "Ω", "singletons")
+ok(ud.normalize("NFC", "ﬁ") == "ﬁ" and ud.normalize("NFKC", "ﬁle") == "file" and ud.normalize("NFKC", "①") == "1" and ud.normalize("NFC", "①") == "①", "compat")
+ok(ud.normalize("NFD", "한") == "한" and len(ud.normalize("NFD", "한").encode()) == 9, "hangul")
+ok(ud.normalize("NFC", "e") + ud.normalize("NFC", "́") != ud.normalize("NFC", "é"), "concat")
+ok(ud.normalize("NFD", ud.normalize("NFC", "Ω")) == "Ω" and ud.normalize("NFKC", "x²") == "x2", "stability examples")
+ok(ud.normalize("NFD", "Å") == "Å" and ud.normalize("NFD", "é") == "é", "table")
+ok(ud.normalize("NFC", "q́") == "q́", "q acute stays")
+
+# s=16 case mapping and collation
+ok("straße".upper() == "STRASSE" and len("straße".upper()) == 7, "sharp s upper")
+ok("Straße".lower() != "strasse" and "Straße".casefold() == "strasse", "casefold")
+ok(sorted(["Zebra", "apple", "Éclair"]) == ["Zebra", "apple", "Éclair"] and sorted(["zebra", "äpple", "apple"]) == ["apple", "zebra", "äpple"], "ordinal sort")
+ok("ŉ".upper() == "ʼN", "n apostrophe")
+js('for (const l of ["sv","de"]) console.log(["zebra","äpple","apple"].sort(new Intl.Collator(l).compare).join(",")); console.log(["Zebra","apple","Éclair"].sort(new Intl.Collator("en").compare).join(","), "file".toLocaleUpperCase("tr-TR"), "I".toLocaleLowerCase("tr"), "ß".toUpperCase())', "apple,zebra,äpple\napple,äpple,zebra\napple,Éclair,Zebra FİLE ı SS", "collation js")
+
+# s=17 confusables
+def _key(raw):
+    return ud.normalize("NFKC", ud.normalize("NFKC", raw).casefold())
+_fw = "".join(chr(0xFF21 + ord(c) - 65) for c in "ADMIN")
+ok(_key("Admin") == "admin" == _key(_fw) and ud.normalize("NFKC", _fw) == "ADMIN" and _fw.casefold() == "ａｄｍｉｎ", "fullwidth admin")
+ok(_key("pаypal") != "paypal" and len("pаypal".encode()) == 7, "cyrillic")
+ok("münchen".encode("idna") == b"xn--mnchen-3ya" and b"xn--pypal-4ve".decode("idna") == "pаypal", "idna")
+ok(len("‮".encode()) == 3 and ud.name("‮") == "RIGHT-TO-LEFT OVERRIDE", "rlo")
+
+# s=18 Unix time
+from datetime import datetime as _dt, timezone as _tz, date as _date, timedelta as _td
+_f = lambda t: _dt.fromtimestamp(t, _tz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+ok(_f(2**31 - 1) == "2038-01-19T03:14:07Z" and _f(-2**31) == "1901-12-13T20:45:52Z" and _f(2**32 - 1) == "2106-02-07T06:28:15Z", "epoch limits")
+ok(divmod(2**31 - 1, 86400) == (24855, 11647) and 68 * 365 + 17 == 24837 and 24855 - 24837 == 18, "2038 arithmetic")
+ok(24856 * 86400 - 2**31 == 74752 and _date(1970, 1, 1) - _td(days=24856) == _date(1901, 12, 13), "wrap arithmetic")
+ok(calendar.timegm((2026, 11, 27, 0, 0, 0)) == 1795737600 == 20784 * 86400 and 56 * 365 + 14 + 304 + 26 == 20784, "unix time of date")
+ok(1795737600 + 5 * 3600 == 1795755600 and 1795737600 - 365 * 86400 == calendar.timegm((2025, 11, 27, 0, 0, 0)), "distractors")
+ok(round((2**31 - 1) / 1000 / 86400, 2) == 24.86 and round((2**32 - 1) / 1000 / 86400, 2) == 49.71, "ms overflow")
+ok(int((2**63 - 1) / (365.2425 * 86400) / 1e9) == 292, "64-bit years")
+
+# s=19 leap years
+_L = lambda y: y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)
+ok([y for y in (1900, 2000, 2024, 2100, 2400) if _L(y)] == [2000, 2024, 2400] and all(_L(y) == calendar.isleap(y) for y in range(1, 5000)), "leap rule")
+ok([y for y in (1900, 2000, 2024, 2100) if (y % 4 == 0) != _L(y)] == [1900, 2100], "mod four bug")
+ok(sum(366 if _L(y) else 365 for y in range(2001, 2401)) == 146097 == 400 * 365 + 97 and 146097 % 7 == 0 and 146097 // 7 == 20871, "400 years")
+ok(sum(_L(y) for y in range(2001, 2101)) == 24 == calendar.leapdays(2001, 2101) and (2100 - 2004) // 4 + 1 == 25, "leap count")
+ok(146097 / 400 == 365.2425 and 400 * 365 + 100 == 146100 and 400 * 365 + 96 == 146096, "mean year")
+ok((_date(2100, 3, 1) - _date(2000, 3, 1)).days == 36524, "century days")
+try:
+    _date(2024, 2, 29).replace(year=2025); ok(False, "feb29")
+except ValueError:
+    ok(True, "feb29")
+
+# s=20 time scales
+ok(10 + 27 == 37 and 37 - 19 == 18, "tai/gps offsets")
+_u = _dt(2026, 11, 27, 12, 0, 0, tzinfo=_tz.utc)
+ok((_u + _td(seconds=37)).strftime("%H:%M:%S") == "12:00:37" and (_u + _td(seconds=18)).strftime("%H:%M:%S") == "12:00:18" and (_u - _td(seconds=37)).strftime("%H:%M:%S") == "11:59:23", "tai convert")
+ok(round(1 / 86400 * 1e6, 1) == 11.6 and round(1e6 / 86400, 1) == 11.6 and round(1e7 / 86400, 0) == 116, "smear ppm")
+try:
+    _dt.fromisoformat("2016-12-31T23:59:60+00:00"); ok(False, "leap parse")
+except ValueError:
+    ok(True, "leap parse")
+ok(calendar.timegm((2017, 1, 1, 0, 0, 0)) == 1483228800, "unix 2017")
+js('console.log(new Date("2016-12-31T23:59:60Z").getTime())', "NaN", "js leap parse")
+
+# s=21 clocks
+ok(0.5 - 2 == -1.5 and abs(1 / 500e-6 - 2000) < 1e-9 and abs(1 / 0.002 - 500) < 1e-9, "step/slew")
+ok(abs(1 / (1 / 86400) - 86400) < 1e-6, "smear 86400")
+_true_x = -0.010; _stamp_x = _true_x + 0.050; _true_y = 0.000; _stamp_y = _true_y
+ok(abs(_stamp_x - 0.040) < 1e-12 and _stamp_y < _stamp_x and _true_x < _true_y, "skew ordering")
+
+# s=22 offsets and zones
+from zoneinfo import ZoneInfo as _Z
+_i = _dt(2026, 1, 1, 9, 0, tzinfo=_tz.utc)
+_loc = lambda z: _i.astimezone(_Z(z)).strftime("%H:%M")
+ok(_loc("America/New_York") == "04:00" and _loc("Asia/Kolkata") == "14:30" and _loc("Asia/Kathmandu") == "14:45" and _loc("Pacific/Chatham") == "22:45" and _loc("Etc/GMT+5") == "04:00", "local times")
+ok(_dt.fromisoformat("2026-07-01T12:00:00-04:00").astimezone(_tz.utc) == _dt(2026, 7, 1, 16, tzinfo=_tz.utc), "offset to utc")
+ok(_dt(2026, 7, 1, 12, tzinfo=_Z("America/New_York")).utcoffset() == _td(hours=-4) and _dt(2026, 1, 15, tzinfo=_Z("America/New_York")).utcoffset() == _td(hours=-5), "ny dst")
+ok(_dt(2026, 7, 1, tzinfo=_Z("Pacific/Kiritimati")).utcoffset() == _td(hours=14) and _dt(2026, 7, 1, tzinfo=_Z("Etc/GMT+12")).utcoffset() == _td(hours=-12), "offset range")
+ok(_dt(2026, 7, 1, tzinfo=_Z("Pacific/Chatham")).utcoffset() == _td(hours=12, minutes=45), "chatham standard")
+
+# s=23 DST
+_ny = _Z("America/New_York")
+_U = lambda d: d.astimezone(_tz.utc)
+ok(_U(_dt(2026, 3, 9, tzinfo=_ny)) - _U(_dt(2026, 3, 8, tzinfo=_ny)) == _td(hours=23) and _U(_dt(2026, 11, 2, tzinfo=_ny)) - _U(_dt(2026, 11, 1, tzinfo=_ny)) == _td(hours=25), "day lengths")
+_d0 = _dt(2026, 11, 1, 1, 30, tzinfo=_ny); _d1 = _d0.replace(fold=1)
+ok(_d0.strftime("%z") == "-0400" and _d1.strftime("%z") == "-0500" and _U(_d0).strftime("%H:%M") == "05:30" and _U(_d1).strftime("%H:%M") == "06:30", "fold")
+_g = _dt(2026, 3, 8, 2, 30, tzinfo=_ny)
+ok(_U(_g).astimezone(_ny).strftime("%H:%M%z") == "03:30-0400" and _U(_g).strftime("%H:%M") == "07:30", "gap normalization")
+_s = _dt(2026, 3, 7, 12, tzinfo=_ny)
+ok((_s + _td(hours=24)).hour == 12 and (_U(_s) + _td(hours=24)).astimezone(_ny).hour == 13, "aware arithmetic")
+ok(_U(_dt(2026, 3, 8, 1, 30, tzinfo=_ny)).strftime("%H:%M") == "06:30" and _U(_dt(2026, 11, 1, 0, 30, tzinfo=_ny)).strftime("%H:%M") == "04:30" and _U(_dt(2026, 11, 1, 2, 30, tzinfo=_ny)).strftime("%H:%M") == "07:30", "table")
+_lon = _Z("Europe/Berlin")
+ok(_dt(2026, 3, 29, 12, tzinfo=_lon).utcoffset() == _td(hours=2) and _dt(2026, 3, 28, 12, tzinfo=_lon).utcoffset() == _td(hours=1) and _dt(2026, 10, 25, 12, tzinfo=_lon).utcoffset() == _td(hours=1) and _dt(2026, 10, 24, 12, tzinfo=_lon).utcoffset() == _td(hours=2), "eu 2026 dates")
+
+# s=24 storing times
+ok((_dt(2026, 1, 5, 14, tzinfo=_tz.utc).astimezone(_ny).hour, _dt(2026, 7, 6, 14, tzinfo=_tz.utc).astimezone(_ny).hour) == (9, 10), "recurring standup")
+ok((_dt(2027, 7, 6, 8, tzinfo=_tz.utc) + _td(hours=1)).hour == 9 and (_dt(2027, 7, 6, 10) - _td(hours=2)).hour == 8, "rule change arithmetic")
+ok(_dt(2027, 7, 6, 10, tzinfo=_ny).astimezone(_tz.utc).isoformat() == "2027-07-06T14:00:00+00:00", "appointment example")
+
+# s=25 serialization
+ok(tuple(_date(2027, 1, 1).isocalendar()) == (2026, 53, 5) and tuple(_date(2026, 11, 27).isocalendar()) == (2026, 48, 5) and _date(2026, 11, 27).timetuple().tm_yday == 331, "iso week")
+ok(_date(2026, 1, 1).weekday() == 3 and _date(2027, 1, 4).weekday() == 0 and tuple(_date(2026, 12, 28).isocalendar())[:2] == (2026, 53), "week year details")
+ok(_dt.fromisoformat("2026-11-27T10:00:00-05:00").astimezone(_tz.utc) == _dt(2026, 11, 27, 15, tzinfo=_tz.utc), "offset parse")
+try:
+    _dt(2026, 11, 27, 10) < _dt(2026, 11, 27, 10, tzinfo=_tz.utc); ok(False, "naive aware")
+except TypeError:
+    ok(True, "naive aware")
+ok((_dt(2026, 11, 27, 10) == _dt(2026, 11, 27, 10, tzinfo=_tz.utc)) is False, "naive aware equality")
+ok(_dt.fromisoformat("2026-11-27T15:00:00-00:00") == _dt(2026, 11, 27, 15, tzinfo=_tz.utc), "-00:00 instant")
+JS_TZ = []
+js('process.env.TZ = "America/New_York"; console.log(new Date("2026-11-27").toISOString(), new Date("2026-11-27T00:00").toISOString())', "2026-11-27T00:00:00.000Z 2026-11-27T05:00:00.000Z", "js date-only")
+
+# s=26 review: numbers on the wire
+ok(math.ulp(1.8e9) == 2**-22 and float(np.spacing(np.float32(1.8e9))) == 128.0, "latency quantum")
+ok(round(1.005 * 3, 2) == 3.01 and repr(1.005 * 3) == "3.0149999999999997" and str((Decimal("1.005") * 3).quantize(Decimal("0.01"), ROUND_HALF_UP)) == "3.02", "invoice")
+ok(str(Decimal(1.005)) == "1.00499999999999989341858963598497211933135986328125" and str(round(Decimal("3.015"), 2)) == "3.02", "1.005 exact / half-even")
+ok(float(np.spacing(np.float32(122.4))) == 2**-17 and abs(2**-17 * 111320 - 0.849) < 0.001 and abs(2**-17 * 111320 * math.cos(math.radians(37.77)) - 0.67) < 0.01, "longitude")
+ok(float(np.spacing(np.float32(0.1))) == 2**-27 and abs(2**-27 * 111320 * 1000 - 0.83) < 0.01 and float(np.spacing(np.float32(4096.0))) * 111320 < 85 < float(np.spacing(np.float32(8192.0))) * 111320, "longitude distractors")
+ok(float(np.spacing(np.float32(1e5))) == 2**-7, "binary32 durations")
+ok(repr((0.1 + 0.2) + 0.3) == "0.6000000000000001" and math.isclose((0.1 + 0.2) + 0.3, 0.6), "parallel sum")
+ok(float("1795737600.0000003") - float("1795737600.0000001") == 2**-22, "trace span")
+js('try { JSON.parse(\'{"temp": NaN}\') } catch (e) { console.log(e.name) }', "SyntaxError", "json nan parse")
+
+# s=27 review: text in boxes
+_cafe = "Café ☕".encode()
+ok(len(_cafe) == 9 and repr(_cafe[:7].decode("utf-8", "replace")) == "'Café �'" and _cafe.hex() == "436166c3a920e29895", "cafe truncation")
+def _trunc(data, limit):
+    if len(data) <= limit:
+        return data
+    cut = limit
+    while cut > 0 and (data[cut] & 0xC0) == 0x80:
+        cut -= 1
+    return data[:cut]
+ok(_trunc(_cafe, 7).decode() == "Café ", "safe truncation")
+_g = "Great job \U0001F44D team"
+ok(len(_g.encode("utf-16-le")) // 2 > 11 and _g.encode("utf-16-le")[20:24] == bytes.fromhex("3dd84ddc"), "surrogate at 10-11")
+ok("\ud83d".encode("utf-8", "replace") == b"?" and "�".encode() == b"\xef\xbf\xbd", "replacement bytes")
+ok("josé".encode() != "josé".encode() and "é".encode() == b"\xc3\xa9" and "é".encode() == b"e\xcc\x81" and ud.normalize("NFC", "josé") == "josé", "emails")
+_hdr = b"\xef\xbb\xbfid,name".decode("utf-8").split(",")[0]
+ok((len(_hdr), _hdr == "id") == (3, False) and b"\xef\xbb\xbfid,name".decode("utf-8-sig").split(",")[0] == "id", "bom header")
+_w = "\U0001F44B" * 5
+ok((len(_w), len(_w.encode("utf-16-le")) // 2, len(_w.encode())) == (5, 10, 20), "five emoji")
+ok("Zoë".encode().decode("cp1252") == "ZoÃ«" and "ë".encode("latin-1") == b"\xeb" and b"\xeb".decode("utf-8", "replace") == "�", "mojibake")
+ok("é€".encode().decode("cp1252") == "Ã©â‚¬", "mojibake table")
+
+# s=28 review: time incidents
+_v = 1795737600 + 15 * 365 * 86400
+ok(15 * 365 * 86400 == 473040000 < 2**31 and _v == 2268777600 > 2**31 - 1 and _v - 2**32 == -2026189696 == (_v + 2**31) % 2**32 - 2**31, "license overflow")
+ok(_f(-2026189696) == "1905-10-17T17:31:44Z" and _date(2026, 11, 27) + _td(days=5475) == _date(2041, 11, 23), "license dates")
+ok(int(_dt(2041, 11, 27, tzinfo=_tz.utc).timestamp()) == 2269123200 == _v + 4 * 86400, "fixed license")
+ok(_U(_dt(2026, 11, 1, 1, 30, tzinfo=_ny)).strftime("%H:%M") == "05:30" and _U(_dt(2026, 11, 1, 1, 30, fold=1, tzinfo=_ny)).strftime("%H:%M") == "06:30", "billing twice")
+
+# late additions (s=4 python print, s=18 JS int32)
+ok(repr(struct.unpack(">f", bytes.fromhex("ff800000"))[0]) == "-inf" and repr(struct.unpack(">f", bytes.fromhex("ff7fffff"))[0]) == "-3.4028234663852886e+38", "struct -inf")
+ok(-24856 * 86400 + 74752 == -2**31, "int32 wrap arithmetic")
+js('const ms = Date.UTC(2038, 0, 19, 3, 14, 8); const seconds = (ms / 1000) | 0; console.log(seconds, new Date(seconds * 1000).toISOString())', "-2147483648 1901-12-13T20:45:52.000Z", "js int32 wrap")
+
+# run JavaScript checks with Node.js
+import shutil
+node = shutil.which("node")
+if node:
+    for code, expected, label in JS:
+        out = subprocess.run([node, "-e", code], capture_output=True, text=True, timeout=30)
+        ok(out.returncode == 0 and out.stdout.strip() == expected, f"{label}: got {out.stdout.strip()!r} {out.stderr.strip()[:200]}")
+    print(f"{len(JS)} JavaScript checks run with {node}")
+else:
+    print("node not found: JavaScript checks skipped")
+print(f"check_math: {checks} checks passed")
+
+==> _build/data-representation-traps/check_math_output.txt <==
+14 JavaScript checks run with /opt/node22/bin/node
+check_math: 216 checks passed
+
+==> _build/data-representation-traps/common.py <==
+import os
+import re
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+BOOK = os.path.join(ROOT, "content", "books", "data-representation-traps")
+
+NUMBERED = re.compile(r"^(\d+)[-_]([a-z0-9]+(?:-[a-z0-9]+)*)$")
+SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def hidden(name):
+    return name.startswith(".") or name.startswith("_")
+
+
+def numbered(entries):
+    out = []
+    for path in entries:
+        name = os.path.basename(path)
+        if name.endswith(".md"):
+            name = name[:-3]
+        m = NUMBERED.match(name)
+        out.append((int(m.group(1)) if m else -1, m.group(2) if m else None, path))
+    return sorted(out, key=lambda e: (e[0], e[2]))
+
+
+def chapters():
+    dirs = [os.path.join(BOOK, d) for d in os.listdir(BOOK)
+            if os.path.isdir(os.path.join(BOOK, d)) and not hidden(d)]
+    return numbered(dirs)
+
+
+def sections():
+    result = []
+    for _, _, cdir in chapters():
+        files = [os.path.join(cdir, f) for f in os.listdir(cdir)
+                 if f.endswith(".md") and not hidden(f)]
+        for entry in numbered(files):
+            result.append((cdir, entry[2]))
+    return result
+
+
+def split_front_matter(raw):
+    if not raw.startswith("---"):
+        return None, raw
+    end = raw.find("\n---", 3)
+    if end < 0:
+        return None, raw
+    yaml_block = raw[3:end].strip()
+    body = raw[end + 4:].lstrip("\r\n")
+    return yaml_block, body
+
+==> _build/data-representation-traps/fix_quotes.py <==
+import re, difflib, yaml
+from common import sections, split_front_matter
+
+def key(t):
+    return re.sub(r"[`\\]", "", t).rstrip(".").strip()
+
+changed = 0
+for s, (_, path) in enumerate(sections(), 1):
+    raw = open(path, encoding="utf-8").read()
+    yb, body = split_front_matter(raw)
+    fm = yaml.safe_load(yb)
+    new_raw = raw
+    for q in fm["questions"]:
+        distractors = [o["text"] for o in q["options"] if not o.get("correct")]
+        expl = q["explanation"]
+        new_expl = expl
+        for m in re.finditer(r'^(\s*(?:- )?)"(.+?)"(?= )', expl, flags=re.M):
+            quoted = m.group(2)
+            best, score = None, 0
+            for d in distractors:
+                r = difflib.SequenceMatcher(None, key(quoted).lower(), key(d).lower()).ratio()
+                if r > score:
+                    best, score = d, r
+            target = best.rstrip(".") if best else None
+            if best and score >= 0.55 and quoted != target:
+                new_expl = new_expl.replace(f'"{quoted}"', f'"{target}"', 1)
+                print(f"s={s} {q['id']}: {quoted!r} -> {target!r} ({score:.2f})")
+        if new_expl != expl:
+            old_block = "\n".join(("      " + l) if l.strip() else "" for l in expl.split("\n"))
+            new_block = "\n".join(("      " + l) if l.strip() else "" for l in new_expl.split("\n"))
+            assert old_block in new_raw, q["id"]
+            new_raw = new_raw.replace(old_block, new_block, 1)
+            changed += 1
+    if new_raw != raw:
+        open(path, "w", encoding="utf-8").write(new_raw)
+print("questions changed:", changed)
+
+==> _build/data-representation-traps/normalize.py <==
+import re
+import sys
+import unicodedata
+import yaml
+from common import sections, split_front_matter
+
+INDENT_EXPL = "      "
+
+
+def dq(value):
+    if not isinstance(value, str):
+        raise ValueError(f"expected string, got {value!r}")
+    for ch in value:
+        if ch in "\r\t":
+            raise ValueError(f"control character in {value!r}")
+        if ch != "\n" and unicodedata.category(ch) in ("Cf", "Cc", "Co", "Cs", "Mn", "Me"):
+            raise ValueError(f"invisible/format character U+{ord(ch):04X} in {value!r}")
+    return '"' + value.strip("\n").replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
+
+
+def block(value):
+    lines = value.strip("\n").split("\n")
+    if lines[0].startswith(" "):
+        raise ValueError("explanation must not start with a space")
+    for line in lines:
+        for ch in line:
+            if unicodedata.category(ch) in ("Cf", "Cc", "Co", "Cs", "Mn", "Me") and ch != "\t":
+                raise ValueError(f"invisible character U+{ord(ch):04X} in explanation")
+        if line.startswith("---"):
+            raise ValueError("line starting with --- in explanation")
+    return "|-\n" + "\n".join((INDENT_EXPL + l.rstrip()) if l.strip() else "" for l in lines)
+
+
+CODE = re.compile(r"```.*?```|`[^`\n]*`", re.S)
+
+
+def escape_md(text):
+    """Escape Markdig emphasis-extra delimiters (^ superscript, == mark) outside code."""
+    out, pos = [], 0
+    for m in CODE.finditer(text):
+        out.append(_esc(text[pos:m.start()]))
+        out.append(m.group(0))
+        pos = m.end()
+    out.append(_esc(text[pos:]))
+    return "".join(out)
+
+
+def _esc(t):
+    t = re.sub(r"(?<!\\)\^", r"\\^", t)
+    t = re.sub(r"(?<![\\=])==", r"\\==", t)
+    return t
+
+
+def place(options, k, s):
+    n = len(options)
+    correct = [o for o in options if o.get("correct") is True]
+    wrong = [o for o in options if o.get("correct") is not True]
+    first = (k + s) % n
+    targets = sorted((first + j) % n for j in range(len(correct)))
+    out = [None] * n
+    for t, o in zip(targets, correct):
+        out[t] = o
+    it = iter(wrong)
+    for i in range(n):
+        if out[i] is None:
+            out[i] = next(it)
+    return out
+
+
+def emit(fm, body):
+    lines = ["---", f"title: {dq(fm['title'])}", "questions:"]
+    for q in fm["questions"]:
+        lines.append(f"  - id: {dq(q['id'])}")
+        lines.append(f"    type: {dq(q['type'])}")
+        lines.append(f"    prompt: {dq(q['prompt'])}")
+        lines.append(f"    explanation: {block(q['explanation'])}")
+        lines.append("    options:")
+        for o in q["options"]:
+            lines.append(f"      - text: {dq(o['text'])}")
+            if o.get("correct") is True:
+                lines.append("        correct: true")
+    lines.append("---")
+    return "\n".join(lines) + "\n\n" + body.strip("\n") + "\n"
+
+
+def main(only=None):
+    for s, (_, path) in enumerate(sections(), start=1):
+        if only and only not in path:
+            continue
+        raw = open(path, encoding="utf-8").read()
+        yb, body = split_front_matter(raw)
+        fm = yaml.safe_load(yb)
+        for k, q in enumerate(fm["questions"], start=1):
+            q["options"] = place(q["options"], k, s)
+            q["prompt"] = escape_md(q["prompt"])
+            q["explanation"] = escape_md(q["explanation"])
+            for o in q["options"]:
+                o["text"] = escape_md(o["text"])
+        body = escape_md(body)
+        out = emit(fm, body)
+        check = yaml.safe_load(split_front_matter(out)[0])
+        assert check == fm, f"round-trip mismatch in {path}"
+        if out != raw:
+            open(path, "w", encoding="utf-8").write(out)
+            print(f"normalized s={s} {path}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else None)
+
+==> _build/data-representation-traps/plan.md <==
+# Plan — Data Representation Traps: Floating-Point, Unicode, and Time
+
+Slug `data-representation-traps`, author `terlingua-team`, date 2026-11-27. 7 chapters, 28 sections (s = global section number used by the answer-position formula).
+
+## 01-binary-floating-point-anatomy
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 1 | 01-three-fields-and-the-bias.md | Read binary32/binary64 as sign, biased exponent, fraction | binary32 field widths; binary64 field widths; bias formula 2^(k−1)−1; stored exponent of 32.0f; bit pattern of 1.0f; effect of XOR with the sign bit; why biased exponents make positive floats sort as integers |
+| 2 | 02-hidden-bit-and-exact-decoding.md | Encode and decode normal numbers exactly | precision p = 24/53 from the hidden bit; encode −6.5f; decode 0x3E200000; exact value of 0x40490FDB; largest finite binary32; spot-the-bug exponent extraction mask/shift |
+| 3 | 03-subnormals-and-gradual-underflow.md | Explain the zero-exponent encoding and why gradual underflow matters | smallest normal 2^−126; smallest subnormal 2^−149 and its pattern; effective exponent of subnormals is 1−bias; x−y==0 ⇔ x==y guarantee; what `5e-324 / 2` prints; flush-to-zero consequences; count of positive subnormals |
+| 4 | 04-special-encodings-and-small-formats.md | Recognize inf/NaN/−0 encodings and the same layout in binary16, bfloat16, FP8 | inf vs NaN by fraction field; quiet-NaN bit; number of NaN patterns in binary32; binary16 layout and max 65504; bfloat16 as upper half of binary32; FP8 E4M3 vs E5M2 trade-off |
+
+## 02-floating-point-arithmetic-and-traps
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 5 | 01-why-0-1-plus-0-2-is-not-0-3.md | Trace decimal→binary rounding and round-to-nearest-even | which decimals are exact (power-of-two denominators); exact stored value of 0.1; what `0.1 + 0.2 == 0.3` prints; ties-to-even on 2^53+1 and 2^53+3; shortest round-trip printing; hex of 0.1 |
+| 6 | 02-ulps-and-the-2-to-the-53-limit.md | Compute ULP size and the exact-integer limit | ulp(x)=2^(e−52); ulp at 1e16; 2^53 limit and 9007199254740993; binary32 limit 2^24; loop `x += 1` stalls; ulp of Unix-seconds-as-double; (dated) JSON big IDs in JavaScript |
+| 7 | 03-cancellation-and-non-associativity.md | Predict cancellation and order-dependent sums | (1e16 + 1) − 1e16; (a+b)+c ≠ a+(b+c) trace; relative error after cancellation; stable quadratic root rewrite; Kahan compensation trace; which strategies reduce summation error |
+| 8 | 04-nan-signed-zero-and-infinity.md | Apply IEEE special-value rules in comparisons | NaN ≠ NaN; NaN-safe check; sort comparator broken by NaN; −0.0 == 0.0 but 1/−0.0; inf − inf; language-specific division by zero (Python raises vs C#/JS) |
+| 9 | 05-tolerances-decimal-and-money.md | Choose tolerances, decimal types or integer minor units | relative vs absolute tolerance; `math.isclose(x, 0)` trap; C# `decimal` 0.1m+0.2m; allocation of 100.00 into 3 shares; minor-unit exponents (JPY 0, BHD 3); ties-to-even vs half-up on money |
+
+## 03-code-points-utf-8-and-utf-16
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 10 | 01-code-points-scalar-values-and-code-units.md | Separate code points, scalar values, code units | size of codespace 1,114,112; scalar values 1,112,064; plane of U+1F600; U+D800 not a scalar value; `len` vs `.Length` of an emoji; which runtimes index by UTF-16 units |
+| 11 | 02-utf-8-byte-patterns.md | Encode/decode UTF-8 by hand | ranges per length; encode U+20AC; decode F0 9F 92 A9; byte count of mixed string; self-synchronization (find start from middle); spot-the-bug lead-byte test |
+| 12 | 03-invalid-and-overlong-utf-8.md | Reject ill-formed UTF-8 and handle BOMs | overlong C0 AF; bytes never valid (C0, C1, F5–FF); encoded surrogate ED A0 80; RFC 3629 max 4 bytes; BOM EF BB BF decoded as U+FEFF; truncation mid-sequence → U+FFFD count |
+| 13 | 04-utf-16-surrogate-pairs.md | Compute surrogate pairs and their failure modes | encode U+1F600 → D83D DE00; decode D83C DF89; lone surrogate from substring; UTF-16 vs UTF-8 byte counts; BOM bytes for UTF-16LE; (dated) MySQL utf8mb3 rejection of astral |
+
+## 04-text-length-indexing-normalization-and-sorting
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 14 | 01-four-lengths-of-a-string.md | Compute the four lengths and truncate by grapheme | lengths of "e"+U+0301; thumbs-up+skin tone; flag regional indicators; ZWJ family; which API counts grapheme clusters; truncation splitting a cluster |
+| 15 | 02-normalization-forms.md | Apply NFC/NFD/NFKC/NFKD correctly | canonical vs compatibility equivalence; NFC of e+U+0301; NFKC of U+FB01; ANGSTROM SIGN → U+00C5; byte length change after NFD; concatenation not closed |
+| 16 | 03-case-mapping-and-collation.md | Avoid culture and case-mapping traps | Turkish dotless i; `"ß".upper()` length; casefold vs lower; ordinal sort of "Zebra","apple","Éclair"; locale-dependent order (Swedish ä); culture-sensitive vs ordinal API choice |
+| 17 | 04-confusables-and-identifier-security.md | Compare identifiers safely | Cyrillic а vs Latin a; NFKC + casefold for usernames; unique index on raw vs normalized; bidi override (Trojan Source); punycode `xn--`; skeleton check per UTS #39 |
+
+## 05-calendars-epochs-and-clocks
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 18 | 01-unix-time-and-2038.md | Compute epoch limits and overflow results | 2^31−1 → 2038-01-19T03:14:07Z; wrap to 1901-12-13T20:45:52Z; unsigned 32-bit → 2106; ms timestamps in int32; POSIX day = 86400 s; (dated) MySQL TIMESTAMP range |
+| 19 | 02-gregorian-leap-years.md | Apply the 4/100/400 rule | 1900/2000/2100; buggy `% 4` only; days in 400 years 146097; leap years 2001–2100 = 24; average year 365.2425; Feb 29 + 1 year |
+| 20 | 03-utc-tai-gps-and-leap-seconds.md | Convert between time scales | TAI−UTC = 37 s; GPS−UTC = 18 s; GPS epoch; 23:59:60 parsing; smear rate ppm; (dated) CGPM 2026 continuous UTC |
+| 21 | 04-wall-clock-versus-monotonic.md | Measure durations correctly | negative elapsed with wall clock; which APIs are monotonic; slew duration at 500 ppm; step vs slew; event ordering across machines; monotonic clock meaningless across processes/reboots |
+
+## 06-time-zones-dst-and-serialization
+
+| s | File | Learning goal | Question concepts |
+|---|------|---------------|-------------------|
+| 22 | 01-offsets-versus-zones.md | Distinguish offsets, zone IDs and abbreviations | `Etc/GMT+5` = UTC−05:00; ambiguity of "CST"; offset is not a zone; converting 2026-07-01T12:00−04:00 to UTC; non-hour offsets (+05:45); offset range −12..+14 |
+| 23 | 02-dst-gaps-and-overlaps.md | Handle nonexistent and ambiguous local times | 2026-03-08 02:30 New York nonexistent; 2026-11-01 01:30 ambiguous; length of local day = 23 h; add 1 day vs 24 h; Python `fold`; scheduling daily jobs at 02:30 |
+| 24 | 03-storing-past-and-future-times.md | Pick the right representation for past and future events | past = UTC instant; future civil = local + zone ID; stored offset goes stale; recurring meeting across DST; (dated) tzdata delivery in containers; recomputing after rule changes |
+| 25 | 04-iso-8601-rfc-3339-and-database-types.md | Serialize timestamps unambiguously | RFC 3339 requires offset; `-00:00` meaning; JS date-only parsed as UTC vs date-time local; naive vs aware Python; PostgreSQL `timestamptz` stores an instant not a zone; (dated) Temporal Stage 4 |
+
+## 07-cross-chapter-review-and-diagnostics
+
+| s | File | Learning goal | Question concepts (each combines ≥2 chapters) |
+|---|------|---------------|-------------------|
+| 26 | 01-numbers-on-the-wire.md | Diagnose numeric bugs that cross serialization boundaries | JSON id round trip; float seconds timestamps; money summed as double then rounded; NaN in JSON; binary32 GPU coordinates; float32 epoch seconds |
+| 27 | 02-text-in-fixed-size-boxes.md | Diagnose truncation and storage limits | byte-truncation mid UTF-8; UTF-16 `Substring` on emoji; `VARCHAR(N)` byte vs character semantics; utf8mb3 and astral; normalization before uniqueness; BOM in CSV header |
+| 28 | 03-clocks-calendars-and-zones-in-incidents.md | Diagnose time incidents end to end | timeout measured with wall clock during NTP step; DST double-run of cron; 2038 in int32 expiry; leap day yearly renewal; offset stored for future meeting; float seconds since epoch precision |
+
+No concept is reused across chapters 1–6; chapter 7 deliberately combines them.
+
+==> _build/data-representation-traps/positions.py <==
+import sys
+from collections import Counter
+s = int(sys.argv[1])
+spec = sys.argv[2:]  # like 4 4 5:2 4 5:3
+allc, first = Counter(), Counter()
+tot = 0
+for k, item in enumerate(spec, 1):
+    n, c = (item.split(":") + ["1"])[:2]
+    n, c = int(n), int(c)
+    f = (k + s) % n
+    first[f] += 1
+    for j in range(c):
+        allc[(f + j) % n] += 1
+        tot += 1
+    print(f"k={k} n={n} first={f}")
+print("all", dict(allc), max(allc.values()) / tot, "first", dict(first), max(first.values()) / len(spec))
+
+==> _build/data-representation-traps/progress.md <==
+# Progress
+
+- [x] plan.md
+- [x] NOTES.md
+- [x] book.yml
+- [x] 01-binary-floating-point-anatomy/chapter.yml
+- [x] 01-binary-floating-point-anatomy/01-three-fields-and-the-bias.md (s=1)
+- [x] 01-binary-floating-point-anatomy/02-hidden-bit-and-exact-decoding.md (s=2)
+- [x] 01-binary-floating-point-anatomy/03-subnormals-and-gradual-underflow.md (s=3)
+- [x] 01-binary-floating-point-anatomy/04-special-encodings-and-small-formats.md (s=4)
+- [x] 02-floating-point-arithmetic-and-traps/chapter.yml
+- [x] 02-floating-point-arithmetic-and-traps/01-why-0-1-plus-0-2-is-not-0-3.md (s=5)
+- [x] 02-floating-point-arithmetic-and-traps/02-ulps-and-the-2-to-the-53-limit.md (s=6)
+- [x] 02-floating-point-arithmetic-and-traps/03-cancellation-and-non-associativity.md (s=7)
+- [x] 02-floating-point-arithmetic-and-traps/04-nan-signed-zero-and-infinity.md (s=8)
+- [x] 02-floating-point-arithmetic-and-traps/05-tolerances-decimal-and-money.md (s=9)
+- [x] 03-code-points-utf-8-and-utf-16/chapter.yml
+- [x] 03-code-points-utf-8-and-utf-16/01-code-points-scalar-values-and-code-units.md (s=10)
+- [x] 03-code-points-utf-8-and-utf-16/02-utf-8-byte-patterns.md (s=11)
+- [x] 03-code-points-utf-8-and-utf-16/03-invalid-and-overlong-utf-8.md (s=12)
+- [x] 03-code-points-utf-8-and-utf-16/04-utf-16-surrogate-pairs.md (s=13)
+- [x] 04-text-length-indexing-normalization-and-sorting/chapter.yml
+- [x] 04-text-length-indexing-normalization-and-sorting/01-four-lengths-of-a-string.md (s=14)
+- [x] 04-text-length-indexing-normalization-and-sorting/02-normalization-forms.md (s=15)
+- [x] 04-text-length-indexing-normalization-and-sorting/03-case-mapping-and-collation.md (s=16)
+- [x] 04-text-length-indexing-normalization-and-sorting/04-confusables-and-identifier-security.md (s=17)
+- [x] 05-calendars-epochs-and-clocks/chapter.yml
+- [x] 05-calendars-epochs-and-clocks/01-unix-time-and-2038.md (s=18)
+- [x] 05-calendars-epochs-and-clocks/02-gregorian-leap-years.md (s=19)
+- [x] 05-calendars-epochs-and-clocks/03-utc-tai-gps-and-leap-seconds.md (s=20)
+- [x] 05-calendars-epochs-and-clocks/04-wall-clock-versus-monotonic.md (s=21)
+- [x] 06-time-zones-dst-and-serialization/chapter.yml
+- [x] 06-time-zones-dst-and-serialization/01-offsets-versus-zones.md (s=22)
+- [x] 06-time-zones-dst-and-serialization/02-dst-gaps-and-overlaps.md (s=23)
+- [x] 06-time-zones-dst-and-serialization/03-storing-past-and-future-times.md (s=24)
+- [x] 06-time-zones-dst-and-serialization/04-iso-8601-rfc-3339-and-database-types.md (s=25)
+- [x] 07-cross-chapter-review-and-diagnostics/chapter.yml
+- [x] 07-cross-chapter-review-and-diagnostics/01-numbers-on-the-wire.md (s=26)
+- [x] 07-cross-chapter-review-and-diagnostics/02-text-in-fixed-size-boxes.md (s=27)
+- [x] 07-cross-chapter-review-and-diagnostics/03-clocks-calendars-and-zones-in-incidents.md (s=28)
+- [x] validate.py run clean
+- [x] check_math.py run clean
+- [x] question audit
+- [x] REPORT.md
+
+==> _build/data-representation-traps/validate.py <==
+import os
+import re
+import sys
+import datetime
+from collections import Counter
+import yaml
+import unicodedata
+from common import BOOK, SLUG, NUMBERED, hidden, chapters, sections, split_front_matter
+
+ALLOWED_LANGS = {"csharp", "python", "javascript", "sql", "bash", "json", "yaml", "html"}
+RESERVED_IDS = {"yes", "no", "true", "false", "null", "on", "off", "y", "n", "~"}
+HEADINGS = ["Learning objectives", "The invariant", "Worked example",
+            "Where this shows up today", "Pitfalls checklist", "Key takeaways"]
+STRING_KEYS = ("title", "id", "prompt", "text", "type", "summary")
+
+errors = []
+warnings = []
+stats = {"sections": 0, "questions": 0, "single": 0, "multiple": 0, "words": []}
+longest_correct = [0, 0]
+
+
+def err(loc, msg):
+    errors.append(f"{loc}: {msg}")
+
+
+def warn(loc, msg):
+    warnings.append(f"{loc}: {msg}")
+
+
+def rel(p):
+    return os.path.relpath(p, os.path.dirname(BOOK))
+
+
+def check_book():
+    path = os.path.join(BOOK, "book.yml")
+    raw = open(path, encoding="utf-8").read()
+    data = yaml.safe_load(raw)
+    for key in ("title", "author", "summary", "date", "tags", "draft"):
+        if key not in data:
+            err(rel(path), f"missing {key}")
+    if data.get("draft") is not False:
+        err(rel(path), "draft must be false")
+    if data.get("author") != "terlingua-team":
+        err(rel(path), "author must be terlingua-team")
+    if data.get("date") != datetime.date(2026, 11, 27):
+        err(rel(path), f"date must be 2026-11-27, got {data.get('date')!r}")
+    if not os.path.exists(os.path.join(BOOK, "..", "..", "authors", f"{data.get('author')}.yml")):
+        err(rel(path), "author profile missing")
+    if data.get("tags") != ["fundamentals", "floating-point", "unicode", "time", "engineering"]:
+        err(rel(path), "tags mismatch")
+    if not SLUG.match(os.path.basename(BOOK)):
+        err(rel(BOOK), "bad book slug")
+
+
+def check_chapter(cdir):
+    name = os.path.basename(cdir)
+    if not NUMBERED.match(name):
+        err(rel(cdir), "bad chapter folder name")
+    path = os.path.join(cdir, "chapter.yml")
+    if not os.path.exists(path):
+        err(rel(cdir), "chapter.yml missing")
+        return
+    data = yaml.safe_load(open(path, encoding="utf-8").read())
+    for key in ("title", "summary", "draft"):
+        if key not in data:
+            err(rel(path), f"missing {key}")
+    if data.get("draft") is not False:
+        err(rel(path), "draft must be false")
+    if not isinstance(data.get("title"), str) or not data["title"].strip():
+        err(rel(path), "title required")
+
+
+def raw_quote_checks(loc, yb):
+    for i, line in enumerate(yb.split("\n"), start=1):
+        if line.startswith("---"):
+            err(loc, f"front matter line {i} starts with ---")
+        m = re.match(r"^\s*(?:-\s+)?([a-zA-Z]+):\s*(.*)$", line)
+        if not m:
+            continue
+        key, val = m.group(1), m.group(2)
+        if key in STRING_KEYS and not val.startswith('"'):
+            err(loc, f"line {i}: {key} value must be double-quoted")
+        if key == "explanation" and val != "|-":
+            err(loc, f"line {i}: explanation must use |- block scalar")
+        if key == "correct" and val != "true":
+            err(loc, f"line {i}: correct must be 'true' when present")
+
+
+def words(text):
+    return len([w for w in re.split(r"\s+", text) if w])
+
+
+def body_checks(loc, body):
+    if not body.startswith("## Learning objectives"):
+        err(loc, "body must start with '## Learning objectives'")
+    heads = re.findall(r"^## (.+)$", body, flags=re.M)
+    if heads != HEADINGS:
+        err(loc, f"headings {heads} != {HEADINGS}")
+    for m in re.finditer(r"^```(.*)$", body, flags=re.M):
+        pass
+    fences = re.findall(r"^```(\S*)\s*$", body, flags=re.M)
+    if len(fences) % 2:
+        err(loc, "unbalanced code fences")
+    for i, lang in enumerate(fences):
+        if i % 2 == 0:
+            if not lang:
+                err(loc, "code fence without language")
+            elif lang not in ALLOWED_LANGS:
+                err(loc, f"code fence language '{lang}' not allowed")
+        elif lang:
+            err(loc, "closing fence has text")
+    parts = re.split(r"^## (.+)$", body, flags=re.M)
+    sections_map = {parts[i]: parts[i + 1] for i in range(1, len(parts) - 1, 2)}
+
+    def bullets(name):
+        return len(re.findall(r"^- ", sections_map.get(name, ""), flags=re.M))
+
+    for name, lo, hi in (("Learning objectives", 3, 5), ("Pitfalls checklist", 3, 6), ("Key takeaways", 3, 5)):
+        n = bullets(name)
+        if not lo <= n <= hi:
+            err(loc, f"{name} has {n} bullets (want {lo}-{hi})")
+    prose = re.sub(r"^```.*?^```", " ", body, flags=re.M | re.S)
+    prose_no_tables = "\n".join(l for l in prose.split("\n") if not l.lstrip().startswith("|"))
+    total = words(prose_no_tables)
+    stats["words"].append(total)
+    if not 400 <= total <= 1200:
+        err(loc, f"prose word count {total} outside 400-1200")
+    today = sections_map.get("Where this shows up today", "")
+    tw = words(re.sub(r"^```.*?^```", " ", today, flags=re.M | re.S))
+    if total and tw / total > 0.20:
+        err(loc, f"'Where this shows up today' is {tw}/{total} = {tw/total:.0%} (> 20%)")
+    elif total and tw / total > 0.155:
+        warn(loc, f"'Where this shows up today' is {tw/total:.0%} of prose")
+    if "As of November 2026" not in today:
+        err(loc, "'Where this shows up today' lacks an 'As of November 2026' statement")
+    for ch in body:
+        if unicodedata.category(ch) in ("Mn", "Me", "Cf", "Co", "Cs") and ord(ch) != 0xFE0F:
+            err(loc, f"literal combining/format character U+{ord(ch):04X} in body; write an escape")
+            break
+    if re.search(r"\b(and so on|similar for the rest|TODO|TBD|lorem)\b", body, flags=re.I):
+        err(loc, "placeholder wording in body")
+
+
+def question_checks(loc, s, fm):
+    qs = fm.get("questions") or []
+    if not 5 <= len(qs) <= 7:
+        err(loc, f"{len(qs)} questions (want 5-7)")
+    seen = set()
+    positions = Counter()
+    first_positions = Counter()
+    total_correct = 0
+    longest = 0
+    singles = 0
+    for k, q in enumerate(qs, start=1):
+        ql = f"{loc} q{k}"
+        for key in ("id", "prompt", "type", "explanation", "options"):
+            if key not in q:
+                err(ql, f"missing {key}")
+        qid = q.get("id")
+        if not isinstance(qid, str) or not SLUG.match(qid):
+            err(ql, f"bad id {qid!r}")
+        elif qid.lower() in RESERVED_IDS:
+            err(ql, f"reserved id {qid!r}")
+        if qid in seen:
+            err(ql, f"duplicate id {qid}")
+        seen.add(qid)
+        prompt = q.get("prompt", "")
+        if not isinstance(prompt, str) or not prompt.strip():
+            err(ql, "empty prompt")
+        expl = q.get("explanation", "")
+        if not isinstance(expl, str) or len(expl.strip()) < 200:
+            err(ql, "explanation missing or too short")
+        if re.search(r"\b[Oo]ption\s+[A-Ea-e1-5]\b|\b(first|second|third|fourth|fifth|last|top|bottom)\s+option\b|(?:^|\s)\(\s*[a-eA-E]\s*\)", expl or "", flags=re.M):
+            err(ql, "explanation refers to options by letter/position")
+        low = (prompt + " " + " ".join(o.get("text", "") for o in q.get("options", []))).lower()
+        if "all of the above" in low or "none of the above" in low:
+            err(ql, "all/none of the above")
+        if re.search(r"\bnot\b", prompt) and "**NOT**" not in prompt:
+            warn(ql, "negation in stem without **NOT** emphasis")
+        opts = q.get("options") or []
+        for o in opts:
+            if set(o) - {"text", "correct"}:
+                err(ql, f"unexpected option keys {set(o)}")
+            if "correct" in o and o["correct"] is not True:
+                err(ql, "correct key present but not true")
+            if not isinstance(o.get("text"), str) or not o["text"].strip():
+                err(ql, "option without text")
+        texts = [o.get("text", "") for o in opts]
+        if len(set(texts)) != len(texts):
+            err(ql, "duplicate option text")
+        correct_idx = [i for i, o in enumerate(opts) if o.get("correct") is True]
+        n = len(opts)
+        t = q.get("type")
+        if t == "single":
+            singles += 1
+            stats["single"] += 1
+            if len(correct_idx) != 1:
+                err(ql, f"single with {len(correct_idx)} correct")
+            if not 4 <= n <= 5:
+                err(ql, f"single with {n} options")
+            if correct_idx:
+                lens = [len(x) for x in texts]
+                c = correct_idx[0]
+                if lens[c] == max(lens) and lens.count(max(lens)) == 1:
+                    longest += 1
+        elif t == "multiple":
+            stats["multiple"] += 1
+            if not 2 <= len(correct_idx) <= 3:
+                err(ql, f"multiple with {len(correct_idx)} correct")
+            if n != 5:
+                err(ql, f"multiple with {n} options (want 5)")
+            if not prompt.rstrip().endswith("Select all that apply."):
+                err(ql, "multiple prompt must end with 'Select all that apply.'")
+        else:
+            err(ql, f"bad type {t!r}")
+        if n and correct_idx:
+            first = (k + s) % n
+            expected = sorted((first + j) % n for j in range(len(correct_idx)))
+            if sorted(correct_idx) != expected:
+                err(ql, f"correct positions {correct_idx} != expected {expected} (k={k}, s={s}, n={n})")
+            first_positions[first] += 1
+            for i in correct_idx:
+                positions[i] += 1
+                total_correct += 1
+    for name, counter, tot in (("all-correct", positions, total_correct), ("first-correct", first_positions, len(qs))):
+        if tot and max(counter.values()) / tot > 0.40:
+            err(loc, f"{name} position concentration {dict(counter)} exceeds 40%")
+    if singles and longest / singles > 0.5:
+        err(loc, f"correct option is the unique longest in {longest}/{singles} single questions")
+    longest_correct[0] += longest
+    longest_correct[1] += singles
+    stats["questions"] += len(qs)
+
+
+def compiler_port(loc, fm):
+    title = fm.get("title")
+    if not isinstance(title, str) or not title.strip():
+        err(loc, "[compiler] title is required")
+    if fm.get("draft"):
+        err(loc, "[compiler] draft subchapter")
+    seen = set()
+    for i, q in enumerate(fm.get("questions") or []):
+        qid = (q.get("id") or "").strip() or f"q{i+1}"
+        if not SLUG.match(qid):
+            err(loc, f"[compiler] question '{qid}' id invalid")
+            continue
+        if qid in seen:
+            err(loc, f"[compiler] duplicate question id {qid}")
+        seen.add(qid)
+        if not str(q.get("prompt") or "").strip():
+            err(loc, f"[compiler] {qid} prompt is required")
+        opts = q.get("options") or []
+        oseen = set()
+        for j, o in enumerate(opts):
+            oid = (o.get("id") or "").strip() or (chr(97 + j) if j < 26 else f"o{j+1}")
+            if not SLUG.match(oid) or oid in oseen:
+                err(loc, f"[compiler] {qid} option id {oid} invalid/duplicate")
+            oseen.add(oid)
+            if not str(o.get("text") or "").strip():
+                err(loc, f"[compiler] {qid} option {oid} has no text")
+            if "correct" in o and not isinstance(o["correct"], bool):
+                err(loc, f"[compiler] {qid} correct is not a boolean")
+        cc = sum(1 for o in opts if o.get("correct") is True)
+        if len(opts) < 2:
+            err(loc, f"[compiler] {qid} at least 2 options are required")
+        if cc == 0:
+            err(loc, f"[compiler] {qid} at least one option must be marked correct")
+        t = q.get("type")
+        if t is not None:
+            if not isinstance(t, str):
+                err(loc, f"[compiler] {qid} type not a string")
+            else:
+                nt = t.strip().lower()
+                if nt not in ("", "single", "multiple"):
+                    err(loc, f"[compiler] {qid} unknown type {t}")
+                if nt == "single" and cc > 1:
+                    err(loc, f"[compiler] {qid} single but >1 correct")
+
+
+def main():
+    check_book()
+    chs = chapters()
+    for order, slug, cdir in chs:
+        if order < 0:
+            err(rel(cdir), "[compiler] name must look like '01-my-slug'")
+        check_chapter(cdir)
+        for f in os.listdir(cdir):
+            if f == "chapter.yml" or hidden(f):
+                continue
+            if not f.endswith(".md"):
+                err(rel(os.path.join(cdir, f)), "unexpected file")
+            elif not NUMBERED.match(f[:-3]):
+                err(rel(os.path.join(cdir, f)), "[compiler] bad section file name")
+    for s, (cdir, path) in enumerate(sections(), start=1):
+        loc = rel(path)
+        stats["sections"] += 1
+        raw = open(path, encoding="utf-8").read()
+        yb, body = split_front_matter(raw)
+        if yb is None:
+            err(loc, "no front matter")
+            continue
+        raw_quote_checks(loc, yb)
+        try:
+            fm = yaml.safe_load(yb)
+        except yaml.YAMLError as e:
+            err(loc, f"[compiler] invalid front matter: {e}")
+            continue
+        compiler_port(loc, fm)
+        question_checks(loc, s, fm)
+        body_checks(loc, body)
+    if longest_correct[1] and longest_correct[0] / longest_correct[1] > 0.40:
+        err("book", f"correct option is unique-longest in {longest_correct[0]}/{longest_correct[1]} singles")
+    print(f"chapters={len(chs)} sections={stats['sections']} questions={stats['questions']} "
+          f"single={stats['single']} multiple={stats['multiple']} "
+          f"correct-is-longest={longest_correct[0]}/{longest_correct[1]}")
+    if stats["words"]:
+        print(f"prose words: min={min(stats['words'])} max={max(stats['words'])} total={sum(stats['words'])}")
+    for w in warnings:
+        print("WARNING:", w)
+    for e in errors:
+        print("ERROR:", e)
+    print(f"{len(errors)} error(s), {len(warnings)} warning(s)")
+    return 1 if errors else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+==> _build/data-representation-traps/validate_output.txt <==
+chapters=7 sections=28 questions=169 single=141 multiple=28 correct-is-longest=21/141
+prose words: min=408 max=666 total=14015
+0 error(s), 0 warning(s)
 
 ==> content/authors/abraham-lincoln.yml <==
 name: Abraham Lincoln
