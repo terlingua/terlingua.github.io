@@ -1,0 +1,3 @@
+title: "Floating-Point Arithmetic and Its Traps"
+summary: "Rounding to nearest, ties to even; ULPs and the 2^53 exact-integer limit; cancellation and non-associativity; NaN, signed zero and infinity; tolerances, decimal types and integer minor units for money."
+draft: false

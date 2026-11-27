@@ -1,0 +1,3 @@
+title: "Cross-Chapter Review and Diagnostics"
+summary: "Realistic bug reports that combine floating-point precision, encoding and truncation, storage limits, and clock or time-zone errors — find the root cause and the minimal correct fix."
+draft: false

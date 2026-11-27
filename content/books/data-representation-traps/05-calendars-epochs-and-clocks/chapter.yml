@@ -1,0 +1,3 @@
+title: "Calendars, Epochs and Clocks"
+summary: "Unix time and its 32-bit limits, the Gregorian leap-year rule, UTC versus TAI versus GPS time and leap seconds, and why elapsed time must come from a monotonic clock."
+draft: false

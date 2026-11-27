@@ -1,0 +1,3 @@
+title: "Binary Floating-Point Anatomy"
+summary: "How binary32 and binary64 pack a sign, a biased exponent and a fraction into bits, why the leading 1 is hidden, how subnormals fill the gap around zero, and which encodings mean infinity, NaN and negative zero."
+draft: false

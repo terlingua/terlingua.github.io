@@ -1,0 +1,11 @@
+title: "Data Representation Traps: Floating-Point, Unicode, and Time"
+author: terlingua-team
+summary: "The language-agnostic invariants behind IEEE 754 arithmetic, Unicode encoding and text segmentation, and clocks, calendars, and time zones — and the assumptions that silently break production code."
+date: 2026-11-27
+tags:
+  - fundamentals
+  - floating-point
+  - unicode
+  - time
+  - engineering
+draft: false

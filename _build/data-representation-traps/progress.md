@@ -1,0 +1,44 @@
+# Progress
+
+- [x] plan.md
+- [x] NOTES.md
+- [x] book.yml
+- [x] 01-binary-floating-point-anatomy/chapter.yml
+- [x] 01-binary-floating-point-anatomy/01-three-fields-and-the-bias.md (s=1)
+- [x] 01-binary-floating-point-anatomy/02-hidden-bit-and-exact-decoding.md (s=2)
+- [x] 01-binary-floating-point-anatomy/03-subnormals-and-gradual-underflow.md (s=3)
+- [x] 01-binary-floating-point-anatomy/04-special-encodings-and-small-formats.md (s=4)
+- [x] 02-floating-point-arithmetic-and-traps/chapter.yml
+- [x] 02-floating-point-arithmetic-and-traps/01-why-0-1-plus-0-2-is-not-0-3.md (s=5)
+- [x] 02-floating-point-arithmetic-and-traps/02-ulps-and-the-2-to-the-53-limit.md (s=6)
+- [x] 02-floating-point-arithmetic-and-traps/03-cancellation-and-non-associativity.md (s=7)
+- [x] 02-floating-point-arithmetic-and-traps/04-nan-signed-zero-and-infinity.md (s=8)
+- [x] 02-floating-point-arithmetic-and-traps/05-tolerances-decimal-and-money.md (s=9)
+- [x] 03-code-points-utf-8-and-utf-16/chapter.yml
+- [x] 03-code-points-utf-8-and-utf-16/01-code-points-scalar-values-and-code-units.md (s=10)
+- [x] 03-code-points-utf-8-and-utf-16/02-utf-8-byte-patterns.md (s=11)
+- [x] 03-code-points-utf-8-and-utf-16/03-invalid-and-overlong-utf-8.md (s=12)
+- [x] 03-code-points-utf-8-and-utf-16/04-utf-16-surrogate-pairs.md (s=13)
+- [x] 04-text-length-indexing-normalization-and-sorting/chapter.yml
+- [x] 04-text-length-indexing-normalization-and-sorting/01-four-lengths-of-a-string.md (s=14)
+- [x] 04-text-length-indexing-normalization-and-sorting/02-normalization-forms.md (s=15)
+- [x] 04-text-length-indexing-normalization-and-sorting/03-case-mapping-and-collation.md (s=16)
+- [x] 04-text-length-indexing-normalization-and-sorting/04-confusables-and-identifier-security.md (s=17)
+- [x] 05-calendars-epochs-and-clocks/chapter.yml
+- [x] 05-calendars-epochs-and-clocks/01-unix-time-and-2038.md (s=18)
+- [x] 05-calendars-epochs-and-clocks/02-gregorian-leap-years.md (s=19)
+- [x] 05-calendars-epochs-and-clocks/03-utc-tai-gps-and-leap-seconds.md (s=20)
+- [x] 05-calendars-epochs-and-clocks/04-wall-clock-versus-monotonic.md (s=21)
+- [x] 06-time-zones-dst-and-serialization/chapter.yml
+- [x] 06-time-zones-dst-and-serialization/01-offsets-versus-zones.md (s=22)
+- [x] 06-time-zones-dst-and-serialization/02-dst-gaps-and-overlaps.md (s=23)
+- [x] 06-time-zones-dst-and-serialization/03-storing-past-and-future-times.md (s=24)
+- [x] 06-time-zones-dst-and-serialization/04-iso-8601-rfc-3339-and-database-types.md (s=25)
+- [x] 07-cross-chapter-review-and-diagnostics/chapter.yml
+- [x] 07-cross-chapter-review-and-diagnostics/01-numbers-on-the-wire.md (s=26)
+- [x] 07-cross-chapter-review-and-diagnostics/02-text-in-fixed-size-boxes.md (s=27)
+- [x] 07-cross-chapter-review-and-diagnostics/03-clocks-calendars-and-zones-in-incidents.md (s=28)
+- [x] validate.py run clean
+- [x] check_math.py run clean
+- [x] question audit
+- [x] REPORT.md

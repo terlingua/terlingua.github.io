@@ -1,0 +1,3 @@
+title: "Text Length, Indexing, Normalization and Sorting"
+summary: "Why a string has at least four different lengths, how grapheme clusters are formed, the four normalization forms, case mapping and collation traps, and confusable identifiers."
+draft: false

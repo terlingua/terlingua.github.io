@@ -1,0 +1,3 @@
+title: "Time Zones, DST and Serialization"
+summary: "Offsets versus IANA zones, daylight-saving gaps and overlaps, how to store past and future times, and how to serialize timestamps with ISO 8601, RFC 3339 and database types."
+draft: false

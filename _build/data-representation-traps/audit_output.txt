@@ -1,0 +1,17 @@
+s=5 what-prints-point-three: correct option quoted like a distractor: False 0.30000000000000004
+s=6 ulp-at-ten-to-sixteen: correct option quoted like a distractor: 2
+s=7 association-order-output: correct option quoted like a distractor: 0.6000000000000001 0.6
+s=8 division-by-zero-by-language: distractor not addressed in explanation: C# `1 / zero` where `int zero = 0`
+s=10 plane-of-grinning-face: correct option quoted like a distractor: Plane 1
+s=11 encode-euro-sign: correct option quoted like a distractor: E2 82 AC
+s=12 never-valid-byte-values: multiple question lacks Correct:/Wrong: structure
+s=14 grapheme-counting-apis: distractor not addressed in explanation: Python `len(s)`
+s=14 grapheme-counting-apis: distractor not addressed in explanation: Java `s.length()`
+s=14 grapheme-counting-apis: distractor not addressed in explanation: C# `s.Length`
+s=15 canonical-equivalence-pairs: distractor not addressed in explanation: U+FB01 (ﬁ ligature) and `fi`
+s=15 canonical-equivalence-pairs: distractor not addressed in explanation: U+2460 (①) and `1`
+s=15 canonical-equivalence-pairs: multiple question lacks Correct:/Wrong: structure
+s=17 fullwidth-admin-key: correct option quoted like a distractor: `admin`
+s=19 mean-gregorian-year: correct option quoted like a distractor: 365.2425
+s=27 byte-truncated-status-text: correct option quoted like a distractor: `'Café �'`
+audit: 16 potential problem(s)
