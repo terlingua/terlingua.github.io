@@ -1,0 +1,3 @@
+title: "Three-Valued Logic and NULL Semantics"
+summary: "TRUE, FALSE and UNKNOWN; why NOT IN breaks on NULL; aggregates on empty and all-NULL input; IS DISTINCT FROM; and how UNIQUE, GROUP BY, DISTINCT and ORDER BY treat NULL."
+draft: false

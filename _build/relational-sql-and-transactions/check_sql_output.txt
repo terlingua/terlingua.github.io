@@ -1,0 +1,2 @@
+checks: 205 entries; runs: {'sqlite': 106, 'postgres': 141, 'schedule': 30, 'python': 18}
+all checks passed

@@ -1,0 +1,3 @@
+title: "SQL's Logical Query Processing Order"
+summary: "The order in which SQL clauses are logically evaluated, why aliases are visible in some clauses and not others, WHERE versus ON in outer joins, semi-joins without duplicate multiplication, and the gap between logical order and physical plans."
+draft: false

@@ -1,0 +1,43 @@
+# Progress — relational-sql-and-transactions
+
+- [x] NOTES.md
+- [x] plan.md
+- [x] build.py / check_sql.py / validate.py
+- [x] book.yml
+- [x] 7 × chapter.yml
+
+- [x] s1 01-relational-foundations-and-normalization/01-relations-sets-and-bags.md
+- [x] s2 01-relational-foundations-and-normalization/02-keys-and-functional-dependencies.md
+- [x] s3 01-relational-foundations-and-normalization/03-normal-forms-and-anomalies.md
+- [x] s4 01-relational-foundations-and-normalization/04-lossless-decomposition-and-denormalization.md
+- [x] s5 02-sql-logical-query-processing-order/01-the-logical-clause-order.md
+- [x] s6 02-sql-logical-query-processing-order/02-aliases-and-clause-scope.md
+- [x] s7 02-sql-logical-query-processing-order/03-outer-joins-where-vs-on.md
+- [x] s8 02-sql-logical-query-processing-order/04-exists-in-join-and-duplicates.md
+- [x] s9 02-sql-logical-query-processing-order/05-logical-vs-physical-order-and-ctes.md
+- [x] s10 03-three-valued-logic-and-null-semantics/01-truth-tables-and-unknown.md
+- [x] s11 03-three-valued-logic-and-null-semantics/02-not-in-versus-not-exists.md
+- [x] s12 03-three-valued-logic-and-null-semantics/03-aggregates-on-empty-and-null-groups.md
+- [x] s13 03-three-valued-logic-and-null-semantics/04-is-distinct-from-unique-and-ordering.md
+- [x] s14 04-grouping-aggregation-and-window-functions/01-group-by-and-functional-dependence.md
+- [x] s15 04-grouping-aggregation-and-window-functions/02-window-frames-rows-range-groups.md
+- [x] s16 04-grouping-aggregation-and-window-functions/03-ranking-functions-and-top-n.md
+- [x] s17 04-grouping-aggregation-and-window-functions/04-running-totals-and-gaps-and-islands.md
+- [x] s18 05-b-plus-tree-indexes-selectivity-and-joins/01-b-plus-tree-anatomy-and-depth.md
+- [x] s19 05-b-plus-tree-indexes-selectivity-and-joins/02-composite-indexes-and-leftmost-prefix.md
+- [x] s20 05-b-plus-tree-indexes-selectivity-and-joins/03-sargability.md
+- [x] s21 05-b-plus-tree-indexes-selectivity-and-joins/04-covering-indexes-and-selectivity.md
+- [x] s22 05-b-plus-tree-indexes-selectivity-and-joins/05-join-algorithms-and-cardinality-estimation.md
+- [x] s23 06-transaction-anomalies-and-isolation-levels/01-dirty-write-to-phantom.md
+- [x] s24 06-transaction-anomalies-and-isolation-levels/02-lost-update-read-skew-write-skew.md
+- [x] s25 06-transaction-anomalies-and-isolation-levels/03-ansi-levels-and-snapshot-isolation.md
+- [x] s26 06-transaction-anomalies-and-isolation-levels/04-two-phase-locking-and-deadlocks.md
+- [x] s27 06-transaction-anomalies-and-isolation-levels/05-ssi-retries-and-engine-defaults.md
+- [x] s28 07-cross-chapter-review-and-debugging/01-query-output-puzzles.md
+- [x] s29 07-cross-chapter-review-and-debugging/02-index-selection-puzzles.md
+- [x] s30 07-cross-chapter-review-and-debugging/03-schedule-anomaly-puzzles.md
+
+- [x] validate.py clean (0 errors, 1 warning)
+- [x] check_sql.py clean (205 check entries)
+- [x] question audit
+- [x] REPORT.md

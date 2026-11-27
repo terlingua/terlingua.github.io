@@ -1,0 +1,3 @@
+title: "Grouping, Aggregation and Window Functions"
+summary: "The functional-dependency rule for GROUP BY, HAVING versus WHERE, window frames and the default-frame trap, ranking functions, top-N per group, running totals, and gaps and islands."
+draft: false

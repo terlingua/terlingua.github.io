@@ -1,0 +1,3 @@
+title: "Transaction Anomalies and Isolation Levels"
+summary: "Dirty writes to write skew traced on interleaved schedules, the ANSI levels and their critique, two-phase locking, snapshot isolation and SSI, locking reads, gap locks, deadlocks and retries, and what real engines do by default."
+draft: false

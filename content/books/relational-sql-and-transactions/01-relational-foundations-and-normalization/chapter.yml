@@ -1,0 +1,3 @@
+title: "Relational Foundations and Normalization"
+summary: "Relations as sets versus SQL tables as bags, keys and functional dependencies, the normal forms through BCNF with the anomalies each one removes, lossless decomposition, and when to denormalize on purpose."
+draft: false

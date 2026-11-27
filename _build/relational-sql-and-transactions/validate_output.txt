@@ -1,0 +1,4 @@
+WARNING: 01-relational-foundations-and-normalization/03-normal-forms-and-anomalies.md: 'Where this shows up today' has no 'As of November 2026' claim
+stats: {'chapters': 7, 'sections': 30, 'questions': 180, 'type_single': 149, 'type_multiple': 31, 'longest_correct': 59, 'prose_words': 14757}
+correct-answer positions (book): {0: 44, 1: 52, 2: 52, 3: 57, 4: 16}
+0 error(s), 1 warning(s)

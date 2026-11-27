@@ -1,0 +1,3 @@
+title: "B+tree Indexes, Selectivity and Join Algorithms"
+summary: "B+tree depth and fanout arithmetic, composite indexes and the leftmost-prefix rule, sargable predicates, covering indexes, the selectivity point where a scan wins, join algorithms, and cardinality-estimation errors."
+draft: false

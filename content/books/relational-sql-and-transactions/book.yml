@@ -1,0 +1,11 @@
+title: "Relational Theory, SQL Semantics & Transaction Anomalies"
+author: "terlingua-team"
+summary: "The timeless mechanics of relational algebra, SQL's logical execution and three-valued logic, B-tree indexing invariants, and MVCC/lock-based transaction isolation levels."
+date: 2026-11-27
+tags:
+  - "sql"
+  - "databases"
+  - "relational-theory"
+  - "transactions"
+  - "concurrency"
+draft: false
