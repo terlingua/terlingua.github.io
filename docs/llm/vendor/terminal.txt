@@ -1,25 +1,25 @@
-kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
-429M	.
+kushal@fedora:~/src/bash$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+430M	.
 
-real	0m0.036s
-user	0m0.003s
-sys	0m0.029s
+real	0m0.079s
+user	0m0.008s
+sys	0m0.040s
 
-real	0m6.742s
-user	0m12.181s
-sys	0m0.730s
+real	0m8.390s
+user	0m12.148s
+sys	0m0.764s
 Restore complete (0.2s)
 
-Build succeeded in 0.2s
+Build succeeded in 0.3s
 
-real	0m0.374s
-user	0m0.093s
-sys	0m0.038s
+real	0m0.396s
+user	0m0.096s
+sys	0m0.035s
 Content directory: content/blog
 Output directory:  src/ObserverMagazine.Web/wwwroot
 Authors directory: content/authors
 Books directory:   content/books
-Publish before:    2026-11-25 17:19:27 UTC
+Publish before:    2026-11-27 14:59:23 UTC
 Found 3 author profile(s)
   Loaded author: kushal (kushal)
   Loaded author: abraham-lincoln (Abraham Lincoln)
@@ -88,32 +88,32 @@ Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (23 books)
 Content processing complete.
 Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
 Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
-tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (751ms)
-tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (908ms)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (762ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (926ms)
 
 Test run summary: Passed!
-  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (751ms)
-  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (908ms)
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (762ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (926ms)
 
   total: 169
   failed: 0
   succeeded: 169
   skipped: 0
-  duration: 1s 085ms
+  duration: 1s 111ms
 
-real	0m6.319s
-user	0m3.345s
-sys	0m0.480s
+real	0m6.665s
+user	0m3.659s
+sys	0m0.499s
 Restore complete (0.1s)
 
-Build succeeded in 0.1s
+Build succeeded in 0.2s
 Project 'ObserverMagazine.Web' has the following package references
    [net11.0]: 
-   Top-level Package                                     Requested                   Resolved             
-   > Microsoft.AspNetCore.App.Internal.Assets      (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.AspNetCore.Components.WebAssembly         11.0.0                      11.0.0               
-   > Microsoft.NET.ILLink.Tasks                    (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
-   > Microsoft.NET.Sdk.WebAssembly.Pack            (A)   [11.0.0-rc.3.26522.148, )   11.0.0-rc.3.26522.148
+   Top-level Package                                     Requested    Resolved
+   > Microsoft.AspNetCore.App.Internal.Assets      (A)   [11.0.0, )   11.0.0  
+   > Microsoft.AspNetCore.Components.WebAssembly         11.0.0       11.0.0  
+   > Microsoft.NET.ILLink.Tasks                    (A)   [11.0.0, )   11.0.0  
+   > Microsoft.NET.Sdk.WebAssembly.Pack            (A)   [11.0.0, )   11.0.0  
 
 Project 'ObserverMagazine.Integration.Tests' has the following package references
    [net11.0]: 
@@ -136,9 +136,9 @@ Project 'ObserverMagazine.ContentProcessor' has the following package references
 
 (A) : Auto-referenced package.
 
-real	0m1.219s
-user	0m0.889s
-sys	0m0.224s
+real	0m1.403s
+user	0m1.133s
+sys	0m0.314s
 Restore complete (0.1s)
 
 Build succeeded in 0.1s
@@ -151,9 +151,9 @@ The given project `ObserverMagazine.Integration.Tests` has no updates given the 
 The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
 The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
 
-real	0m2.499s
-user	0m1.611s
-sys	0m0.252s
+real	0m2.596s
+user	0m1.690s
+sys	0m0.356s
 Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 436492 bytes, ~109123 tokens
   text files: 136, book files summarized: 1456, path only: 3
   largest:
@@ -168,7 +168,7 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 436492 bytes, ~109123
        12095  tests/ObserverMagazine.Integration.Tests/ContentProcessorTests.cs
        10463  tools/ObserverMagazine.ContentProcessor/Books/BookCompiler.cs
 
-real	0m3.295s
-user	0m1.687s
-sys	0m1.961s
+real	0m3.214s
+user	0m1.831s
+sys	0m1.726s
 kushal@fedora:~/src/dotnet/terlingua$ 
