@@ -1,0 +1,3 @@
+title: "Cross-Chapter Review and Network Diagnostics"
+summary: "Scenario puzzles that combine earlier chapters: counting round trips for whole page loads, diagnosing throughput caps and MTU black holes, and debugging retry storms and protocol-contract violations."
+draft: false

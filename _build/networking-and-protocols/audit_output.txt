@@ -1,0 +1,199 @@
+01/02 frame-after-router: distractor not quoted: Source MAC `aa:aa:aa:00:00:01`, destination MAC `02:00:00:00:00:03`; s
+01/02 frame-after-router: distractor not quoted: Source MAC `aa:aa:aa:00:00:01`, destination MAC `00:00:5e:00:01:01`; s
+01/02 frame-after-router: distractor not quoted: Source MAC `02:00:00:00:00:02`, destination MAC `02:00:00:00:00:03`; s
+01/02 arp-for-gateway: distractor not quoted: `203.0.113.5`, because ARP always resolves the MAC of the final destin
+01/02 failover-stale-arp: distractor not quoted: DNS still maps the service name to the old server; lower the record's 
+01/03 network-and-broadcast: distractor not quoted: `172.16.45.128` and `172.16.45.255`
+01/03 network-and-broadcast: distractor not quoted: `172.16.45.64` and `172.16.45.127`
+01/03 network-and-broadcast: distractor not quoted: `172.16.45.128` and `172.16.45.159`
+01/03 network-and-broadcast: distractor not quoted: `172.16.45.130` and `172.16.45.191`
+01/03 usable-host-counts: distractor not quoted: A /30 subnet has 4 usable host addresses
+01/03 usable-host-counts: distractor not quoted: A /24 subnet has 256 usable host addresses
+01/04 reply-translation: distractor not quoted: It arrives as `198.51.100.9:443 → 203.0.113.1:51000`; the NAT rewrites
+01/04 unsolicited-inbound: distractor not quoted: The NAT forwards it to the internal host that most recently sent traff
+01/04 port-exhaustion-rate: distractor not quoted: About 64,512 new connections per second
+01/04 port-exhaustion-rate: distractor not quoted: About 117 new connections per second
+01/04 port-exhaustion-rate: distractor not quoted: About 537 new connections per second
+01/04 nat-port-mitigations: distractor not quoted: Raise the TCP receive window so that connections finish sooner
+01/04 ipv6-bypasses-cgn: distractor not quoted: IPv6 NAT reuses the same public port for many subscribers, unlike NAT4
+01/05 ipv6-size-rules: distractor not quoted: The receiver can ask the sender to fragment by returning a Fragment he
+01/05 tunnel-black-hole: distractor not quoted: The TLS certificate chain is too large to encrypt; a smaller ECDSA cer
+02/01 why-random-isn: distractor not quoted: So that the receiver can compute how many bytes the sender has sent si
+02/01 flow-byte-count-bug: distractor not quoted: Retransmitted segments were counted twice because each retransmission 
+02/01 flow-byte-count-bug: distractor not quoted: The 20-byte TCP header is counted in sequence space, and the monitor r
+02/01 flow-byte-count-bug: distractor not quoted: Delayed ACKs acknowledge two extra sequence numbers so that the sender
+02/02 who-gets-time-wait: distractor not quoted: Neither side, because TIME_WAIT only follows a connection reset
+02/02 time-wait-reasons: distractor not quoted: To give the application time to read data still waiting in its receive
+02/02 time-wait-reasons: distractor not quoted: To keep a listening socket's port reserved so it can accept new connec
+02/02 time-wait-reasons: distractor not quoted: To wait for the peer's delayed ACK of the final ACK before releasing m
+02/02 close-wait-leak: distractor not quoted: The peers' final ACKs are being lost on the network; enabling TCP keep
+02/02 linger-zero-reset: distractor not quoted: It flushes the 10 KB, sends a FIN, and then enters TIME_WAIT as the ac
+02/02 linger-zero-reset: distractor not quoted: It sends a FIN at once and discards only the bytes that the peer has n
+02/02 linger-zero-reset: distractor not quoted: It blocks in `close()` until the peer has acknowledged all 10 KB of th
+02/03 zero-window-next: distractor not quoted: Aborts the connection after one retransmission timeout with no window 
+02/03 slow-transfer-causes: distractor not quoted: The path MTU is 1500 rather than 9000, so per-packet overhead caps the
+02/03 slow-transfer-causes: distractor not quoted: The congestion window is far larger than the BDP, so the sender is pac
+02/04 ssthresh-after-dupacks: distractor not quoted: `ssthresh` is 120 segments and `cwnd` is 60 segments
+02/04 rto-versus-dupacks: distractor not quoted: Neither event changes ssthresh; only cwnd is adjusted in each of the t
+02/04 short-flow-benchmark-bug: distractor not quoted: Window scaling must be disabled, which caps every connection at a 64 K
+02/04 short-flow-benchmark-bug: distractor not quoted: The receive window of 100 KB limits throughput to 100 KB per RTT, whic
+02/04 loss-based-vs-model-based: distractor not quoted: CUBIC is defined only for QUIC connections, and BBR is defined only fo
+02/04 loss-based-vs-model-based: distractor not quoted: CUBIC paces at a fixed rate derived from link speed; BBR halves its wi
+02/05 karn-ambiguous-sample: distractor not quoted: Record a 30 ms sample, since the ACK most likely answers the retransmi
+02/05 karn-ambiguous-sample: distractor not quoted: Reset SRTT to the 1-second initial value, since the path has clearly c
+02/05 nagle-delayed-ack-stall: distractor not quoted: The server's receive window is too small for two segments, so the seco
+02/05 tcp-head-of-line: distractor not quoted: HTTP/2 notices the loss and re-requests stream 3 on a new connection w
+02/05 delayed-ack-rules: distractor not quoted: Delayed ACKs are turned off automatically whenever Nagle's algorithm i
+02/05 delayed-ack-rules: distractor not quoted: A receiver may delay an ACK until its receive buffer is completely ful
+02/05 delayed-ack-rules: distractor not quoted: An out-of-order segment should be ACKed only after the delay timer exp
+03/01 udp-truncation: distractor not quoted: The call fails with an error and the datagram stays queued until a lar
+03/01 udp-truncation: distractor not quoted: The kernel splits the datagram into three datagrams of at most 512 byt
+03/01 what-udp-apps-add: distractor not quoted: Keeping each message's boundaries intact on delivery
+03/01 what-udp-apps-add: distractor not quoted: Delivering each datagram to the socket bound to its destination port
+03/02 retransmission-new-packet-number: distractor not quoted: Packet 41 is sent again byte for byte, with the same packet number, so
+03/02 retransmission-new-packet-number: distractor not quoted: The connection rewinds to packet 41 and resends every packet after it,
+03/02 why-quic-over-udp: distractor not quoted: UDP's checksum also encrypts the payload, so QUIC gets confidentiality
+03/03 first-byte-tcp-vs-quic: distractor not quoted: 160 ms over TCP and TLS 1.3; 80 ms over QUIC
+03/03 first-byte-tcp-vs-quic: distractor not quoted: 240 ms over TCP and TLS 1.3; 240 ms over QUIC
+03/03 crypto-frames: distractor not quoted: QUIC wraps complete TLS records, record headers included, inside STREA
+03/03 crypto-frames: distractor not quoted: QUIC first completes TLS over a short-lived TCP connection and then sw
+03/03 anti-amplification: distractor not quoted: The server sends 1,200 bytes, then waits for an ACK from the client af
+03/03 initial-keys-public: distractor not quoted: Only the server, because the client encrypts Initial packets to the pu
+03/03 initial-keys-public: distractor not quoted: Only the two endpoints, because Initial keys come from the ECDHE excha
+03/03 retry-cost: distractor not quoted: Nothing extra, because the Retry token is delivered together with the 
+03/03 retry-cost: distractor not quoted: Two extra round trips, because after a Retry the TLS handshake must re
+03/03 retry-cost: distractor not quoted: One extra round trip, but only for clients that were attempting 0-RTT 
+03/03 quic-zero-rtt-availability: distractor not quoted: A client contacting the server for the first time can use it if the se
+03/03 quic-zero-rtt-availability: distractor not quoted: It makes the server's Finished message unnecessary for the rest of the
+03/04 nat-rebinding-survives: distractor not quoted: Both connections break, because every transport identifies a connectio
+03/04 nat-rebinding-survives: distractor not quoted: Both connections continue, because the NAT restores the old public por
+03/04 nat-rebinding-survives: distractor not quoted: The QUIC connection breaks until a new handshake runs; the TCP connect
+03/04 path-validation: distractor not quoted: Repeat the whole TLS handshake on the new path so that fresh keys are 
+03/04 path-validation: distractor not quoted: Nothing, because a packet carrying a valid connection ID proves that t
+03/04 path-validation: distractor not quoted: Ask the client to resend all unacknowledged stream data so the server 
+03/04 alt-svc-first-visit: distractor not quoted: Both go over HTTP/3, because the browser learns that HTTP/3 is availab
+03/04 alt-svc-first-visit: distractor not quoted: Both go over HTTP/2, because an Alt-Svc advertisement only takes effec
+03/04 load-balancer-five-tuple-bug: distractor not quoted: Raise the servers' idle timeout so that NAT mappings never change whil
+03/04 load-balancer-five-tuple-bug: distractor not quoted: Pad every client Initial packet to the full path MTU so that the hash 
+03/04 udp-blocked-fallback: distractor not quoted: The page fails to load until the Alt-Svc entry expires, because the br
+03/04 udp-blocked-fallback: distractor not quoted: The browser tunnels QUIC packets inside the TCP connection so the site
+03/04 udp-blocked-fallback: distractor not quoted: The firewall rewrites the QUIC packets into TCP segments, so the HTTP/
+04/01 glue-records: distractor not quoted: Nothing extra, because the resolver can look up `ns1.example.com` by s
+04/01 warm-cache-query-count: distractor not quoted: Three: root, `com` and `example.com`, as for any name it has never see
+04/01 warm-cache-query-count: distractor not quoted: Two: `com` and then `example.com`, because only the root referral is c
+04/01 stale-delegation-bug: distractor not quoted: The A records' TTLs at provider B are too long, so resolvers keep usin
+04/01 stale-delegation-bug: distractor not quoted: Provider B's SOA serial number must be higher than provider A's, or re
+04/01 stale-delegation-bug: distractor not quoted: DNSSEC must be switched off during a move, because provider B's server
+04/01 root-and-tld-roles: distractor not quoted: Root servers hold the address records of every registered second-level
+04/01 root-and-tld-roles: distractor not quoted: TLD servers forward each query to the domain's servers and relay the a
+04/02 cname-plus-txt-bug: distractor not quoted: The TXT record overrides the CNAME for every query type, so the websit
+04/02 cname-plus-txt-bug: distractor not quoted: The CNAME is ignored for TXT queries only after its TTL expires, so th
+04/02 apex-cname: distractor not quoted: CNAMEs are legal at the apex, but browsers ignore them there; an ALIAS
+04/02 apex-cname: distractor not quoted: The apex may hold only SOA and NS records, so the CDN's address goes i
+04/02 alias-flattening: distractor not quoted: Resolvers receive a CNAME-like record from the provider and follow the
+04/02 alias-flattening: distractor not quoted: They let the apex keep a real CNAME record as long as DNSSEC is not en
+04/02 alias-flattening: distractor not quoted: They are the exception to the CNAME rule that RFC 2181 §10.1 itself de
+04/03 worst-case-staleness: distractor not quoted: 11:00 on Monday, because resolvers re-check records every hour
+04/03 worst-case-staleness: distractor not quoted: 10:00 on Wednesday, because the browser cache adds a second TTL
+04/03 premature-query-bug: distractor not quoted: The new record's TTL of 300 seconds must expire before resolvers will 
+04/03 anycast-facts: distractor not quoted: Clients must be configured with every site's unicast address so that t
+04/04 dnssec-guarantees: distractor not quoted: Protection of the stub-to-resolver hop when the stub does not itself v
+04/04 dnssec-guarantees: distractor not quoted: Hiding the client's IP address from the authoritative servers it conta
+04/04 ds-links-chain: distractor not quoted: An RRSIG record in the `example.com` zone, created with the private ke
+04/04 ds-links-chain: distractor not quoted: A copy of `example.com`'s DNSKEY RRset, published in the `com` zone an
+04/04 expired-signatures: distractor not quoted: Validating resolvers return the address with the AD bit clear, so clie
+04/04 expired-signatures: distractor not quoted: Validating resolvers fall back to treating the zone as unsigned until 
+04/04 encrypted-transport-ports: distractor not quoted: DNS over HTTPS: plain HTTP requests to port 80
+04/04 encrypted-transport-ports: distractor not quoted: DNS over TLS: DTLS over UDP, port 53
+04/04 what-doh-hides: distractor not quoted: Nobody, because DoH encrypts each name end to end all the way to the a
+05/01 hello-retry-request: distractor not quoted: The server generates the P-256 share for both sides and continues, bec
+05/01 hello-retry-request: distractor not quoted: The handshake fails with `handshake_failure`, and the client has to re
+05/01 zero-rtt-post-replay: distractor not quoted: None is needed: the Finished message authenticates the early data, so 
+05/01 psk-resumption: distractor not quoted: The whole key exchange; data is sent in clear until both Finished mess
+05/01 psk-resumption: distractor not quoted: Deriving new traffic keys; the previous session's traffic keys are reu
+05/01 psk-resumption: distractor not quoted: The ServerHello; the client derives all the keys by itself from the ti
+05/02 forward-secrecy-recorded-traffic: distractor not quoted: Only the TLS 1.3 sessions, because TLS 1.2 RSA sessions were protected
+05/02 stolen-key-impact: distractor not quoted: Decrypt sessions that it recorded before the theft
+05/02 stolen-key-impact: distractor not quoted: Read sessions in progress by passively observing their encrypted recor
+05/02 tampered-record: distractor not quoted: It discards the record and asks the peer to retransmit it, so the conn
+05/02 tampered-record: distractor not quoted: It accepts the record, because a corrected TCP checksum shows the byte
+05/02 per-record-nonce: distractor not quoted: `1a2b3c4d5e6f708192a3b4c5`
+05/02 per-record-nonce: distractor not quoted: `1a2b3c4d5e6f708192a3b4c6`
+05/02 per-record-nonce: distractor not quoted: `1a2b3c4d5e6f708192a3b4c501`
+05/02 why-hybrid-kex: distractor not quoted: ML-KEM key shares are smaller than X25519 shares, so combining them sh
+05/03 chain-link-check: distractor not quoted: The leaf's serial number appears in the intermediate's extensions as a
+05/03 chain-link-check: distractor not quoted: Both certificates carry the same subject alternative names, and their 
+05/03 missing-intermediate: distractor not quoted: The certificate uses an ECDSA key, which curl and Java reject unless e
+05/03 san-wildcard-matching: distractor not quoted: `www.example.com`
+05/03 san-wildcard-matching: distractor not quoted: `a.b.api.example.com`
+05/03 san-wildcard-matching: distractor not quoted: `api.example.com`
+05/03 leaf-cannot-issue: distractor not quoted: The forged certificate's signature cannot verify, because the attacker
+05/03 ocsp-stapling: distractor not quoted: The client downloads the CA's complete revocation list during every ha
+05/03 ocsp-stapling: distractor not quoted: The server signs a statement of its own revocation status with its cer
+05/03 ocsp-stapling: distractor not quoted: The CA pushes revocation notices to every client, so revoked certifica
+05/04 missing-sni: distractor not quoted: The server reads the HTTP `Host` header from the request, picks the `b
+05/04 missing-sni: distractor not quoted: The server closes the connection with an alert that lists the three ho
+05/04 alpn-mismatch-bug: distractor not quoted: Browsers send an SNI value that the backends do not recognize, so they
+05/04 alpn-mismatch-bug: distractor not quoted: TLS 1.3 encrypts the ALPN extension, so the backends never learn the p
+05/04 visible-metadata: distractor not quoted: The server's certificate chain
+05/04 visible-metadata: distractor not quoted: The URL path and query string of each request
+05/04 ech-observer-view: distractor not quoted: A hash of `private.example` in the outer ClientHello, which it can mat
+05/04 ech-observer-view: distractor not quoted: The real SNI `private.example`, because ECH encrypts only the ALPN lis
+05/04 ech-config-source: distractor not quoted: From the site's certificate, which the server sends before the ClientH
+05/04 ech-config-source: distractor not quoted: From a session ticket, which is the only way to obtain the key
+06/01 idempotent-methods: distractor not quoted: `POST`
+06/01 idempotent-methods: distractor not quoted: `PATCH`
+06/01 delete-different-status: distractor not quoted: No, but only because both responses had empty bodies, which is the con
+06/01 post-timeout-retry-bug: distractor not quoted: TCP should have suppressed the duplicate request, so the server's netw
+06/01 post-timeout-retry-bug: distractor not quoted: The server should have answered `202 Accepted` at once, which would ma
+06/01 idempotency-key-replay: distractor not quoted: Return `409 Conflict`, because a key may never be used in more than on
+06/01 get-delete-link-bug: distractor not quoted: The app must check the `Referer` header on every GET, since that is ho
+06/02 post-redirect-303: distractor not quoted: `POST /orders/9` with the original form body
+06/02 post-redirect-303: distractor not quoted: `GET /orders`, the URL of the original form
+06/02 401-versus-403-bug: distractor not quoted: `401 Unauthorized` is correct; the SDKs are wrong to treat it as a req
+06/02 401-versus-403-bug: distractor not quoted: `404 Not Found` in every case, because any other status reveals that t
+06/02 gateway-504: distractor not quoted: `502 Bad Gateway`: the upstream sent the gateway a malformed or invali
+06/02 gateway-504: distractor not quoted: `503 Service Unavailable`: the gateway itself is overloaded and is she
+06/03 s-maxage-split: distractor not quoted: Browser 3,600 seconds; CDN 60 seconds
+06/03 s-maxage-split: distractor not quoted: Both 60 seconds, the stricter of the two values
+06/03 no-cache-vs-no-store: distractor not quoted: `no-cache` forbids every cache from storing the response at all
+06/03 no-cache-vs-no-store: distractor not quoted: `no-store` allows storage provided the cache revalidates before every 
+06/03 no-cache-vs-no-store: distractor not quoted: `private` forbids the user's own browser cache from storing the respon
+06/03 stale-while-revalidate-window: distractor not quoted: Served fresh; held until revalidation completes; served stale while a 
+06/03 stale-while-revalidate-window: distractor not quoted: Served fresh; served fresh; served stale while a background revalidati
+06/03 stale-while-revalidate-window: distractor not quoted: Served stale while a background revalidation starts in all three cases
+06/03 stale-while-revalidate-window: distractor not quoted: Served fresh; served stale while a background revalidation starts; ser
+06/04 weak-validators: distractor not quoted: The `W/` prefix tells caches that the resource changes rarely and can 
+06/04 missing-vary-bug: distractor not quoted: Require clients to send `Accept: application/json`, so the CDN can ser
+06/04 vary-star: distractor not quoted: The cache keeps one stored copy for every distinct combination of requ
+06/04 vary-star: distractor not quoted: The cache disregards the `Vary` header and serves the stored copy for 
+06/04 vary-star: distractor not quoted: The cache keys stored copies on the `Cookie` header only, since `*` st
+06/04 last-modified-granularity: distractor not quoted: `If-Modified-Since` is compared with the client's local clock, which i
+06/04 last-modified-granularity: distractor not quoted: A `304` produced by a date comparison cannot be cached, while a `304` 
+06/05 sse-for-push-only: distractor not quoted: WebSockets, because they are the only mechanism with which a server ca
+06/05 sse-for-push-only: distractor not quoted: Polling with `GET` every 100 ms, because frequent short requests pass 
+06/05 websocket-protocol-facts: distractor not quoted: Frames from the server to the client must be masked with a key that th
+07/01 warm-and-resumed: distractor not quoted: A new QUIC connection sending the request as 0-RTT data: 20 ms
+07/01 warm-and-resumed: distractor not quoted: A new TCP connection with a full TLS 1.3 handshake and no early data: 
+07/02 flat-5-mbit-checks: distractor not quoted: Whether the path MTU is smaller than 1,500 bytes somewhere along the r
+07/02 flat-5-mbit-checks: distractor not quoted: Whether the DNS record's TTL is too short and forces repeated lookups
+07/02 parallel-streams-clue: distractor not quoted: Parallel streams lower the loss rate seen by each stream, so each of t
+07/02 parallel-streams-clue: distractor not quoted: Other traffic on the 10 Gbit/s link leaves exactly 280 Mbit/s of spare
+07/03 synchronized-retries-429: distractor not quoted: A 429 means the request was malformed, so retrying is pointless; the S
+07/03 safe-retries-without-key: distractor not quoted: Retrying `POST /orders` after the gateway answered `504 Gateway Timeou
+07/03 safe-retries-without-key: distractor not quoted: Retrying `POST /payments` after the client's own read timeout expired 
+07/03 safe-retries-without-key: distractor not quoted: Retrying `PATCH /carts/3` that appends an item after a `502 Bad Gatewa
+07/03 timeout-ordering-bug: distractor not quoted: TCP retransmits the client's request after 2 seconds, and the service 
+07/03 timeout-ordering-bug: distractor not quoted: The service's 5-second timeout is too short, so it cancels work and th
+07/03 pooling-latency-and-ports: distractor not quoted: Request time drops from 40 ms to 20 ms; TIME_WAIT sockets drop from ab
+07/03 pooling-latency-and-ports: distractor not quoted: Request time drops from 60 ms to 20 ms; TIME_WAIT sockets stay at abou
+unquoted distractors: 189
+--- structural check: one quoted rebuttal per distractor ---
+01/02 frame-after-router: 0 rebuttals for 3 distractors
+05/03 san-wildcard-matching: 0 rebuttals for 3 distractors
+05/04 visible-metadata: 0 rebuttals for 2 distractors
+06/01 idempotent-methods: 0 rebuttals for 2 distractors
+06/02 method-preserving-redirects: 2 rebuttals for 3 distractors
+06/02 gateway-504: 1 rebuttals for 3 distractors
+07/03 safe-retries-without-key: 0 rebuttals for 3 distractors
+questions with fewer rebuttals than distractors: 7

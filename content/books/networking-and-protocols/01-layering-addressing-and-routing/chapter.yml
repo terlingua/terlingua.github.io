@@ -1,0 +1,3 @@
+title: "Layering, Addressing and Routing"
+summary: "The TCP/IP hourglass and what the OSI model is good for, link-layer versus network-layer addresses, ARP and Neighbor Discovery, CIDR arithmetic and longest-prefix match, NAT and port exhaustion, and MTU, MSS and Path MTU Discovery."
+draft: false

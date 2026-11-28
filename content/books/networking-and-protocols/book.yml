@@ -1,0 +1,12 @@
+title: "Networking & Internet Protocols: RFC Mechanics"
+author: "terlingua-team"
+summary: "The protocol invariants behind IP routing, TCP congestion control, QUIC, DNS, TLS 1.3, and HTTP semantics — verifiable against the RFCs, with concrete latency and throughput math."
+date: 2026-11-27
+tags:
+  - "networking"
+  - "protocols"
+  - "tcp"
+  - "http"
+  - "dns"
+  - "tls"
+draft: false

@@ -1,0 +1,3 @@
+title: "HTTP Semantics, Caching and Real-Time Patterns"
+summary: "Method safety and idempotency, status-code contracts, Cache-Control freshness, validators and Vary, HTTP/1.1 versus HTTP/2 versus HTTP/3, and server-sent events, WebSockets and long polling."
+draft: false

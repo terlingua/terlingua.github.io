@@ -1,0 +1,3 @@
+title: "TCP: State, Flow and Congestion"
+summary: "Sequence and acknowledgment arithmetic, connection teardown and TIME_WAIT, flow control and the bandwidth-delay product, slow start, AIMD and fast recovery, retransmission timers, Nagle and delayed ACKs, and head-of-line blocking."
+draft: false

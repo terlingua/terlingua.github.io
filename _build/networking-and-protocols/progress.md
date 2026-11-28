@@ -1,0 +1,45 @@
+# Progress — networking-and-protocols
+
+- [x] content/books/networking-and-protocols/book.yml
+- [x] 01-layering-addressing-and-routing/chapter.yml
+- [x] 01-layering-addressing-and-routing/01-layers-and-the-hourglass.md (s=1)
+- [x] 01-layering-addressing-and-routing/02-mac-ip-arp-and-ndp.md (s=2)
+- [x] 01-layering-addressing-and-routing/03-cidr-subnets-and-longest-prefix-match.md (s=3)
+- [x] 01-layering-addressing-and-routing/04-nat-and-port-exhaustion.md (s=4)
+- [x] 01-layering-addressing-and-routing/05-mtu-mss-and-path-mtu-discovery.md (s=5)
+- [x] 02-tcp-state-flow-and-congestion/chapter.yml
+- [x] 02-tcp-state-flow-and-congestion/01-handshake-sequence-and-ack-arithmetic.md (s=6)
+- [x] 02-tcp-state-flow-and-congestion/02-teardown-and-time-wait.md (s=7)
+- [x] 02-tcp-state-flow-and-congestion/03-flow-control-and-bandwidth-delay-product.md (s=8)
+- [x] 02-tcp-state-flow-and-congestion/04-slow-start-aimd-and-fast-recovery.md (s=9)
+- [x] 02-tcp-state-flow-and-congestion/05-retransmission-timers-nagle-and-head-of-line-blocking.md (s=10)
+- [x] 03-udp-quic-and-http3/chapter.yml
+- [x] 03-udp-quic-and-http3/01-udp-datagrams-and-message-boundaries.md (s=11)
+- [x] 03-udp-quic-and-http3/02-quic-streams-and-loss-recovery.md (s=12)
+- [x] 03-udp-quic-and-http3/03-quic-handshake-and-tls-integration.md (s=13)
+- [x] 03-udp-quic-and-http3/04-connection-ids-migration-and-http3-discovery.md (s=14)
+- [x] 04-dns-resolution-and-caching-invariants/chapter.yml
+- [x] 04-dns-resolution-and-caching-invariants/01-hierarchy-and-resolution.md (s=15)
+- [x] 04-dns-resolution-and-caching-invariants/02-record-types-and-the-cname-rule.md (s=16)
+- [x] 04-dns-resolution-and-caching-invariants/03-ttl-negative-caching-and-anycast.md (s=17)
+- [x] 04-dns-resolution-and-caching-invariants/04-dnssec-and-encrypted-transports.md (s=18)
+- [x] 05-tls-13-and-trust-chains/chapter.yml
+- [x] 05-tls-13-and-trust-chains/01-tls-13-handshake-resumption-and-0-rtt.md (s=19)
+- [x] 05-tls-13-and-trust-chains/02-ecdhe-forward-secrecy-and-aead.md (s=20)
+- [x] 05-tls-13-and-trust-chains/03-x509-chain-validation-and-revocation.md (s=21)
+- [x] 05-tls-13-and-trust-chains/04-sni-alpn-and-what-tls-does-not-hide.md (s=22)
+- [x] 06-http-semantics-caching-and-real-time-patterns/chapter.yml
+- [x] 06-http-semantics-caching-and-real-time-patterns/01-method-safety-idempotency-and-retries.md (s=23)
+- [x] 06-http-semantics-caching-and-real-time-patterns/02-status-code-contracts.md (s=24)
+- [x] 06-http-semantics-caching-and-real-time-patterns/03-cache-control-and-freshness.md (s=25)
+- [x] 06-http-semantics-caching-and-real-time-patterns/04-conditional-requests-etags-and-vary.md (s=26)
+- [x] 06-http-semantics-caching-and-real-time-patterns/05-http-versions-and-real-time-patterns.md (s=27)
+- [x] 07-cross-chapter-review-and-network-diagnostics/chapter.yml
+- [x] 07-cross-chapter-review-and-network-diagnostics/01-end-to-end-latency-counting.md (s=28)
+- [x] 07-cross-chapter-review-and-network-diagnostics/02-throughput-and-mtu-diagnostics.md (s=29)
+- [x] 07-cross-chapter-review-and-network-diagnostics/03-retry-storms-and-contract-violations.md (s=30)
+- [x] validate.py clean
+- [x] check_math.py clean
+- [x] RFC audit
+- [x] question audit
+- [x] REPORT.md

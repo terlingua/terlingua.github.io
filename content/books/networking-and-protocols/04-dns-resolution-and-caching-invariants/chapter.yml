@@ -1,0 +1,3 @@
+title: "DNS: Resolution and Caching Invariants"
+summary: "The delegation hierarchy and recursive versus iterative resolution, record types and the CNAME rule, positive and negative caching, anycast, DNSSEC, and encrypted DNS transports."
+draft: false
