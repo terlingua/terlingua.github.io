@@ -175,4 +175,183 @@ Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 1050327 bytes, ~26258
 real	0m3.707s
 user	0m1.935s
 sys	0m2.153s
+kushal@fedora:~/src/dotnet/terlingua$ cd /home/kushal/src/dotnet/terlingua/; time du -sh .; time dotnet format; time dotnet restore; dotnet run --project tools/ObserverMagazine.ContentProcessor -- --content-dir content/blog --output-dir src/ObserverMagazine.Web/wwwroot; time dotnet test; time dotnet list package; time dotnet list package --outdated; time bash export.sh;
+441M	.
+
+real	0m0.048s
+user	0m0.004s
+sys	0m0.030s
+
+real	0m6.229s
+user	0m11.249s
+sys	0m0.632s
+Restore complete (0.2s)
+
+Build succeeded in 0.2s
+
+real	0m0.358s
+user	0m0.101s
+sys	0m0.031s
+Content directory: content/blog
+Output directory:  src/ObserverMagazine.Web/wwwroot
+Authors directory: content/authors
+Books directory:   content/books
+Publish before:    2026-11-28 00:03:14 UTC
+Found 3 author profile(s)
+  Loaded author: kushal (kushal)
+  Loaded author: abraham-lincoln (Abraham Lincoln)
+  Loaded author: terlingua-team (Terlingua Team)
+Wrote authors index: src/ObserverMagazine.Web/wwwroot/blog-data/authors.json (3 authors)
+Found 5 markdown files
+Processing: 2026-03-22-good-morning.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-morning.html (~1 min read)
+Processing: 2026-09-19-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-25-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-09-29-good-afternoon.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-afternoon.html (~1 min read)
+Processing: 2026-10-21-good-night.md
+  Wrote: src/ObserverMagazine.Web/wwwroot/blog-data/good-night.html (~1 min read)
+Wrote posts index: src/ObserverMagazine.Web/wwwroot/blog-data/posts-index.json (5 posts, 0 drafts skipped, 0 future posts skipped)
+Wrote RSS feed: src/ObserverMagazine.Web/wwwroot/feed.xml
+Processing book: ai-agent-fundamentals
+  10 chapter(s), 25 subchapter(s), 214 question(s)
+Processing book: amazon-web-services
+  8 chapter(s), 19 subchapter(s), 60 question(s)
+Processing book: blazor-basics
+  2 chapter(s), 4 subchapter(s), 8 question(s)
+Processing book: clean-code
+  7 chapter(s), 14 subchapter(s), 44 question(s)
+Processing book: dapper
+  5 chapter(s), 15 subchapter(s), 48 question(s)
+Processing book: data-representation-traps
+  7 chapter(s), 28 subchapter(s), 169 question(s)
+Processing book: databricks-fundamentals
+  10 chapter(s), 28 subchapter(s), 272 question(s)
+Processing book: databricks-platform
+  8 chapter(s), 24 subchapter(s), 73 question(s)
+Processing book: designing-data-intensive-applications
+  14 chapter(s), 72 subchapter(s), 1144 question(s)
+Processing book: generative-ai-fundamentals
+  12 chapter(s), 30 subchapter(s), 272 question(s)
+Processing book: in-pursuit-of-the-traveling-salesman
+  14 chapter(s), 59 subchapter(s), 351 question(s)
+Processing book: introduction-to-criminological-theory
+  25 chapter(s), 86 subchapter(s), 839 question(s)
+Processing book: microsoft-azure
+  7 chapter(s), 18 subchapter(s), 55 question(s)
+Processing book: modern-blazor
+  8 chapter(s), 22 subchapter(s), 73 question(s)
+Processing book: modern-dotnet
+  8 chapter(s), 21 subchapter(s), 76 question(s)
+Processing book: networking-and-protocols
+  7 chapter(s), 30 subchapter(s), 180 question(s)
+Processing book: nutrition-science
+  11 chapter(s), 34 subchapter(s), 264 question(s)
+Processing book: relational-sql-and-transactions
+  7 chapter(s), 30 subchapter(s), 180 question(s)
+Processing book: see-what-you-made-me-do
+  13 chapter(s), 47 subchapter(s), 505 question(s)
+Processing book: social-psychology
+  17 chapter(s), 73 subchapter(s), 552 question(s)
+Processing book: solid-principles
+  7 chapter(s), 14 subchapter(s), 45 question(s)
+Processing book: statistical-rethinking
+  17 chapter(s), 65 subchapter(s), 543 question(s)
+Processing book: sustainable-energy-without-the-hot-air
+  43 chapter(s), 159 subchapter(s), 1326 question(s)
+Processing book: taxes-for-dummies-2026
+  30 chapter(s), 127 subchapter(s), 632 question(s)
+Processing book: timeless-dotnet
+  14 chapter(s), 39 subchapter(s), 284 question(s)
+Processing book: working-effectively-with-legacy-code
+  26 chapter(s), 122 subchapter(s), 799 question(s)
+Wrote book data: src/ObserverMagazine.Web/wwwroot/book-data (26 books)
+Content processing complete.
+Running tests from tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64)
+Running tests from tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64)
+tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (728ms)
+tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (901ms)
+
+Test run summary: Passed!
+  tests/ObserverMagazine.Integration.Tests/bin/Debug/net11.0/ObserverMagazine.Integration.Tests.dll (net11.0|x64) passed [✓55/x0/↓0] (728ms)
+  tests/ObserverMagazine.Web.Tests/bin/Debug/net11.0/ObserverMagazine.Web.Tests.dll (net11.0|x64) passed [✓114/x0/↓0] (901ms)
+
+  total: 169
+  failed: 0
+  succeeded: 169
+  skipped: 0
+  duration: 1s 074ms
+
+real	0m6.504s
+user	0m3.412s
+sys	0m0.447s
+Restore complete (0.1s)
+
+Build succeeded in 0.1s
+Project 'ObserverMagazine.Web' has the following package references
+   [net11.0]: 
+   Top-level Package                                     Requested    Resolved
+   > Microsoft.AspNetCore.App.Internal.Assets      (A)   [11.0.0, )   11.0.0  
+   > Microsoft.AspNetCore.Components.WebAssembly         11.0.0       11.0.0  
+   > Microsoft.NET.ILLink.Tasks                    (A)   [11.0.0, )   11.0.0  
+   > Microsoft.NET.Sdk.WebAssembly.Pack            (A)   [11.0.0, )   11.0.0  
+
+Project 'ObserverMagazine.Integration.Tests' has the following package references
+   [net11.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.6.0       1.6.0   
+   > xunit.v3             4.0.3       4.0.3   
+   > YamlDotNet           18.1.0      18.1.0  
+
+Project 'ObserverMagazine.Web.Tests' has the following package references
+   [net11.0]: 
+   Top-level Package      Requested   Resolved
+   > bunit                2.15.2      2.15.2  
+   > xunit.v3             4.0.3       4.0.3   
+
+Project 'ObserverMagazine.ContentProcessor' has the following package references
+   [net11.0]: 
+   Top-level Package      Requested   Resolved
+   > Markdig              1.6.0       1.6.0   
+   > YamlDotNet           18.1.0      18.1.0  
+
+(A) : Auto-referenced package.
+
+real	0m1.337s
+user	0m1.056s
+sys	0m0.258s
+Restore complete (0.1s)
+
+Build succeeded in 0.1s
+
+The following sources were used:
+   https://api.nuget.org/v3/index.json
+
+The given project `ObserverMagazine.Web` has no updates given the current sources.
+The given project `ObserverMagazine.Integration.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.Web.Tests` has no updates given the current sources.
+The given project `ObserverMagazine.ContentProcessor` has no updates given the current sources.
+
+real	0m2.667s
+user	0m1.703s
+sys	0m0.327s
+Wrote /home/kushal/src/dotnet/terlingua/docs/llm/dump.txt: 1553142 bytes, ~388285 tokens
+  text files: 241, book files summarized: 1568, path only: 3
+  largest:
+       26449  _build/data-representation-traps/check_math.py
+       26443  src/ObserverMagazine.Web/Pages/Showcase.razor
+       22212  _build/networking-and-protocols/audit_output.txt
+       20427  tests/ObserverMagazine.Web.Tests/Components/ShowcaseTests.cs
+       20144  tools/ObserverMagazine.ContentProcessor/SyntaxHighlighter.cs
+       19779  _build/relational-sql-and-transactions/src/06-transaction-anomalies-and-isolation-levels/05-ssi-retries-and-engine-defaults.md
+       19263  README.md
+       18743  _build/relational-sql-and-transactions/src/07-cross-chapter-review-and-debugging/03-schedule-anomaly-puzzles.md
+       18020  _build/relational-sql-and-transactions/src/06-transaction-anomalies-and-isolation-levels/02-lost-update-read-skew-write-skew.md
+       17775  _build/relational-sql-and-transactions/src/02-sql-logical-query-processing-order/03-outer-joins-where-vs-on.md
+
+real	0m4.244s
+user	0m2.067s
+sys	0m2.523s
 kushal@fedora:~/src/dotnet/terlingua$ 
